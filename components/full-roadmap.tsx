@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Deliverable } from "@/lib/mdx";
-import type { WeekSchedule, DeliverableEntry } from "@/lib/roadmap-schedule";
+import type { WeekSchedule, DeliverableEntry } from "@/lib/schedule";
 
 interface FullRoadmapProps {
   schedule: WeekSchedule[];
@@ -103,57 +103,60 @@ export function FullRoadmap({
             </div>
           )}
 
-          <div
-            className={`grid grid-cols-[72px_1fr_1fr] ${wi < schedule.length - 1 ? "border-b border-border-default" : ""}`}
-          >
-            {/* Week label cell */}
-            <div className="border-r border-border-default px-3 py-3 flex flex-col gap-1">
-              <span className="text-[13px] font-bold tracking-[0.04em] text-text-primary">
-                {week.week}
-              </span>
-            </div>
-
-            {/* Dev columns */}
-            {devNames.map((devName) => {
-              const entries = week.devs[devName] ?? [];
-              return (
+          {(() => {
+            const maxEntries = Math.max(
+              ...devNames.map((d) => (week.devs[d] ?? []).length)
+            );
+            return (
+              <div
+                className={`grid grid-cols-[72px_1fr_1fr] ${wi < schedule.length - 1 ? "border-b border-border-default" : ""}`}
+                style={{ gridTemplateRows: `auto repeat(${maxEntries}, auto)` }}
+              >
+                {/* Week label — spans all rows */}
                 <div
-                  key={devName}
-                  className="border-r border-border-default px-3 py-2.5 last:border-r-0"
+                  className="border-r border-border-default px-3 py-3 flex flex-col gap-1"
+                  style={{ gridRow: `1 / ${maxEntries + 2}` }}
                 >
-                  {/* Week theme label (only in first dev column) */}
-                  {devName === devNames[0] && (
-                    <div className="mb-2 flex items-center gap-2 -mx-3 -mt-2.5 px-3 py-1.5 bg-bg-surface/50 border-b border-border-default/40"
-                      style={{ gridColumn: "2 / -1" }}
-                    >
-                      <span className="text-[10px] tracking-[0.08em] text-text-secondary">
-                        {week.label}
-                      </span>
-                    </div>
-                  )}
-                  {devName !== devNames[0] && (
-                    <div className="mb-2 -mx-3 -mt-2.5 px-3 py-1.5 bg-bg-surface/50 border-b border-border-default/40">
-                      <span className="text-[10px] tracking-[0.08em] text-transparent select-none">
-                        &nbsp;
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Deliverables stacked */}
-                  <div className="flex flex-col gap-2">
-                    {entries.map((entry) => (
-                      <DeliverableCell
-                        key={entry.title}
-                        entry={entry}
-                        devName={devName}
-                        deliverables={deliverables}
-                      />
-                    ))}
-                  </div>
+                  <span className="text-[13px] font-bold tracking-[0.04em] text-text-primary">
+                    {week.week}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Theme label — spans both dev columns */}
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 bg-bg-surface/50 border-b border-border-default/40"
+                  style={{ gridColumn: "2 / -1", gridRow: "1" }}
+                >
+                  <span className="text-[10px] tracking-[0.08em] text-text-secondary">
+                    {week.label}
+                  </span>
+                </div>
+
+                {/* Deliverable pairs — one grid row per pair */}
+                {Array.from({ length: maxEntries }, (_, i) =>
+                  devNames.map((devName) => {
+                    const entries = week.devs[devName] ?? [];
+                    const entry = entries[i];
+                    return (
+                      <div
+                        key={`${devName}-${i}`}
+                        className={`border-r border-border-default px-3 ${i === 0 ? "pt-2.5" : "pt-1"} ${i === maxEntries - 1 ? "pb-2.5" : "pb-1"} last:border-r-0`}
+                        style={{ gridRow: i + 2 }}
+                      >
+                        {entry && (
+                          <DeliverableCell
+                            entry={entry}
+                            devName={devName}
+                            deliverables={deliverables}
+                          />
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            );
+          })()}
 
         </div>
       ))}

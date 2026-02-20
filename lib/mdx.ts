@@ -20,7 +20,7 @@ const CONTENT_DIR = path.join(process.cwd(), "content");
 export async function getAllDeliverables(): Promise<Deliverable[]> {
   try {
     const files = await fs.readdir(CONTENT_DIR);
-    const mdxFiles = files.filter((f) => f.endsWith(".mdx"));
+    const mdxFiles = files.filter((f) => f.endsWith(".mdx") && f !== "commits.mdx");
 
     const deliverables = await Promise.all(
       mdxFiles.map(async (filename) => {
@@ -86,4 +86,33 @@ export function groupByEnvironment(
     },
     {} as Record<string, Deliverable[]>
   );
+}
+
+export interface CommitEntry {
+  message: string;
+  author: string;
+}
+
+export async function getCommitLog(): Promise<CommitEntry[]> {
+  try {
+    const filePath = path.join(CONTENT_DIR, "commits.mdx");
+    const raw = await fs.readFile(filePath, "utf-8");
+    const entries: CommitEntry[] = [];
+
+    for (const line of raw.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith("- ")) continue;
+      const text = trimmed.slice(2);
+      const match = text.match(/^(.+?)\s*—\s*\*(.+?)\*$/);
+      if (match) {
+        entries.push({ message: match[1].trim(), author: match[2].trim() });
+      } else {
+        entries.push({ message: text, author: "" });
+      }
+    }
+
+    return entries;
+  } catch {
+    return [];
+  }
 }

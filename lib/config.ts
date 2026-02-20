@@ -1,16 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
 
-export interface DevConfig {
-  name: string;
-  deliverables: string[];
-}
-
 export interface ProjectConfig {
   project: string;
-  devs: DevConfig[];
+  devs: string[];
   environments: ("dev" | "prod")[];
   commitPrefix: string;
+  linearTeamKey?: string;
 }
 
 const CONFIG_PATH = path.join(process.cwd(), "project.config.json");

@@ -1,6 +1,7 @@
 import { getAllDeliverables, groupByOwner } from "@/lib/mdx";
 import { getConfig, hasMultipleEnvironments } from "@/lib/config";
 import { getStats } from "@/lib/stats";
+import { getSchedule, getDeliverablesByDev } from "@/lib/schedule";
 import { RoadmapCard } from "@/components/roadmap-card";
 import { StatGrid } from "@/components/stat-grid";
 import { PipelineView } from "@/components/pipeline-view";
@@ -9,11 +10,14 @@ import { LinesChart } from "@/components/lines-chart";
 import { RoadmapTimeline } from "@/components/roadmap-timeline";
 
 export default async function Home() {
-  const [config, deliverables, stats] = await Promise.all([
+  const [config, deliverables, stats, schedule] = await Promise.all([
     getConfig(),
     getAllDeliverables(),
     getStats(),
+    getSchedule(),
   ]);
+
+  const plannedByDev = getDeliverablesByDev(schedule);
 
   const byOwner = groupByOwner(deliverables);
   const showPipeline = hasMultipleEnvironments(config);
@@ -72,7 +76,7 @@ export default async function Home() {
         <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
           On Track
         </h2>
-        <OnTrackView devs={config.devs} deliverables={deliverables} />
+        <OnTrackView devNames={config.devs} plannedByDev={plannedByDev} deliverables={deliverables} />
       </section>
 
       {/* Lines shipped per dev */}

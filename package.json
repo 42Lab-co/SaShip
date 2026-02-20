@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@linear/sdk": "^75.0.0",
     "@next/font": "^14.2.15",
     "gray-matter": "^4.0.3",
     "next": "16.1.6",

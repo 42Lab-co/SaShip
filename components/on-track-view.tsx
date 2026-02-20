@@ -1,13 +1,13 @@
 import type { Deliverable } from "@/lib/mdx";
-import type { DevConfig } from "@/lib/config";
 import { StatusBadge } from "./status-badge";
 
 interface OnTrackViewProps {
-  devs: DevConfig[];
+  devNames: string[];
+  plannedByDev: Record<string, string[]>;
   deliverables: Deliverable[];
 }
 
-export function OnTrackView({ devs, deliverables }: OnTrackViewProps) {
+export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackViewProps) {
   return (
     <div className="border border-border-default">
       <div className="border-b border-border-default px-4 py-2.5 flex items-center justify-between">
@@ -19,11 +19,12 @@ export function OnTrackView({ devs, deliverables }: OnTrackViewProps) {
         </span>
       </div>
       <div className="divide-y divide-border-default">
-        {devs.map((dev) => {
+        {devNames.map((devName) => {
+          const plannedList = plannedByDev[devName] || [];
           const devDeliverables = deliverables.filter(
-            (d) => d.frontmatter.owner === dev.name
+            (d) => d.frontmatter.owner === devName
           );
-          const planned = dev.deliverables.length;
+          const planned = plannedList.length;
           const shipped = devDeliverables.filter(
             (d) => d.frontmatter.status === "deployed"
           ).length;
@@ -38,10 +39,10 @@ export function OnTrackView({ devs, deliverables }: OnTrackViewProps) {
           const pct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
 
           return (
-            <div key={dev.name} className="px-4 py-4">
+            <div key={devName} className="px-4 py-4">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-[12px] font-semibold uppercase tracking-[0.1em] text-text-primary">
-                  {dev.name}
+                  {devName}
                 </span>
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] uppercase tracking-[0.12em] text-text-muted">
@@ -79,7 +80,7 @@ export function OnTrackView({ devs, deliverables }: OnTrackViewProps) {
 
               {/* Deliverable breakdown */}
               <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {dev.deliverables.map((name) => {
+                {plannedList.map((name) => {
                   const match = devDeliverables.find(
                     (d) =>
                       d.frontmatter.title.toLowerCase() === name.toLowerCase()

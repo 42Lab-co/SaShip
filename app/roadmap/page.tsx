@@ -1,15 +1,16 @@
 import { getAllDeliverables } from "@/lib/mdx";
 import { getConfig } from "@/lib/config";
 import { FullRoadmap } from "@/components/full-roadmap";
-import { roadmapSchedule } from "@/lib/roadmap-schedule";
+import { getSchedule } from "@/lib/schedule";
 
 export default async function RoadmapPage() {
-  const [config, deliverables] = await Promise.all([
+  const [config, deliverables, schedule] = await Promise.all([
     getConfig(),
     getAllDeliverables(),
+    getSchedule(),
   ]);
 
-  const devNames = config.devs.map((d) => d.name);
+  const devNames = config.devs;
 
   return (
     <div className="space-y-6 animate-enter">
@@ -23,7 +24,7 @@ export default async function RoadmapPage() {
       </div>
 
       <FullRoadmap
-        schedule={roadmapSchedule}
+        schedule={schedule}
         deliverables={deliverables}
         devNames={devNames}
       />
