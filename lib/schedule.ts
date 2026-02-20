@@ -13,19 +13,34 @@ export interface WeekSchedule {
   devs: Record<string, DeliverableEntry[]>;
 }
 
-const SCHEDULE_PATH = path.join(process.cwd(), "content", "schedule.json");
+export interface Roadmap {
+  startDate: string;
+  weeks: WeekSchedule[];
+}
 
-let cachedSchedule: WeekSchedule[] | null = null;
+const ROADMAP_PATH = path.join(process.cwd(), "content", "roadmap.json");
+
+let cachedRoadmap: Roadmap | null = null;
+
+async function getRoadmap(): Promise<Roadmap> {
+  if (cachedRoadmap) return cachedRoadmap;
+  try {
+    const raw = await fs.readFile(ROADMAP_PATH, "utf-8");
+    cachedRoadmap = JSON.parse(raw) as Roadmap;
+    return cachedRoadmap;
+  } catch {
+    return { startDate: "", weeks: [] };
+  }
+}
 
 export async function getSchedule(): Promise<WeekSchedule[]> {
-  if (cachedSchedule) return cachedSchedule;
-  try {
-    const raw = await fs.readFile(SCHEDULE_PATH, "utf-8");
-    cachedSchedule = JSON.parse(raw) as WeekSchedule[];
-    return cachedSchedule;
-  } catch {
-    return [];
-  }
+  const roadmap = await getRoadmap();
+  return roadmap.weeks;
+}
+
+export async function getStartDate(): Promise<string> {
+  const roadmap = await getRoadmap();
+  return roadmap.startDate;
 }
 
 export function getDeliverablesByDev(

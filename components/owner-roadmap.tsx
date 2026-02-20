@@ -95,7 +95,13 @@ export function OwnerRoadmap() {
             Quentin + Leonard &mdash; S1
           </span>
         </div>
-        <div className="border border-border-default bg-bg-panel p-4">
+        <div
+          className="relative overflow-hidden border border-border-default bg-transparent p-4 transition-all duration-200 hover:border-neutral-900 hover:shadow-[0_2px_8px_rgba(26,26,20,0.06)]"
+        >
+          <div
+            className="absolute inset-y-0 left-0 w-[3px]"
+            style={{ background: "var(--accent-primary)" }}
+          />
           <h3 className="mb-1 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-primary">
             Socle Commun
           </h3>
@@ -118,14 +124,23 @@ export function OwnerRoadmap() {
               {owner.role}
             </span>
           </div>
-          <div className="grid grid-cols-1 gap-px border border-border-default bg-border-default sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-px border border-border-default sm:grid-cols-2 lg:grid-cols-4">
             {owner.blocks.map((block) => (
-              <div key={block.id} className="bg-bg-panel p-4">
+              <div
+                key={block.id}
+                className="group/card relative overflow-hidden bg-transparent p-4 transition-all duration-200"
+              >
+                <div
+                  className="absolute inset-y-0 left-0 w-[2px] opacity-0 transition-opacity duration-200 group-hover/card:opacity-100"
+                  style={{
+                    background: "var(--accent-primary)",
+                  }}
+                />
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h3 className="text-[12px] font-semibold uppercase tracking-[0.08em] text-text-primary">
                     {block.title}
                   </h3>
-                  <span className="shrink-0 text-[10px] font-mono tracking-[0.1em] text-text-muted">
+                  <span className="shrink-0 rounded-sm px-1.5 py-0.5 text-[10px] font-mono tracking-[0.1em] text-text-muted" style={{ background: "var(--neutral-200)" }}>
                     {block.weeks}
                   </span>
                 </div>
