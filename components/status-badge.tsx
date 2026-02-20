@@ -4,23 +4,18 @@ const statusConfig: Record<
   DeliverableFrontmatter["status"],
   { label: string; color: string; dotColor: string }
 > = {
-  "in-dev": {
-    label: "IN DEV",
-    color: "text-accent-text",
-    dotColor: "bg-accent border border-accent-text/50",
-  },
-  "in-review": {
-    label: "IN REVIEW",
-    color: "text-[#e0a030]",
-    dotColor: "bg-[#e0a030]",
+  "in-staging": {
+    label: "STAGING",
+    color: "text-status-staging",
+    dotColor: "bg-status-staging",
   },
   deployed: {
-    label: "DEPLOYED",
-    color: "text-status-done",
-    dotColor: "bg-status-done",
+    label: "SHIPPED",
+    color: "text-accent-text",
+    dotColor: "bg-accent",
   },
-  blocked: {
-    label: "BLOCKED",
+  "waiting-for-review": {
+    label: "WAITING FOR REVIEW",
     color: "text-status-error",
     dotColor: "bg-status-error",
   },
@@ -37,7 +32,7 @@ export function StatusBadge({
       <span
         className={`inline-block h-[6px] w-[6px] rounded-full ${config.dotColor}`}
         style={
-          status === "in-dev"
+          status === "in-staging" || status === "waiting-for-review"
             ? { animation: "pulse-dot 2s infinite" }
             : undefined
         }

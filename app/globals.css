@@ -35,6 +35,7 @@
   --status-prod: #4a9eff;
   --status-error: #c84040;
   --status-done: #5ab870;
+  --status-staging: #b7b7b7;
 
   /* Borders */
   --border-default: #c0bdb5;
@@ -67,6 +68,7 @@
   --color-status-prod: var(--status-prod);
   --color-status-error: var(--status-error);
   --color-status-done: var(--status-done);
+  --color-status-staging: var(--status-staging);
   --color-border-default: var(--border-default);
   --color-border-dark: var(--border-dark);
   --color-border-accent: var(--border-accent);
@@ -152,15 +154,16 @@ body {
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
+  height: 3px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-base);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--neutral-400);
-  border-radius: 3px;
+  background: var(--neutral-300);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--neutral-600);
+  background: var(--neutral-400);
 }

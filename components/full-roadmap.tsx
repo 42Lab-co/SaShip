@@ -24,10 +24,29 @@ export function FullRoadmap({
     (d) => d.frontmatter.status === "deployed"
   ).length;
   const totalInDev = deliverables.filter(
-    (d) => d.frontmatter.status === "in-dev"
+    (d) => d.frontmatter.status === "in-staging"
   ).length;
   const pct =
     totalPlanned > 0 ? Math.round((totalShipped / totalPlanned) * 100) : 0;
+
+  // Per-dev stats
+  const devStats = devNames.map((name) => {
+    let planned = 0;
+    for (const week of schedule) {
+      planned += (week.devs[name] ?? []).length;
+    }
+    const devDeliverables = deliverables.filter(
+      (d) => d.frontmatter.owner === name
+    );
+    const shipped = devDeliverables.filter(
+      (d) => d.frontmatter.status === "deployed"
+    ).length;
+    const inProgress = devDeliverables.filter(
+      (d) => d.frontmatter.status === "in-staging"
+    ).length;
+    const devPct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
+    return { name, planned, shipped, inProgress, pct: devPct };
+  });
 
   return (
     <div className="border border-border-default">
@@ -38,10 +57,8 @@ export function FullRoadmap({
         </span>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <Legend dotClass="bg-status-done" label="SHIPPED" />
-            <Legend dotClass="bg-accent border border-accent-text/50" label="IN DEV" />
-            <Legend dotClass="bg-[#e0a030]" label="REVIEW" />
-            <Legend dotClass="bg-status-error" label="BLOCKED" />
+            <Legend dotClass="bg-accent" label="SHIPPED" />
+            <Legend dotClass="bg-status-staging" label="STAGING" />
             <Legend dotClass="bg-neutral-300" label="PLANNED" />
           </div>
           <span className="font-mono text-[18px] font-bold text-neutral-900">
@@ -50,18 +67,18 @@ export function FullRoadmap({
         </div>
       </div>
 
-      {/* Progress bar */}
+      {/* Overall progress bar */}
       <div className="px-4 pt-3 pb-2">
-        <div className="flex h-2 w-full overflow-hidden rounded-sm bg-neutral-300">
+        <div className="flex h-2 w-full overflow-hidden rounded-sm bg-neutral-300 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)]">
           {totalShipped > 0 && (
             <div
-              className="bg-status-done"
+              className="bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.3)]"
               style={{ width: `${(totalShipped / totalPlanned) * 100}%` }}
             />
           )}
           {totalInDev > 0 && (
             <div
-              className="bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.4)]"
+              className="bg-status-staging shadow-[inset_0_0_0_1px_rgba(180,80,0,0.3)]"
               style={{ width: `${(totalInDev / totalPlanned) * 100}%` }}
             />
           )}
@@ -71,24 +88,52 @@ export function FullRoadmap({
             {totalShipped}/{totalPlanned} shipped
           </span>
           <span className="text-[10px] tracking-[0.12em] text-text-muted">
-            {totalInDev} in progress
+            {totalInDev} in staging
           </span>
         </div>
       </div>
 
-      {/* Column headers */}
+      {/* Column headers with per-dev progress bars */}
       <div className="grid grid-cols-[72px_1fr_1fr] border-b border-t border-border-default">
         <div className="border-r border-border-default px-3 py-2" />
-        {devNames.map((name) => (
-          <div
-            key={name}
-            className="border-r border-border-default px-3 py-2 last:border-r-0"
-          >
-            <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-primary">
-              {name}
-            </span>
-          </div>
-        ))}
+        {devNames.map((name) => {
+          const dev = devStats.find((d) => d.name === name)!;
+          return (
+            <div
+              key={name}
+              className="border-r border-border-default px-3 py-2 last:border-r-0"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-primary">
+                  {name}
+                </span>
+                <span className="font-mono text-[12px] font-bold text-neutral-900">
+                  {dev.pct}%
+                </span>
+              </div>
+              <div className="mt-1.5 flex h-1.5 w-full overflow-hidden rounded-sm bg-neutral-300 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)]">
+                {dev.shipped > 0 && (
+                  <div
+                    className="bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.3)]"
+                    style={{ width: `${(dev.shipped / dev.planned) * 100}%` }}
+                  />
+                )}
+                {dev.inProgress > 0 && (
+                  <div
+                    className="bg-status-staging shadow-[inset_0_0_0_1px_rgba(180,80,0,0.3)]"
+                    style={{ width: `${(dev.inProgress / dev.planned) * 100}%` }}
+                  />
+                )}
+              </div>
+              <div className="mt-0.5">
+                <span className="text-[9px] tracking-[0.12em] text-text-muted">
+                  {dev.shipped}/{dev.planned} shipped
+                  {dev.inProgress > 0 && <> · {dev.inProgress} in staging</>}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Week rows — one row per week */}
@@ -201,7 +246,7 @@ function DeliverableCell({
         <span
           className={`text-[11px] font-medium tracking-[0.04em] ${
             status === "deployed"
-              ? "text-text-muted line-through decoration-status-done"
+              ? "text-text-muted line-through decoration-accent"
               : status
                 ? "text-text-primary"
                 : "text-text-muted"
@@ -247,16 +292,14 @@ function StatusDot({ status }: { status: string | null }) {
     );
   }
   const colorMap: Record<string, string> = {
-    deployed: "bg-status-done",
-    "in-dev": "bg-accent border border-accent-text/50",
-    "in-review": "bg-[#e0a030]",
-    blocked: "bg-status-error",
+    deployed: "bg-accent",
+    "in-staging": "bg-status-staging",
   };
   return (
     <span
       className={`inline-block h-[8px] w-[8px] shrink-0 rounded-full ${colorMap[status] ?? "bg-neutral-300"}`}
       style={
-        status === "in-dev"
+        status === "in-staging"
           ? { animation: "pulse-dot 2s infinite" }
           : undefined
       }

@@ -7,16 +7,12 @@ interface RoadmapTimelineProps {
 
 const phaseOrder: DeliverableFrontmatter["status"][] = [
   "deployed",
-  "in-review",
-  "in-dev",
-  "blocked",
+  "in-staging",
 ];
 
 const phaseLabels: Record<DeliverableFrontmatter["status"], string> = {
   deployed: "SHIPPED",
-  "in-review": "IN REVIEW",
-  "in-dev": "IN PROGRESS",
-  blocked: "BLOCKED",
+  "in-staging": "IN STAGING",
 };
 
 export function RoadmapTimeline({ deliverables }: RoadmapTimelineProps) {
@@ -195,42 +191,13 @@ function CheckIndicator({
     );
   }
 
-  if (status === "in-dev") {
-    return (
-      <div className="mt-0.5 flex h-5 w-5 items-center justify-center border border-accent-text/40 bg-accent-glow">
-        <span
-          className="inline-block h-[6px] w-[6px] bg-accent border border-accent-text/50 rounded-sm"
-          style={{ animation: "pulse-dot 2s infinite" }}
-        />
-      </div>
-    );
-  }
-
-  if (status === "in-review") {
-    return (
-      <div className="mt-0.5 flex h-5 w-5 items-center justify-center border border-[#e0a030] bg-[#e0a030]/10">
-        <span className="inline-block h-[6px] w-[6px] rounded-full bg-[#e0a030]" />
-      </div>
-    );
-  }
-
-  // blocked
+  // in-staging
   return (
-    <div className="mt-0.5 flex h-5 w-5 items-center justify-center border border-status-error bg-status-error/10">
-      <svg
-        width="8"
-        height="8"
-        viewBox="0 0 8 8"
-        fill="none"
-        className="text-status-error"
-      >
-        <path
-          d="M1 1L7 7M7 1L1 7"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="square"
-        />
-      </svg>
+    <div className="mt-0.5 flex h-5 w-5 items-center justify-center border border-accent-text/40 bg-accent-glow">
+      <span
+        className="inline-block h-[6px] w-[6px] bg-accent border border-accent-text/50 rounded-sm"
+        style={{ animation: "pulse-dot 2s infinite" }}
+      />
     </div>
   );
 }
@@ -241,12 +208,8 @@ function segmentColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "bg-status-done";
-    case "in-review":
-      return "bg-[#e0a030]";
-    case "in-dev":
+    case "in-staging":
       return "bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.4)]";
-    case "blocked":
-      return "bg-status-error";
   }
 }
 
@@ -254,12 +217,8 @@ function dotColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "bg-status-done";
-    case "in-review":
-      return "bg-[#e0a030]";
-    case "in-dev":
+    case "in-staging":
       return "bg-accent border border-accent-text/50";
-    case "blocked":
-      return "bg-status-error";
   }
 }
 
@@ -267,12 +226,8 @@ function phaseTextColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "text-status-done";
-    case "in-review":
-      return "text-[#e0a030]";
-    case "in-dev":
+    case "in-staging":
       return "text-accent-text";
-    case "blocked":
-      return "text-status-error";
   }
 }
 

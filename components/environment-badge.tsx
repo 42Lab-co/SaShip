@@ -1,9 +1,9 @@
 export function EnvironmentBadge({
   environment,
 }: {
-  environment: "dev" | "prod";
+  environment: "staging" | "prod";
 }) {
-  const isDev = environment === "dev";
+  const isDev = environment === "staging";
   return (
     <span
       className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.15em] ${

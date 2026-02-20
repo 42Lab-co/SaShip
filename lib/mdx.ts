@@ -5,8 +5,8 @@ import matter from "gray-matter";
 export interface DeliverableFrontmatter {
   title: string;
   owner: string;
-  status: "in-dev" | "in-review" | "deployed" | "blocked";
-  environment: "dev" | "prod";
+  status: "in-staging" | "deployed" | "waiting-for-review";
+  environment: "staging" | "prod";
 }
 
 export interface Deliverable {

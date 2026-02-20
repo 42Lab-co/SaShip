@@ -1,13 +1,11 @@
-import { getAllDeliverables, groupByOwner } from "@/lib/mdx";
+import { getAllDeliverables } from "@/lib/mdx";
 import { getConfig, hasMultipleEnvironments } from "@/lib/config";
 import { getStats } from "@/lib/stats";
-import { getSchedule, getDeliverablesByDev } from "@/lib/schedule";
-import { RoadmapCard } from "@/components/roadmap-card";
-import { StatGrid } from "@/components/stat-grid";
+import { getSchedule } from "@/lib/schedule";
 import { PipelineView } from "@/components/pipeline-view";
-import { OnTrackView } from "@/components/on-track-view";
+import { HorizonRoadmap } from "@/components/horizon-roadmap";
 import { LinesChart } from "@/components/lines-chart";
-import { RoadmapTimeline } from "@/components/roadmap-timeline";
+import { OwnerRoadmap } from "@/components/owner-roadmap";
 
 export default async function Home() {
   const [config, deliverables, stats, schedule] = await Promise.all([
@@ -17,21 +15,9 @@ export default async function Home() {
     getSchedule(),
   ]);
 
-  const plannedByDev = getDeliverablesByDev(schedule);
-
-  const byOwner = groupByOwner(deliverables);
   const showPipeline = hasMultipleEnvironments(config);
 
   const totalDeliverables = deliverables.length;
-  const inDev = deliverables.filter(
-    (d) => d.frontmatter.status === "in-dev"
-  ).length;
-  const deployed = deliverables.filter(
-    (d) => d.frontmatter.status === "deployed"
-  ).length;
-  const blocked = deliverables.filter(
-    (d) => d.frontmatter.status === "blocked"
-  ).length;
 
   return (
     <div className="space-y-8 animate-enter">
@@ -46,15 +32,10 @@ export default async function Home() {
         </p>
       </div>
 
-      {/* Stats */}
-      <StatGrid
-        stats={[
-          { label: "TOTAL", value: totalDeliverables },
-          { label: "IN_DEV", value: inDev, accent: true },
-          { label: "DEPLOYED", value: deployed },
-          { label: "BLOCKED", value: blocked, danger: true },
-        ]}
-      />
+      {/* Horizontal roadmap overview */}
+      <section>
+        <HorizonRoadmap schedule={schedule} deliverables={deliverables} devNames={config.devs} />
+      </section>
 
       {/* Pipeline View (if dev+prod) */}
       {showPipeline && (
@@ -64,20 +45,21 @@ export default async function Home() {
               Pipeline
             </h2>
             <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted">
-              DEV → PROD
+              STAGING → PROD
+            </span>
+            <span className="ml-auto inline-flex items-center gap-1.5">
+              <span
+                className="inline-block h-[6px] w-[6px] rounded-full bg-status-error"
+                style={{ animation: "pulse-dot 2s infinite" }}
+              />
+              <span className="text-[10px] tracking-[0.12em] text-text-muted">
+                Waiting for Fabrice&apos;s review
+              </span>
             </span>
           </div>
           <PipelineView deliverables={deliverables} />
         </section>
       )}
-
-      {/* On Track — roadmap vs shipped */}
-      <section>
-        <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
-          On Track
-        </h2>
-        <OnTrackView devNames={config.devs} plannedByDev={plannedByDev} deliverables={deliverables} />
-      </section>
 
       {/* Lines shipped per dev */}
       <section>
@@ -87,46 +69,12 @@ export default async function Home() {
         <LinesChart stats={stats} />
       </section>
 
-      {/* Roadmap Timeline */}
-      <section>
-        <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
-          Roadmap
-        </h2>
-        <RoadmapTimeline deliverables={deliverables} />
-      </section>
-
-      {/* Roadmap by Dev */}
+      {/* Roadmap by Owner */}
       <section>
         <h2 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
           Roadmap by Owner
         </h2>
-        {Object.keys(byOwner).length === 0 ? (
-          <div className="border border-border-default p-8 text-center">
-            <p className="text-[12px] text-text-muted">
-              No deliverables yet. Add .mdx files to the content/ directory.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {Object.entries(byOwner).map(([owner, items]) => (
-              <div key={owner}>
-                <div className="mb-2 flex items-center gap-3">
-                  <span className="text-[12px] font-semibold uppercase tracking-[0.1em] text-text-primary">
-                    {owner}
-                  </span>
-                  <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted">
-                    {items.length} items
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-3">
-                  {items.map((d) => (
-                    <RoadmapCard key={d.slug} deliverable={d} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <OwnerRoadmap />
       </section>
 
       {/* Footer section label */}

@@ -7,17 +7,13 @@ interface PipelineViewProps {
 }
 
 export function PipelineView({ deliverables }: PipelineViewProps) {
-  const devItems = deliverables.filter(
-    (d) => d.frontmatter.environment === "dev"
-  );
-  const prodItems = deliverables.filter(
-    (d) => d.frontmatter.environment === "prod"
+  const stagingItems = deliverables.filter(
+    (d) => d.frontmatter.environment === "staging"
   );
 
   return (
-    <div className="grid grid-cols-1 gap-0 border border-border-default md:grid-cols-2">
-      <PipelineColumn label="DEV" sectionNum="001" items={devItems} />
-      <PipelineColumn label="PROD" sectionNum="002" items={prodItems} />
+    <div className="border border-border-default">
+      <PipelineColumn label="STAGING" sectionNum="001" items={stagingItems} />
     </div>
   );
 }

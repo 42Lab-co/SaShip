@@ -4,7 +4,7 @@ import path from "path";
 export interface ProjectConfig {
   project: string;
   devs: string[];
-  environments: ("dev" | "prod")[];
+  environments: ("staging" | "prod")[];
   commitPrefix: string;
   linearTeamKey?: string;
 }
@@ -23,7 +23,7 @@ export async function getConfig(): Promise<ProjectConfig> {
     return {
       project: "project-x",
       devs: [],
-      environments: ["dev", "prod"],
+      environments: ["staging", "prod"],
       commitPrefix: "[project-x]",
     };
   }
