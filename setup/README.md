@@ -42,6 +42,7 @@ Go to the **client dev repo** on GitHub > **Settings > Secrets and Variables > A
 | -------------------- | ------------------------------------------------------ |
 | `TRACKING_REPO_TOKEN`| The fine-grained PAT generated above                   |
 | `AI_GATEWAY_API_KEY` | Vercel AI Gateway key for commit summarization         |
+| `SLACK_WEBHOOK_URL`  | Slack incoming webhook URL for digests and deploy notifs|
 
 #### Add variables on the client repo
 
@@ -52,7 +53,6 @@ Go to the **client dev repo** on GitHub > **Settings > Secrets and Variables > A
 | `TRACKING_REPO`      | `org/SaShip` (e.g. `42Lab-co/SaShip`) |
 | `TRACKING_BRANCH`    | `your-project` (the branch name)   |
 | `COMMIT_PREFIX`      | `[your-project]`                   |
-| `SLACK_WEBHOOK_URL`  | Slack incoming webhook URL for daily digests |
 
 ### 4. Install the GitHub Action on the client dev repo
 
@@ -64,15 +64,29 @@ The required secrets and variables were already configured in step 3.
 
 Copy `setup/slack-merge-notify.yml` to `.github/workflows/slack-merge-notify.yml` in the **client dev repo**.
 
-This workflow fires on every push to `main` or `staging`. It:
-1. Waits for the Vercel deployment to succeed (polls up to 10 min)
-2. Collects all commits in the merge
+This workflow fires on every push to `main`, `staging`, or `dev/*`. It:
+1. Waits for the Vercel deployment to succeed (polls up to 10 min) — **skipped for dev branches**
+2. Collects all commits in the push
 3. Rephrases them in customer-friendly language via AI (no technical jargon)
-4. Posts to Slack: "*Now available in production*" with a bullet list and a "View live" link
-5. If Vercel deployment fails, posts a failure alert instead
-6. If all commits are purely technical (no user-facing changes), skips the Slack message
+4. Posts to Slack with a branch-specific message:
+   - **main** → "*Mise en production effectuee*"
+   - **staging** → "*Nouveau deploiement en staging*" + link to staging URL + ping for validation
+   - **dev/*** → "*{Author} a ajouté à l'environnement de développement*" (French, personalized)
+5. If Vercel deployment fails (main/staging only), posts a failure alert
 
 No new secrets needed — reuses `AI_GATEWAY_API_KEY` and `SLACK_WEBHOOK_URL` from step 3.
+
+### 5b. Create per-developer dev branches on the client repo
+
+Create one `dev/<username>` branch per developer:
+
+```bash
+git branch dev/lmangall staging
+git branch dev/quentin staging
+git push origin dev/lmangall dev/quentin
+```
+
+These branches trigger the merge notify workflow with the personalized French message. No Vercel deployment is expected on these branches.
 
 ### 6. Set up the Claude Code slash commands
 
