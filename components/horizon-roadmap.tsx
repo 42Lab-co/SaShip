@@ -16,7 +16,7 @@ interface TimelineItem {
   devName: string;
   sprint: string;
   isFirstInSprint: boolean;
-  status: "deployed" | "in-staging" | null;
+  status: "deployed" | "staging" | null;
   slug: string | null;
 }
 
@@ -65,7 +65,7 @@ export function HorizonRoadmap({
   // Find last shipped index for auto-centering
   let lastShippedIndex = -1;
   for (let i = items.length - 1; i >= 0; i--) {
-    if (items[i].status === "deployed" || items[i].status === "in-staging") {
+    if (items[i].status === "deployed" || items[i].status === "staging") {
       lastShippedIndex = i;
       break;
     }
@@ -86,7 +86,7 @@ export function HorizonRoadmap({
   }, []);
 
   const shipped = items.filter((i) => i.status === "deployed").length;
-  const staging = items.filter((i) => i.status === "in-staging").length;
+  const staging = items.filter((i) => i.status === "staging").length;
 
   return (
     <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen border-y border-border-default">
@@ -117,14 +117,14 @@ export function HorizonRoadmap({
               const color =
                 item.status === "deployed"
                   ? "bg-accent"
-                  : item.status === "in-staging"
+                  : item.status === "staging"
                     ? "bg-neutral-400"
                     : "bg-neutral-300";
 
               const textColor =
                 item.status === "deployed"
                   ? "text-accent-text"
-                  : item.status === "in-staging"
+                  : item.status === "staging"
                     ? "text-text-primary"
                     : "text-neutral-400";
 
@@ -157,7 +157,7 @@ export function HorizonRoadmap({
                     <span
                       className={`block h-[10px] w-[10px] rounded-full ${color} border border-white/60`}
                       style={
-                        item.status === "in-staging"
+                        item.status === "staging"
                           ? { animation: "pulse-dot 2s infinite" }
                           : undefined
                       }

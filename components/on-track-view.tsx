@@ -21,7 +21,7 @@ export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackVie
           (d) => d.frontmatter.status === "deployed"
         ).length;
         const inProgress = devDeliverables.filter(
-          (d) => d.frontmatter.status === "in-staging"
+          (d) => d.frontmatter.status === "staging"
         ).length;
         const notStarted = planned - shipped - inProgress;
         const pct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
@@ -65,7 +65,7 @@ export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackVie
                 const color =
                   status === "deployed"
                     ? "bg-accent"
-                    : status === "in-staging"
+                    : status === "staging"
                       ? "bg-neutral-400"
                       : "bg-neutral-300";
                 return (

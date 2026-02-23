@@ -7,12 +7,12 @@ interface RoadmapTimelineProps {
 
 const phaseOrder: DeliverableFrontmatter["status"][] = [
   "deployed",
-  "in-staging",
+  "staging",
 ];
 
 const phaseLabels: Record<DeliverableFrontmatter["status"], string> = {
   deployed: "SHIPPED",
-  "in-staging": "IN STAGING",
+  "staging": "IN STAGING",
 };
 
 export function RoadmapTimeline({ deliverables }: RoadmapTimelineProps) {
@@ -191,7 +191,7 @@ function CheckIndicator({
     );
   }
 
-  // in-staging
+  // staging
   return (
     <div className="mt-0.5 flex h-5 w-5 items-center justify-center border border-accent-text/40 bg-accent-glow">
       <span
@@ -208,7 +208,7 @@ function segmentColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "bg-status-done";
-    case "in-staging":
+    case "staging":
       return "bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.4)]";
   }
 }
@@ -217,7 +217,7 @@ function dotColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "bg-status-done";
-    case "in-staging":
+    case "staging":
       return "bg-accent border border-accent-text/50";
   }
 }
@@ -226,7 +226,7 @@ function phaseTextColor(status: DeliverableFrontmatter["status"]) {
   switch (status) {
     case "deployed":
       return "text-status-done";
-    case "in-staging":
+    case "staging":
       return "text-accent-text";
   }
 }

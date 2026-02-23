@@ -24,7 +24,7 @@ export function FullRoadmap({
     (d) => d.frontmatter.status === "deployed"
   ).length;
   const totalInDev = deliverables.filter(
-    (d) => d.frontmatter.status === "in-staging"
+    (d) => d.frontmatter.status === "staging"
   ).length;
   const pct =
     totalPlanned > 0 ? Math.round((totalShipped / totalPlanned) * 100) : 0;
@@ -42,7 +42,7 @@ export function FullRoadmap({
       (d) => d.frontmatter.status === "deployed"
     ).length;
     const inProgress = devDeliverables.filter(
-      (d) => d.frontmatter.status === "in-staging"
+      (d) => d.frontmatter.status === "staging"
     ).length;
     const devPct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
     return { name, planned, shipped, inProgress, pct: devPct };
@@ -293,13 +293,13 @@ function StatusDot({ status }: { status: string | null }) {
   }
   const colorMap: Record<string, string> = {
     deployed: "bg-accent",
-    "in-staging": "bg-status-staging",
+    "staging": "bg-status-staging",
   };
   return (
     <span
       className={`inline-block h-[8px] w-[8px] shrink-0 rounded-full ${colorMap[status] ?? "bg-neutral-300"}`}
       style={
-        status === "in-staging"
+        status === "staging"
           ? { animation: "pulse-dot 2s infinite" }
           : undefined
       }
