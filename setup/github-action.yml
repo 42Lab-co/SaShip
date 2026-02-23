@@ -15,7 +15,7 @@ name: SaShip Daily Digest
 
 on:
   schedule:
-    - cron: "0 18 * * 1-5" # Weekdays at 6 PM UTC
+    - cron: "30 6 * * 1-5" # Weekdays at 7:30 AM UTC+1 (6:30 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -39,24 +39,53 @@ jobs:
           SINCE=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
           PREFIX="${{ vars.COMMIT_PREFIX }}"
           echo "::group::Commit collection"
-          echo "Looking for commits since $SINCE with prefix '$PREFIX'"
+          echo "Looking for commits since $SINCE"
 
-          # Get commits from all branches, filtered by prefix
-          COMMITS=$(git log --all --since="$SINCE" --pretty=format:'%H|%an|%s' | grep -F "$PREFIX" || true)
+          # Get ALL commits from all branches (for the commit log page)
+          ALL_RAW=$(git log --all --since="$SINCE" --pretty=format:'%H|%an|%s' || true)
+
+          if [ -z "$ALL_RAW" ]; then
+            echo "no_all_commits=true" >> "$GITHUB_OUTPUT"
+            echo "no_commits=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::No commits found in the last 24h"
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          echo "no_all_commits=false" >> "$GITHUB_OUTPUT"
+
+          # Build JSON array for ALL commits (used by commit log page)
+          echo "$ALL_RAW" | while IFS= read -r line; do
+            HASH=$(echo "$line" | cut -d'|' -f1)
+            AUTHOR=$(echo "$line" | cut -d'|' -f2)
+            MESSAGE=$(echo "$line" | cut -d'|' -f3-)
+            jq -n --arg h "$HASH" --arg a "$AUTHOR" --arg m "$MESSAGE" \
+              '{hash:$h, author:$a, message:$m}'
+          done | jq -s '.' > /tmp/all_commits.json
+
+          ALL_COUNT=$(jq 'length' /tmp/all_commits.json)
+          echo "Found $ALL_COUNT total commit(s)"
+
+          echo "all_commits_json<<EOF" >> "$GITHUB_OUTPUT"
+          cat /tmp/all_commits.json >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          # Get prefix-filtered commits (for AI matching and MDX updates)
+          COMMITS=$(echo "$ALL_RAW" | grep -F "$PREFIX" || true)
 
           if [ -z "$COMMITS" ]; then
             echo "no_commits=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::No commits with prefix $PREFIX found in the last 24h"
+            echo "::warning::No commits with prefix $PREFIX found (but $ALL_COUNT total commits logged)"
             echo "::endgroup::"
             exit 0
           fi
 
           COMMIT_COUNT=$(echo "$COMMITS" | wc -l | tr -d ' ')
-          echo "Found $COMMIT_COUNT commit(s)"
+          echo "Found $COMMIT_COUNT prefixed commit(s)"
           echo "$COMMITS"
           echo "no_commits=false" >> "$GITHUB_OUTPUT"
 
-          # Build JSON array of commits using jq for safe encoding
+          # Build JSON array of prefixed commits using jq for safe encoding
           echo "$COMMITS" | while IFS= read -r line; do
             HASH=$(echo "$line" | cut -d'|' -f1)
             AUTHOR=$(echo "$line" | cut -d'|' -f2)
@@ -83,17 +112,17 @@ jobs:
           echo "::endgroup::"
 
       - name: Update commit log on tracking repo
-        if: steps.commits.outputs.no_commits != 'true'
+        if: steps.commits.outputs.no_all_commits != 'true'
         env:
           TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
-          COMMITS_JSON: ${{ steps.commits.outputs.commits_json }}
+          ALL_COMMITS_JSON: ${{ steps.commits.outputs.all_commits_json }}
         run: |
           TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
           echo "::group::Update commit log"
 
-          printenv COMMITS_JSON > /tmp/commits_for_log.json
+          printenv ALL_COMMITS_JSON > /tmp/commits_for_log.json
 
           # Format commits as markdown bullet list, stripping the project prefix
           BULLET_LIST=$(jq -r '.[] | "- " + (.message | gsub("^\\[.*?\\] *"; "")) + " — *" + .author + "*"' /tmp/commits_for_log.json)
