@@ -189,6 +189,138 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg text "$TEXT" '{text: $text}')"
 
+      - name: Promote staging deliverables to deployed
+        if: steps.vercel.outputs.deploy_ok == 'true' && steps.commits.outputs.no_commits != 'true' && github.ref_name == 'main'
+        continue-on-error: true
+        env:
+          AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
+          TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
+          TRACKING_REPO: ${{ vars.TRACKING_REPO }}
+          TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
+          RAW_COMMITS: ${{ steps.commits.outputs.commits }}
+        run: |
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
+          echo "::group::Promote staging → deployed"
+
+          # Fetch all MDX files from tracking repo
+          CONTENT_RESP=$(curl -s \
+            -H "Authorization: token $TRACKING_REPO_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$TRACKING_REPO/contents/content?ref=$TRACKING_BRANCH")
+
+          # Collect MDX files that are currently in staging
+          STAGING_FILES="[]"
+          for FILE_URL in $(echo "$CONTENT_RESP" | jq -r '.[]? | select(.name | endswith(".mdx") and .name != "commits.mdx") | .url'); do
+            FILE_DATA=$(curl -s \
+              -H "Authorization: token $TRACKING_REPO_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "$FILE_URL?ref=$TRACKING_BRANCH")
+
+            FILENAME=$(echo "$FILE_DATA" | jq -r '.name')
+            SLUG="${FILENAME%.mdx}"
+            FILE_CONTENT=$(echo "$FILE_DATA" | jq -r '.content // empty' | base64 -d 2>/dev/null || true)
+
+            if [ -z "$FILE_CONTENT" ]; then continue; fi
+
+            STATUS=$(echo "$FILE_CONTENT" | sed -n '/^---$/,/^---$/p' | grep '^status:' | sed 's/^status: *//')
+            TITLE=$(echo "$FILE_CONTENT" | sed -n '/^---$/,/^---$/p' | grep '^title:' | sed 's/^title: *//')
+
+            if [ "$STATUS" = "staging" ]; then
+              STAGING_FILES=$(echo "$STAGING_FILES" | jq --arg s "$SLUG" --arg t "$TITLE" '. + [{slug: $s, title: $t}]')
+            fi
+          done
+
+          STAGING_COUNT=$(echo "$STAGING_FILES" | jq 'length')
+          echo "Found $STAGING_COUNT deliverable(s) in staging"
+
+          if [ "$STAGING_COUNT" = "0" ]; then
+            echo "No staging deliverables to promote"
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          # Use AI to match merge commits to staging deliverables
+          cat > /tmp/match_prompt.txt <<PROMPT_EOF
+          Voici les commits qui viennent d'etre merges en production :
+
+          $RAW_COMMITS
+
+          Voici les livrables actuellement en staging :
+          $(echo "$STAGING_FILES" | jq '.')
+
+          Quels livrables parmi ceux en staging sont concernes par ces commits ?
+          Reponds en JSON : un tableau de slugs. Exemple : ["socle-commun-leonard", "agent-guide-quentin"]
+          Si aucun livrable ne correspond, reponds [].
+          IMPORTANT : Reponds avec du JSON brut uniquement, pas de bloc de code markdown.
+          PROMPT_EOF
+
+          jq -n --rawfile content /tmp/match_prompt.txt \
+            '{model:"anthropic/claude-haiku-4-5",max_tokens:256,messages:[{role:"user",content:$content}]}' \
+            > /tmp/match_request.json
+
+          HTTP_CODE=$(curl -s -o /tmp/match_response.json -w "%{http_code}" \
+            https://ai-gateway.vercel.sh/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $AI_GATEWAY_API_KEY" \
+            -d @/tmp/match_request.json)
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::warning::AI matching failed (HTTP $HTTP_CODE) — skipping promotion"
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          MATCHED_SLUGS=$(jq -r '.choices[0].message.content' /tmp/match_response.json | sed '/^```\(json\)\?$/d')
+          echo "AI matched slugs: $MATCHED_SLUGS"
+
+          # Validate JSON array
+          if ! echo "$MATCHED_SLUGS" | jq 'type == "array"' 2>/dev/null | grep -q true; then
+            echo "::warning::AI response is not a JSON array — skipping"
+            echo "::endgroup::"
+            exit 0
+          fi
+
+          # Update each matched MDX file: staging → deployed, environment → prod
+          echo "$MATCHED_SLUGS" | jq -r '.[]' | while read -r SLUG; do
+            FILE_PATH="content/${SLUG}.mdx"
+            echo "Promoting $FILE_PATH to deployed"
+
+            EXISTING=$(curl -s \
+              -H "Authorization: token $TRACKING_REPO_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/$TRACKING_REPO/contents/$FILE_PATH?ref=$TRACKING_BRANCH")
+
+            SHA=$(echo "$EXISTING" | jq -r '.sha // empty')
+            CURRENT=$(echo "$EXISTING" | jq -r '.content // empty' | base64 -d 2>/dev/null || true)
+
+            if [ -z "$CURRENT" ] || [ -z "$SHA" ]; then
+              echo "::warning::$FILE_PATH not found — skipping"
+              continue
+            fi
+
+            # Replace status and environment in frontmatter
+            UPDATED=$(echo "$CURRENT" | sed 's/^status: staging$/status: deployed/' | sed 's/^environment: staging$/environment: prod/')
+
+            B64=$(echo "$UPDATED" | base64 -w 0)
+            jq -n --arg msg "[bot] deployed: $SLUG" \
+              --arg content "$B64" \
+              --arg branch "$TRACKING_BRANCH" \
+              --arg sha "$SHA" \
+              '{message:$msg, content:$content, branch:$branch, sha:$sha}' \
+              > /tmp/promote_payload.json
+
+            if GH_TOKEN="$TRACKING_REPO_TOKEN" gh api \
+              -X PUT \
+              "/repos/$TRACKING_REPO/contents/$FILE_PATH" \
+              --input /tmp/promote_payload.json > /tmp/promote_response.json 2>&1; then
+              echo "Promoted $SLUG to deployed"
+            else
+              echo "::error::Failed to promote $SLUG"
+              cat /tmp/promote_response.json
+            fi
+          done
+          echo "::endgroup::"
+
       - name: Post failure to Slack
         if: steps.vercel.outputs.deploy_ok == 'false'
         env:
