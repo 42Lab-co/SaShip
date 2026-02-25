@@ -15,7 +15,7 @@ name: SaShip Daily Digest
 
 on:
   schedule:
-    - cron: "30 5 * * 1-5" # Weekdays at 7:30 AM CEST (5:30 UTC)
+    - cron: "30 6 * * 1-5" # Weekdays at 7:30 AM CET (6:30 UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -280,6 +280,7 @@ jobs:
           AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
         run: |
           TODAY=$(date +%Y-%m-%d)
+          YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d)
 
           # Write commits, config, roadmap, and schedule to temp files (already there from previous steps)
           echo '${{ steps.commits.outputs.commits_json }}' > /tmp/commits_input.json
@@ -321,7 +322,7 @@ jobs:
           5. Ecris une entree de changelog EN FRANCAIS pour chaque livrable associe. Format :
              ### $TODAY
              <resume concis en francais> — *<Auteur>*
-          6. Ecris un digest Slack quotidien EN FRANCAIS groupe par developpeur, puis par environnement (dev/prod). Utilise du francais simple, pas les messages de commit bruts. Pour le gras, utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques**. Le titre du message doit etre "Entrepreneur OS — avancées du <date du jour>" (PAS "Déploiements du jour").
+          6. Ecris un digest Slack quotidien EN FRANCAIS groupe par developpeur, puis par environnement. Utilise du francais simple, pas les messages de commit bruts. Pour le gras, utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques**. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui").
           7. Si un commit resout ou complete clairement un element des DEVELOPPEMENTS SUPPLEMENTAIRES, inclus-le dans "extras_updates" avec l'"id" exact de l'element et le statut "done". Ne marque comme done que si le commit traite reellement l'extra — ne force pas d'associations.
 
           Reponds au format JSON :
