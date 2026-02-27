@@ -100,7 +100,8 @@ jobs:
           printenv COMMITS_JSON > /tmp/commits_for_log.json
 
           # Format commits as markdown bullet list, stripping the project prefix
-          BULLET_LIST=$(jq -r '.[] | "- " + (.message | gsub("^\\[.*?\\] *"; "")) + " — *" + .author + "*"' /tmp/commits_for_log.json)
+          TODAY=$(date +%Y-%m-%d)
+          BULLET_LIST="### ${TODAY}"$'\n'$(jq -r '.[] | "- " + (.message | gsub("^\\[.*?\\] *"; "")) + " — *" + .author + "*"' /tmp/commits_for_log.json)
 
           if [ -z "$BULLET_LIST" ]; then
             echo "No commits to add to commit log"
