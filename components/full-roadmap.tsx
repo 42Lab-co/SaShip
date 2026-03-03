@@ -1,17 +1,20 @@
 import Link from "next/link";
 import type { Deliverable } from "@/lib/mdx";
 import type { WeekSchedule, DeliverableEntry } from "@/lib/schedule";
+import { getWeekDateRange } from "@/lib/schedule";
 
 interface FullRoadmapProps {
   schedule: WeekSchedule[];
   deliverables: Deliverable[];
   devNames: string[];
+  startDate: string;
 }
 
 export function FullRoadmap({
   schedule,
   deliverables,
   devNames,
+  startDate,
 }: FullRoadmapProps) {
   // Count totals across all weeks
   let totalPlanned = 0;
@@ -159,11 +162,14 @@ export function FullRoadmap({
               >
                 {/* Week label — spans all rows */}
                 <div
-                  className="border-r border-border-default px-3 py-3 flex flex-col gap-1"
+                  className="border-r border-border-default px-3 py-3 flex flex-col gap-0.5"
                   style={{ gridRow: `1 / ${maxEntries + 2}` }}
                 >
                   <span className="text-[13px] font-bold tracking-[0.04em] text-text-primary">
                     {week.week}
+                  </span>
+                  <span className="text-[9px] tracking-[0.06em] text-text-muted">
+                    {getWeekDateRange(startDate, wi)}
                   </span>
                 </div>
 

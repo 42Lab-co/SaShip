@@ -1,13 +1,14 @@
 import { getAllDeliverables } from "@/lib/mdx";
 import { getConfig } from "@/lib/config";
 import { FullRoadmap } from "@/components/full-roadmap";
-import { getSchedule } from "@/lib/schedule";
+import { getSchedule, getStartDate } from "@/lib/schedule";
 
 export default async function RoadmapPage() {
-  const [config, deliverables, schedule] = await Promise.all([
+  const [config, deliverables, schedule, startDate] = await Promise.all([
     getConfig(),
     getAllDeliverables(),
     getSchedule(),
+    getStartDate(),
   ]);
 
   const devNames = config.devs;
@@ -27,6 +28,7 @@ export default async function RoadmapPage() {
         schedule={schedule}
         deliverables={deliverables}
         devNames={devNames}
+        startDate={startDate}
       />
     </div>
   );

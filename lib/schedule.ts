@@ -43,6 +43,19 @@ export async function getStartDate(): Promise<string> {
   return roadmap.startDate;
 }
 
+export function getWeekDateRange(
+  startDate: string,
+  weekIndex: number
+): string {
+  const start = new Date(startDate);
+  start.setDate(start.getDate() + weekIndex * 7);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 5); // Mon → Sat
+  const fmt = (d: Date) =>
+    `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+  return `${fmt(start)} – ${fmt(end)}`;
+}
+
 export function getDeliverablesByDev(
   schedule: WeekSchedule[]
 ): Record<string, string[]> {
