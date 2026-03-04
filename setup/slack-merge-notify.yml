@@ -94,10 +94,16 @@ jobs:
         run: |
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.event.after }}"
+          BRANCH="${GITHUB_REF_NAME}"
 
           # If before is all zeros (new branch), just use the head commit
           if echo "$BEFORE" | grep -qE '^0+$'; then
             COMMITS=$(git log -1 --pretty=format:'%s' "$AFTER")
+          elif [ "$BRANCH" != "main" ]; then
+            # On staging/dev: exclude commits already on main to avoid duplicate notifications
+            # (when merging main into staging or dev, those commits were already announced)
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            COMMITS=$(git log --pretty=format:'%s' --no-merges "${BEFORE}..${AFTER}" --not origin/main)
           else
             COMMITS=$(git log --pretty=format:'%s' "${BEFORE}..${AFTER}")
           fi
@@ -222,6 +228,8 @@ jobs:
               echo "*Nouveau deploiement ${PROJ_LABEL}en staging* :construction:"
               echo ""
               echo "$BODY"
+              echo ""
+              echo "<https://staging-entrepreneurs.42lab.co/?_vercel_share=rH9ijesVYRTij5TPVq0jpA9bPrDkmPNa|Voir sur staging> :eyes:"
               echo ""
               echo "En attente de validation pour passer en production :point_up:"
             } > /tmp/slack_text.txt
