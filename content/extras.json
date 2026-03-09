@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "zendesk-agent-ticket-creation",
+    "title": "Création de tickets Zendesk par les agents IA avec notifications Slack",
+    "description": "Les agents IA peuvent créer des tickets Zendesk avec routage intelligent (Plateforme, Customer Care, Finance). Les tickets plateforme déclenchent une notification Slack au dev team avec lien direct vers le ticket. Synchro bidirectionnelle Zendesk + Slack.",
+    "owner": "Leonard",
+    "status": "done"
+  }
+]
