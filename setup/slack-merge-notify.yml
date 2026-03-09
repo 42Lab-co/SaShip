@@ -1,5 +1,5 @@
 # Slack notification on merge to main, staging, or dev/* branches
-# Waits for Vercel deployment to succeed (skipped for dev branches), then collects all commits,
+# Waits for Vercel deployment to succeed, then collects all commits,
 # rephrases them in French for non-technical stakeholders via AI, and posts to Slack.
 #
 # Required secrets (already set for saship-digest):
@@ -30,13 +30,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # Skip Vercel wait for dev branches (no deployment)
-          if echo "${GITHUB_REF_NAME}" | grep -q "^dev/"; then
-            echo "Dev branch — skipping Vercel deployment check"
-            echo "deploy_ok=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
           SHA="${{ github.sha }}"
           echo "Waiting for Vercel deployment on $SHA..."
 
