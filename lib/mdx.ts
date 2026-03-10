@@ -55,9 +55,14 @@ export async function getDeliverable(
     const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
     const raw = await fs.readFile(filePath, "utf-8");
     const { data, content } = matter(raw);
+    const frontmatter = data as DeliverableFrontmatter;
+    // Normalize status: the Action may write "in-staging" but the UI expects "staging"
+    if ((frontmatter.status as string) === "in-staging") {
+      frontmatter.status = "staging";
+    }
     return {
       slug,
-      frontmatter: data as DeliverableFrontmatter,
+      frontmatter,
       content,
     };
   } catch {

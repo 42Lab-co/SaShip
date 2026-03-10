@@ -9,8 +9,10 @@ Read the current conversation context and the staged git changes.
 
 Produce a commit message following these rules:
 
-1. If the changes relate to a roadmap deliverable (Auth, Dashboard, API, Integrations, etc.), prefix with the project tag: `$ARGUMENTS`
-   Example: `[project-x] feat: implement JWT token refresh`
+1. If the changes relate to a roadmap deliverable (Auth, Dashboard, API, Integrations, etc.), prefix with the project tag.
+   To retrieve the prefix, run: `gh variable list | grep COMMIT_PREFIX`
+   The value in the second column is the prefix (e.g. `[EOS]`).
+   Example: `[EOS] feat: implement JWT token refresh`
 
 2. Use conventional commit format: `[prefix] type: description`
    Types: feat, fix, refactor, docs, test, chore

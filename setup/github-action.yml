@@ -662,20 +662,31 @@ jobs:
           echo "::endgroup::"
 
       - name: Update sync log
-        if: steps.commits.outputs.no_commits != 'true'
+        if: always()
         env:
           TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
           echo "::group::Sync log update"
           NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           TODAY=$(date +%Y-%m-%d)
 
           RESPONSE='${{ steps.summary.outputs.response }}'
-          COMMIT_COUNT=$(echo '${{ steps.commits.outputs.commits_json }}' | jq 'length')
-          MDX_COUNT=$(echo "$RESPONSE" | jq '.mdx_updates | length')
-          FILES_TOUCHED=$(echo "$RESPONSE" | jq -r '[.mdx_updates[].deliverable_slug] | join(", ")')
+          ALL_COMMITS='${{ steps.commits.outputs.all_commits_json }}'
+          if [ -n "$ALL_COMMITS" ]; then
+            COMMIT_COUNT=$(echo "$ALL_COMMITS" | jq 'length // 0' 2>/dev/null || echo 0)
+          else
+            COMMIT_COUNT=0
+          fi
+          if [ -n "$RESPONSE" ]; then
+            MDX_COUNT=$(echo "$RESPONSE" | jq '.mdx_updates | length // 0' 2>/dev/null || echo 0)
+            FILES_TOUCHED=$(echo "$RESPONSE" | jq -r '[.mdx_updates[]?.deliverable_slug] | join(", ")' 2>/dev/null || echo "")
+          else
+            MDX_COUNT=0
+            FILES_TOUCHED=""
+          fi
 
           # Get current sync-log.json
           EXISTING=$(curl -s \
