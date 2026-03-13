@@ -91,13 +91,18 @@ jobs:
             AUTHOR=$(echo "$line" | cut -d'|' -f2)
             MESSAGE=$(echo "$line" | cut -d'|' -f3-)
             # Determine environment by checking which branches contain this commit
-            ENV="staging"
+            ENV="dev"
+            if git branch -a --contains "$HASH" 2>/dev/null | grep -qE "remotes/origin/staging$|staging$"; then
+              ENV="staging"
+            fi
             if git branch -a --contains "$HASH" 2>/dev/null | grep -qE "main$|master$|production$|remotes/origin/main$|remotes/origin/master$|remotes/origin/production$"; then
               ENV="prod"
             fi
-            # Determine status from branch: main/production = deployed, staging = staging
-            STATUS="staging"
-            if [ "$ENV" = "prod" ]; then
+            # Determine status from branch
+            STATUS="dev"
+            if [ "$ENV" = "staging" ]; then
+              STATUS="staging"
+            elif [ "$ENV" = "prod" ]; then
               STATUS="deployed"
             fi
             jq -n --arg h "$HASH" --arg a "$AUTHOR" --arg m "$MESSAGE" --arg e "$ENV" --arg s "$STATUS" \
@@ -324,7 +329,7 @@ jobs:
           7. Ecris une entree de changelog EN FRANCAIS pour chaque livrable associe. N'inclus PAS le nom de l'auteur dans l'entree (le owner est deja dans le frontmatter et affiche par colonne). Format :
              ### $TODAY
              <resume concis en francais>
-          8. Ecris un digest Slack quotidien EN FRANCAIS groupe par developpeur, puis par environnement. Utilise du francais simple, pas les messages de commit bruts. Pour le gras, utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques**. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui").
+          8. Ecris un digest Slack quotidien EN FRANCAIS groupe par developpeur, puis par environnement. Utilise du francais simple, pas les messages de commit bruts. Pour le gras, utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques**. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement (dev)". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui").
           9. Si un commit resout ou complete clairement un element des DEVELOPPEMENTS SUPPLEMENTAIRES, inclus-le dans "extras_updates" avec l'"id" exact de l'element et le statut "done". Ne marque comme done que si le commit traite reellement l'extra — ne force pas d'associations.
 
           Reponds au format JSON :
