@@ -6,7 +6,7 @@ const statusConfig: Record<
 > = {
   staging: {
     label: "STAGING",
-    color: "text-status-staging",
+    color: "text-text-primary",
     dotColor: "bg-status-staging",
   },
   deployed: {

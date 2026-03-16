@@ -97,7 +97,7 @@ export function HorizonRoadmap({
         </span>
         <div className="flex items-center gap-3">
           <Legend color="bg-accent" label="Shipped" />
-          <Legend color="bg-neutral-400" label="Staging" />
+          <Legend color="bg-status-staging" label="Staging" />
           <Legend color="bg-neutral-300" label="Planned" />
           <span className="ml-1 text-[10px] tracking-[0.12em] text-text-muted">
             {shipped + staging}/{items.length}
@@ -118,7 +118,7 @@ export function HorizonRoadmap({
                 item.status === "deployed"
                   ? "bg-accent"
                   : item.status === "staging"
-                    ? "bg-neutral-400"
+                    ? "bg-status-staging"
                     : "bg-neutral-300";
 
               const textColor =
