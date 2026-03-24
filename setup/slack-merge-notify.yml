@@ -204,21 +204,28 @@ jobs:
             PROJ_LABEL=""
           fi
 
+          # Build project suffix: " (EOS)" or "" if no prefix detected
+          if [ -n "$PROJECT" ]; then
+            PROJ_SUFFIX=" (${PROJECT})"
+          else
+            PROJ_SUFFIX=""
+          fi
+
           if [ "$BRANCH" = "main" ]; then
             {
-              echo "*Mise en production ${PROJ_LABEL}effectuee* :rocket:"
+              echo "*Mise en production${PROJ_SUFFIX} effectuée* :rocket:"
               echo ""
               echo "$BODY"
             } > /tmp/slack_text.txt
           elif echo "$BRANCH" | grep -q "^dev/"; then
             {
-              echo ":hammer_and_wrench: *${AUTHOR} a ajouté à l'environnement de développement ${PROJ_LABEL}*"
+              echo ":hammer_and_wrench: *${AUTHOR} a ajouté en dev${PROJ_SUFFIX}*"
               echo ""
               echo "$BODY"
             } > /tmp/slack_text.txt
           else
             {
-              echo "*Nouveau deploiement ${PROJ_LABEL}en staging* :construction:"
+              echo "*Nouveau déploiement en staging${PROJ_SUFFIX}* :construction:"
               echo ""
               echo "$BODY"
               echo ""
