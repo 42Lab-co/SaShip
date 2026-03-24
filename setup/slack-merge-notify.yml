@@ -1,6 +1,6 @@
-# Slack notification on merge to main or staging
+# Slack notification on merge to main, staging, or dev/* branches
 # Waits for Vercel deployment to succeed, then collects all commits,
-# rephrases them in customer-friendly language via AI, and posts to Slack.
+# rephrases them in French for non-technical stakeholders via AI, and posts to Slack.
 #
 # Required secrets (already set for saship-digest):
 #   AI_GATEWAY_API_KEY   — Vercel AI Gateway API key
@@ -10,7 +10,11 @@ name: Slack Merge Notify
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main, staging, 'dev/**']
+
+permissions:
+  contents: read
+  deployments: read
 
 jobs:
   notify:
@@ -35,7 +39,15 @@ jobs:
 
           while [ "$ELAPSED" -lt "$MAX_WAIT" ]; do
             # Check deployment statuses on this commit (Vercel creates these)
-            STATUSES=$(gh api "/repos/${{ github.repository }}/deployments?sha=$SHA&per_page=5" 2>/dev/null || echo "[]")
+            STATUSES=$(gh api "/repos/${{ github.repository }}/deployments?sha=$SHA&per_page=5" 2>&1 || echo "[]")
+
+            # Validate we got a JSON array (not an error string)
+            if ! echo "$STATUSES" | jq 'type == "array"' 2>/dev/null | grep -q true; then
+              echo "API returned non-array (${ELAPSED}s elapsed): $(echo "$STATUSES" | head -1)"
+              sleep "$INTERVAL"
+              ELAPSED=$((ELAPSED + INTERVAL))
+              continue
+            fi
 
             # Look for a Vercel deployment
             DEPLOY_ID=$(echo "$STATUSES" | jq -r '[.[] | select(.creator.login == "vercel[bot]" or .environment == "Production" or .environment == "Preview")] | first | .id // empty')
@@ -75,10 +87,16 @@ jobs:
         run: |
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.event.after }}"
+          BRANCH="${GITHUB_REF_NAME}"
 
           # If before is all zeros (new branch), just use the head commit
           if echo "$BEFORE" | grep -qE '^0+$'; then
             COMMITS=$(git log -1 --pretty=format:'%s' "$AFTER")
+          elif [ "$BRANCH" != "main" ]; then
+            # On staging/dev: exclude commits already on main to avoid duplicate notifications
+            # (when merging main into staging or dev, those commits were already announced)
+            git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
+            COMMITS=$(git log --pretty=format:'%s' --no-merges "${BEFORE}..${AFTER}" --not origin/main)
           else
             COMMITS=$(git log --pretty=format:'%s' "${BEFORE}..${AFTER}")
           fi
@@ -93,6 +111,10 @@ jobs:
           echo "$COMMITS" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+          # Extract project name from commit prefix (e.g. [EOS] -> "EOS")
+          PROJECT=$(echo "$COMMITS" | grep -oE '^\[([^]]+)\]' | head -1 | tr -d '[]')
+          echo "project=${PROJECT}" >> "$GITHUB_OUTPUT"
+
       - name: Rephrase with AI
         if: steps.vercel.outputs.deploy_ok == 'true' && steps.commits.outputs.no_commits != 'true'
         id: ai
@@ -104,8 +126,10 @@ jobs:
 
           if [ "$BRANCH" = "main" ]; then
             ENV_LABEL="production"
+          elif echo "$BRANCH" | grep -q "^dev/"; then
+            ENV_LABEL="développement"
           else
-            ENV_LABEL="staging"
+            ENV_LABEL="staging (environnement de test)"
           fi
 
           cat > /tmp/prompt.txt <<PROMPT_EOF
@@ -122,6 +146,7 @@ jobs:
           - Aucun jargon technique (pas de "refactor", "fix lint", "bump deps", "merge branch", "CI", etc.)
           - Explique TOUS les changements, meme techniques — traduis-les en impact concret (ex: "fix lint" → "Correction de problemes de qualite de code", "update CI" → "Mise a jour du systeme de deploiement automatique")
           - Chaque puce commence par •
+          - Pour mettre en gras utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques** (Markdown standard)
           - Donne suffisamment de detail pour que le lecteur comprenne ce qui a change et pourquoi c'est utile, 1-2 phrases par puce
           - N'inclus aucun lien ni URL
           - Si tous les commits sont purement techniques, reponds exactement : NO_USER_FACING_CHANGES
@@ -147,6 +172,9 @@ jobs:
 
           SUMMARY=$(jq -r '.choices[0].message.content' /tmp/ai_response.json)
 
+          # Fix AI sometimes using **double asterisks** (Markdown) instead of *single* (Slack mrkdwn)
+          SUMMARY=$(echo "$SUMMARY" | sed 's/\*\*\([^*]*\)\*\*/\*\1\*/g')
+
           if [ "$SUMMARY" = "NO_USER_FACING_CHANGES" ]; then
             echo "no_user_changes=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -167,15 +195,6 @@ jobs:
           AI_FALLBACK: ${{ steps.ai.outputs.fallback }}
         run: |
           BRANCH="${GITHUB_REF_NAME}"
-          AUTHOR="${{ github.event.head_commit.author.name }}"
-
-          if [ "$BRANCH" = "main" ]; then
-            EMOJI=":rocket:"
-            LABEL="production"
-          else
-            EMOJI=":construction:"
-            LABEL="staging"
-          fi
 
           if [ "$AI_FALLBACK" = "true" ]; then
             BODY=$(echo "$RAW_COMMITS" | sed 's/^/• /')
@@ -183,11 +202,43 @@ jobs:
             BODY="$AI_SUMMARY"
           fi
 
-          TEXT="${EMOJI} *Disponible en ${LABEL}*\n\n${BODY}"
+          AUTHOR="${{ github.event.head_commit.author.name }}"
+          PROJECT="${{ steps.commits.outputs.project }}"
+          # Build project suffix: " (EOS)" or "" if no prefix detected
+          if [ -n "$PROJECT" ]; then
+            PROJ_SUFFIX=" (${PROJECT})"
+          else
+            PROJ_SUFFIX=""
+          fi
 
+          if [ "$BRANCH" = "main" ]; then
+            {
+              echo "*Mise en production${PROJ_SUFFIX} effectuée* :rocket:"
+              echo ""
+              echo "$BODY"
+            } > /tmp/slack_text.txt
+          elif echo "$BRANCH" | grep -q "^dev/"; then
+            {
+              echo ":hammer_and_wrench: *${AUTHOR} a ajouté en dev${PROJ_SUFFIX}*"
+              echo ""
+              echo "$BODY"
+            } > /tmp/slack_text.txt
+          else
+            {
+              echo "*Nouveau déploiement en staging${PROJ_SUFFIX}* :construction:"
+              echo ""
+              echo "$BODY"
+              echo ""
+              echo "<https://staging-entrepreneurs.42lab.co/?_vercel_share=rH9ijesVYRTij5TPVq0jpA9bPrDkmPNa|Voir sur staging> :eyes:"
+              echo ""
+              echo "En attente de validation pour passer en production :point_up:"
+            } > /tmp/slack_text.txt
+          fi
+
+          jq -n --rawfile text /tmp/slack_text.txt '{text: $text}' > /tmp/slack_payload.json
           curl -s -X POST "$SLACK_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
-            -d "$(jq -n --arg text "$TEXT" '{text: $text}')"
+            -d @/tmp/slack_payload.json
 
       - name: Promote staging deliverables to deployed
         if: steps.vercel.outputs.deploy_ok == 'true' && steps.commits.outputs.no_commits != 'true' && github.ref_name == 'main'

@@ -1,0 +1,7 @@
+{
+  "project": "entrepreneurs-os",
+  "devs": ["Quentin", "Leonard"],
+  "environments": ["staging", "prod"],
+  "commitPrefix": "[entrepreneurs-os]",
+  "linearTeamKey": "EOS"
+}

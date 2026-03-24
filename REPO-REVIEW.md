@@ -3,7 +3,7 @@
 ## Repo Structure
 
 ```
-SaShip/ (branch: entrepreneurs-os)
+SaShip/ (branch: EOS)
 ├── app/                    # Next.js 16 App Router pages
 │   ├── globals.css         # Design tokens + Tailwind v4
 │   ├── layout.tsx          # Root layout (Nav, IBM Plex Mono font)
@@ -15,15 +15,15 @@ SaShip/ (branch: entrepreneurs-os)
 │   ├── config.ts           # Reads project.config.json
 │   ├── mdx.ts              # Reads content/*.mdx (gray-matter)
 │   ├── stats.ts            # Reads stats.json (lines shipped)
-│   └── roadmap-schedule.ts # Hardcoded 13-week sprint plan
-├── content/                # 6 MDX deliverable files
+│   └── schedule.ts        # Reads content/schedule.json (13-week sprint plan)
+├── content/                # 6 MDX deliverable files + schedule.json
 ├── setup/                  # Automation templates (not deployed)
 │   ├── github-action.yml   # Daily digest workflow
 │   ├── slash-command-ship.md
 │   ├── slash-command-roadmap.md
 │   ├── testing-guide.md
 │   └── README.md
-├── project.config.json     # Project metadata (2 devs, 30 deliverables)
+├── project.config.json     # Project metadata (dev names, environments, prefix)
 ├── stats.json              # Empty — populated by the Action
 └── .env                    # Local secrets (gitignored)
 ```
@@ -41,7 +41,7 @@ Dev uses /ship →
        ▼
 GitHub Action (daily cron or manual)
   1. Collects last 24h commits
-     with [entrepreneurs-os] prefix
+     with [EOS] prefix
   2. Determines env from branch:
      staging → in-dev
      main/production → deployed
@@ -71,7 +71,7 @@ GitHub Action (daily cron or manual)
 | `lib/config.ts` | Reads and caches `project.config.json`. Exports `ProjectConfig` interface, `getConfig()`, `hasMultipleEnvironments()` |
 | `lib/mdx.ts` | Reads `content/*.mdx` using `gray-matter`. Exports `getAllDeliverables()`, `getDeliverable(slug)`, `groupByOwner()`, `groupByEnvironment()` |
 | `lib/stats.ts` | Reads `stats.json` for line-count chart data. Exports `getStats()`, `getDevNames()` |
-| `lib/roadmap-schedule.ts` | Hardcoded 13-week `WeekSchedule[]` mapping S1–S13 to deliverables per dev (Quentin/Leonard). Used by the `/roadmap` page |
+| `lib/schedule.ts` | Reads `content/schedule.json` — 13-week `WeekSchedule[]` mapping S1–S13 to deliverables per dev. Single source of truth for deliverables. Exports `getSchedule()`, `getDeliverablesByDev()` |
 
 ---
 
@@ -91,7 +91,7 @@ Async server component. Loads config, deliverables, stats in parallel. Renders:
 
 ### `/roadmap` — 90-Day Roadmap (`app/roadmap/page.tsx`)
 
-Shows `FullRoadmap` component: a 13-week x 2-dev grid. Cross-references `roadmapSchedule` with actual MDX deliverables to show status dots. Includes sync milestones and overall progress.
+Shows `FullRoadmap` component: a 13-week x 2-dev grid. Loads `content/schedule.json` and cross-references with actual MDX deliverables to show status dots. Includes sync milestones and overall progress.
 
 ### `/deliverable/[slug]` — Deliverable Detail (`app/deliverable/[slug]/page.tsx`)
 
@@ -119,7 +119,7 @@ Static-generated via `generateStaticParams()`. Shows title, status badge, enviro
 
 ## Content (6 MDX files)
 
-All 6 files are Sprint 0 deliverables for the "entrepreneurs-os" project, with `status: in-dev` and `environment: dev`:
+All 6 files are Sprint 0 deliverables for the "EOS" project, with `status: in-dev` and `environment: dev`:
 
 | File | Owner | Deliverable |
 |---|---|---|
@@ -167,4 +167,4 @@ Each has a single changelog entry dated 2026-02-18. The `project.config.json` li
 
 4. **All 6 existing MDX files are `in-dev`/`dev`** — the dashboard will show 6 in-dev, 0 deployed, 0 blocked, all under Sprint 0.
 
-5. **Roadmap schedule is hardcoded** — `lib/roadmap-schedule.ts` has all 13 weeks baked in. Changes to the project plan require code changes, not config updates.
+5. **Roadmap schedule is content-driven** — `content/schedule.json` defines the 13-week sprint plan. Editing the plan only requires changing a JSON file, no code changes needed.

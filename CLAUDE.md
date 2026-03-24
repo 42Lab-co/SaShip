@@ -24,7 +24,7 @@ This is the **tracking repo**. It is a passive receiver — it does not contain 
 ## Data flow
 
 1. Devs commit in the client repo using the `/ship` slash command (proper prefix + conventional format)
-2. A daily GitHub Action on the client repo collects today's commits, determines environment from branch (staging → `in-staging`, main/production → `deployed`)
+2. A daily GitHub Action on the client repo collects today's commits, determines environment from branch (staging → `staging`, main/production → `deployed`)
 3. The Action appends ALL collected commits to `content/commits.mdx` (no AI — direct formatting, prefix stripped)
 4. The Action fetches roadmap context from the tracking repo: `project.config.json` + all existing MDX frontmatter (excluding `commits.mdx`)
 5. Commits + roadmap context + extras are sent to Claude API — Claude matches commits to existing deliverables, writes plain-English changelog entries, and marks resolved extras as done; unmatched commits are skipped in MDX but included in the Slack digest
@@ -45,12 +45,30 @@ Each project branch has a `sync-log.json` that records every Action run:
 
 ## MDX status values
 
-`in-staging`, `deployed` — the automated Action sets `in-staging` or `deployed` (derived from branch)
+`staging`, `deployed` — the automated Action sets `staging` or `deployed` (derived from branch)
+
+## Tagging a person in changelog entries
+
+To re-enable author tagging in MDX changelog entries, edit the AI prompt in the GitHub Action (`saship-digest.yml` and `setup/github-action.yml`). In the INSTRUCTIONS section, change the changelog format instruction to append `— *<Auteur>*` after the summary:
+
+```
+### $TODAY
+<resume concis en francais> — *<Auteur>*
+```
+
+And in the JSON response example, update the `entry` field:
+```
+"entry": "### $TODAY\n<resume en francais> — *Auteur*"
+```
+
+This produces entries like `— *Quentin H*` in MDX files. Currently disabled because the owner is already in the frontmatter and displayed per-column in the UI.
 
 ## GitHub Actions (installed on client dev repo, templates in `setup/`)
 
-- `saship-digest.yml` — daily cron (6 PM UTC weekdays) + manual trigger. Collects commits, AI-summarizes them, updates MDX/extras/stats on the tracking repo, posts daily Slack digest.
-- `slack-merge-notify.yml` — triggers on push to `main` or `staging`. Waits for Vercel deployment to succeed, collects all commits in the merge, rephrases them in customer-friendly language via AI, and posts to Slack ("Now available in production/staging"). Posts a failure alert if Vercel deploy fails. Skips if all changes are purely technical.
+- `saship-digest.yml` — daily cron (7:30 AM UTC+1 weekdays) + manual trigger. Collects all commits from the previous day across all branches for the commit log page, then filters by project prefix for AI matching. Updates MDX/extras/stats/sync-log on the tracking repo, posts daily Slack digest.
+- `slack-merge-notify.yml` — triggers on push to `main`, `staging`, or `dev/*`. Waits for Vercel deployment to succeed (skipped for dev branches), collects all commits in the merge, rephrases them in customer-friendly language via AI, and posts to Slack. Dev branches post in French with the author's name ("Léonard a ajouté à l'environnement de développement"). Posts a failure alert if Vercel deploy fails.
+
+**IMPORTANT — keep workflows in sync:** The live workflow files live in the client dev repo (`.github/workflows/`). The templates in `setup/` on this repo must always mirror them. When editing a workflow, update BOTH the client repo copy and the `setup/` template here. The only acceptable differences are project-specific values (Slack user IDs, project names).
 
 ## Slash commands (installed on client dev repo, templates in `setup/`)
 
