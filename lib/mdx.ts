@@ -6,7 +6,17 @@ export interface DeliverableFrontmatter {
   title: string;
   owner: string;
   status: "staging" | "deployed";
-  environment: "staging" | "prod";
+  environment: "staging" | "prod" | "dev";
+}
+
+/** Normalize status values the Action may write to UI-safe values */
+function normalizeStatus(fm: DeliverableFrontmatter): void {
+  const s = fm.status as string;
+  if (s === "deployed") return;
+  // Any non-deployed status maps to "staging" for the UI
+  if (s !== "staging") {
+    fm.status = "staging";
+  }
 }
 
 export interface Deliverable {
@@ -28,10 +38,7 @@ export async function getAllDeliverables(): Promise<Deliverable[]> {
         const raw = await fs.readFile(filePath, "utf-8");
         const { data, content } = matter(raw);
         const frontmatter = data as DeliverableFrontmatter;
-        // Normalize status: the Action may write "in-staging" but the UI expects "staging"
-        if ((frontmatter.status as string) === "in-staging") {
-          frontmatter.status = "staging";
-        }
+        normalizeStatus(frontmatter);
         return {
           slug: filename.replace(/\.mdx$/, ""),
           frontmatter,
@@ -56,10 +63,7 @@ export async function getDeliverable(
     const raw = await fs.readFile(filePath, "utf-8");
     const { data, content } = matter(raw);
     const frontmatter = data as DeliverableFrontmatter;
-    // Normalize status: the Action may write "in-staging" but the UI expects "staging"
-    if ((frontmatter.status as string) === "in-staging") {
-      frontmatter.status = "staging";
-    }
+    normalizeStatus(frontmatter);
     return {
       slug,
       frontmatter,

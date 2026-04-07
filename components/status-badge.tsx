@@ -21,7 +21,7 @@ export function StatusBadge({
 }: {
   status: DeliverableFrontmatter["status"];
 }) {
-  const config = statusConfig[status];
+  const config = statusConfig[status] ?? statusConfig.staging;
   return (
     <span className={`inline-flex items-center gap-1.5 ${config.color}`}>
       <span
