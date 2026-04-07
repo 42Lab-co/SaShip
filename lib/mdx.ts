@@ -5,16 +5,19 @@ import matter from "gray-matter";
 export interface DeliverableFrontmatter {
   title: string;
   owner: string;
-  status: "staging" | "deployed";
-  environment: "staging" | "prod" | "dev";
+  status: "dev" | "staging" | "deployed";
+  environment: "dev" | "staging" | "prod";
 }
 
 /** Normalize status values the Action may write to UI-safe values */
 function normalizeStatus(fm: DeliverableFrontmatter): void {
   const s = fm.status as string;
-  if (s === "deployed") return;
-  // Any non-deployed status maps to "staging" for the UI
-  if (s !== "staging") {
+  if (s === "dev" || s === "staging" || s === "deployed") return;
+  if (s === "in-development") {
+    fm.status = "dev";
+  } else if (s === "in-staging") {
+    fm.status = "staging";
+  } else {
     fm.status = "staging";
   }
 }

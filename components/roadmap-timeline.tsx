@@ -8,11 +8,13 @@ interface RoadmapTimelineProps {
 const phaseOrder: DeliverableFrontmatter["status"][] = [
   "deployed",
   "staging",
+  "dev",
 ];
 
 const phaseLabels: Record<DeliverableFrontmatter["status"], string> = {
   deployed: "SHIPPED",
-  "staging": "IN STAGING",
+  staging: "IN STAGING",
+  dev: "IN DEV",
 };
 
 export function RoadmapTimeline({ deliverables }: RoadmapTimelineProps) {

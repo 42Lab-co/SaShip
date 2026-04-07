@@ -16,7 +16,7 @@ interface TimelineItem {
   devName: string;
   sprint: string;
   isFirstInSprint: boolean;
-  status: "deployed" | "staging" | null;
+  status: "dev" | "staging" | "deployed" | null;
   slug: string | null;
 }
 
@@ -65,7 +65,7 @@ export function HorizonRoadmap({
   // Find last shipped index for auto-centering
   let lastShippedIndex = -1;
   for (let i = items.length - 1; i >= 0; i--) {
-    if (items[i].status === "deployed" || items[i].status === "staging") {
+    if (items[i].status !== null) {
       lastShippedIndex = i;
       break;
     }

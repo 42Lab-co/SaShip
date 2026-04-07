@@ -4,6 +4,11 @@ const statusConfig: Record<
   DeliverableFrontmatter["status"],
   { label: string; color: string; dotColor: string }
 > = {
+  dev: {
+    label: "DEV",
+    color: "text-text-muted",
+    dotColor: "bg-status-dev",
+  },
   staging: {
     label: "STAGING",
     color: "text-text-primary",
@@ -27,7 +32,7 @@ export function StatusBadge({
       <span
         className={`inline-block h-[6px] w-[6px] rounded-full ${config.dotColor}`}
         style={
-          status === "staging"
+          status === "staging" || status === "dev"
             ? { animation: "pulse-dot 2s infinite" }
             : undefined
         }
