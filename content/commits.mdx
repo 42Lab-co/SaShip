@@ -1,4 +1,21 @@
 ## Commit Log
+### 2026-04-29
+- feat(landing): serve dedicated marketing home at www.get-entrepreneurs.com/ — *Leonard Mangallon*
+- fix(billing): default cc_access ACTIVE, fix LeanPay sync semantics, add audit script — *Quentin H*
+- feat(landing): route get-entrepreneurs.com/[slug] to /p/[slug] via middleware rewrite + share-link helper — *Leonard Mangallon*
+- fix(landing): restore LayoutTemplate import after merge — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/staging' into staging — *Leonard Mangallon*
+- feat(landing): add templates gallery with live previews — *Leonard Mangallon*
+- fix(capacity): simplify active client rule to date window + cc_access only — *Quentin H*
+- feat(veille): align list and detail UI with Avatar/Offre style — *Leonard Mangallon*
+- fix(finance-chat): search categories, allow internal transfers, fallback on tool-only turns — *Leonard Mangallon*
+- fix(finance): bump categorize model to gpt-5-mini and harden against AI hallucinations (direction/type guard, cleanLabel drift check, owner-draw heuristic, smarter mapping pattern) — *Leonard Mangallon*
+- imprv: label risky — *Quentin H*
+- fix(admin/demandes-prestation): pipeline fetches all rows for visible columns (no pagination) — *Quentin H*
+- fix(trainees): respect billing access override for BLOCKED clients (EOS-192) — *Quentin H*
+- fix(programs): derive ACTIVE/UPCOMING/COMPLETED from dates (status column drifts) — *Quentin H*
+- Merge remote-tracking branch 'origin/staging' into dev/lmangall-finance-v2 — *Leonard Mangallon*
+- feat(veille): unified competitor model with granular scopes, reviews, and configurable sources — *Leonard Mangallon*
 ### 2026-04-28
 - feat(onboarding-v2): chantier 17 — routing & guards v1/v2-aware — *Quentin H*
 - feat(onboarding-v2): chantier 16 — instrumentation PostHog onboarding_v2_* — *Quentin H*
