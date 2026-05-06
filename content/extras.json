@@ -1,9 +1,86 @@
 [
   {
     "id": "zendesk-agent-ticket-creation",
-    "title": "Création de tickets Zendesk par les agents IA avec notifications Slack",
+    "title": "Création de tickets Zendesk par les agents IA",
     "description": "Les agents IA peuvent créer des tickets Zendesk avec routage intelligent (Plateforme, Customer Care, Finance). Les tickets plateforme déclenchent une notification Slack au dev team avec lien direct vers le ticket. Synchro bidirectionnelle Zendesk + Slack.",
     "owner": "Leonard",
+    "status": "done"
+  },
+  {
+    "id": "service-requests-pipeline",
+    "title": "Pipeline Prestations de Service (Kanban admin)",
+    "description": "Vue Kanban complète pour gérer les demandes de prestation : statuts, suivi d'activité, budget/deadline, dictée vocale, délégation, contacts équipe, stats cards et toggles de colonnes.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "hubspot-direct-sync",
+    "title": "Sync HubSpot directe (remplacement Airtable)",
+    "description": "Pipeline de synchronisation directe des deals HubSpot remplaçant l'ancien trigger Airtable. Webhook logging, auto-lookup contact avec déduplication, dépréciation complète d'Airtable.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "renewal-signal-detection",
+    "title": "Détection de signaux de renouvellement (Revenue Intelligence)",
+    "description": "Dashboard Revenue Intelligence avec détection IA des signaux de renouvellement, filtres coach et urgence multi-select, prévention des notifications dupliquées.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "coach-management-redesign",
+    "title": "Refonte gestion des coachs",
+    "description": "Vue admin coachs redesignée : cards avec photos carrées, capacité, statistiques, création de coach, filtre actifs+experts par défaut.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "oneflow-contract-integration",
+    "title": "Intégration contrats OneFlow",
+    "description": "Intégration OneFlow pour la gestion des contrats légaux avec caching PDF lazy. Génération et suivi de contrats directement depuis la plateforme.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "prestataire-system",
+    "title": "Système Prestataires complet",
+    "description": "Flux complet de demande prestataire avec notifications email, dashboard KPIs, analytics, détection depuis transcriptions coaching, onglet coachings avec tagging.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "client-feedback-avis",
+    "title": "Avis clients & classement coachs",
+    "description": "Dashboard feedback client, intégration Trustpilot sur 3+ notes consécutives de 10/10, panel classement coachs actifs/inactifs, notifications Slack à chaque réflexion complétée.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "recouvrement",
+    "title": "Module Recouvrement",
+    "description": "Module de gestion du recouvrement des impayés clients.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "mes-documents-space",
+    "title": "Espace Mes Documents",
+    "description": "Système de dossiers avec nesting illimité, drag-and-drop et UI Finder-style. Thumbnails de fichiers au lieu d'icônes génériques. Génération de PDF pour documents et artifacts. Synchronisation des documents entre les conversations et Mes Documents.",
+    "owner": "Leonard & Quentin",
+    "status": "done"
+  },
+  {
+    "id": "onboarding-rework",
+    "title": "Refonte complète de l'onboarding",
+    "description": "Refonte complète du parcours d'onboarding.",
+    "owner": "Leonard & Quentin",
+    "status": "pending"
+  },
+  {
+    "id": "coaching-churn-analysis",
+    "title": "Analyse de churn Coaching (cohort study BI)",
+    "description": "Outil BI complet d'analyse de churn par cohorte d'entrée pour les programmes de coaching (Scaling, Incubateur, Accélérateur). Filtres par programme/coach/période, définition configurable du seuil de churn (1-6 mois), heatmap d'activité mensuelle par cohorte (M0-M12), distribution des drop-offs (mois du dernier coaching), KPIs taux de churn mid-programme, médiane du dernier coaching, sessions par client. Drill-down par cohorte avec liste détaillée churnés/actifs/jamais démarrés/achevés.",
+    "owner": "Quentin",
     "status": "done"
   }
 ]
