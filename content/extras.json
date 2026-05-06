@@ -79,7 +79,7 @@
   {
     "id": "coaching-churn-analysis",
     "title": "Analyse de churn Coaching (cohort study BI)",
-    "description": "Outil BI complet d'analyse de churn par cohorte d'entrée pour les programmes de coaching (Scaling, Incubateur, Accélérateur). Filtres par programme/coach/période, définition configurable du seuil de churn (1-6 mois), heatmap d'activité mensuelle par cohorte (M0-M12), distribution des drop-offs (mois du dernier coaching), KPIs taux de churn mid-programme, médiane du dernier coaching, sessions par client. Drill-down par cohorte avec liste détaillée churnés/actifs/jamais démarrés/achevés.",
+    "description": "Outil BI complet d'analyse de churn par cohorte d'entrée pour les programmes de coaching (Scaling, Incubateur, Accélérateur). Filtres par programme/coach/période, définition configurable du seuil de churn (1-6 mois), heatmap d'activité mensuelle par cohorte (M0-M12), distribution des drop-offs (mois du dernier coaching), KPIs taux de churn mid-programme, médiane du dernier coaching, sessions par client. Drill-down par cohorte avec liste détaillée churnés/actifs/jamais démarrés/achevés. https://plateforme.entrepreneurs.com/admin/coaching-churn",
     "owner": "Quentin",
     "status": "done"
   }
