@@ -78,10 +78,10 @@ export default async function ExtrasPage() {
                 {done.map((item) => (
                   <div key={item.id} className="flex">
                     <div className="w-1 shrink-0 bg-status-done/40" />
-                    <div className="flex-1 px-4 py-3 opacity-60">
+                    <div className="flex-1 px-4 py-3">
                       <div className="flex items-center gap-2">
                         <span className="inline-block h-2 w-2 rounded-full bg-status-done" />
-                        <span className="text-[12px] font-semibold text-text-primary line-through">
+                        <span className="text-[12px] font-semibold text-text-primary">
                           {item.title}
                         </span>
                         <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted">

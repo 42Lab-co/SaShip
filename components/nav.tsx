@@ -42,16 +42,6 @@ export function Nav({ projectName, lastSync }: { projectName: string; lastSync?:
                 : "text-text-secondary hover:text-text-primary"
             }`}
           >
-            Overview
-          </Link>
-          <Link
-            href="/roadmap"
-            className={`text-[11px] uppercase tracking-[0.12em] transition-colors ${
-              pathname === "/roadmap"
-                ? "text-text-primary font-semibold"
-                : "text-text-secondary hover:text-text-primary"
-            }`}
-          >
             Roadmap
           </Link>
           <Link
