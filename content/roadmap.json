@@ -120,7 +120,7 @@
           { "title": "CMO AI - Copywriter & Calendrier", "description": "Generation Schwartz/Halbert/Cialdini, batch, calendrier", "status": "in-dev" }
         ],
         "Leonard": [
-          { "title": "Brain Client - Integration & Release", "description": "Timeline business, score completude, integration agents", "status": "staging" }
+          { "title": "Brain Client - Integration & Release", "description": "Timeline business, score completude, integration agents", "status": "in-dev" }
         ]
       }
     },
