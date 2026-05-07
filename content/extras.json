@@ -89,5 +89,138 @@
     "description": "Système permettant de combiner plusieurs landing pages en un funnel cohérent : enchaînement de pages liées (lead magnet → tripwire → sales page → upsell), navigation entre étapes, tracking de progression du visiteur à travers le funnel, partage de contexte entre pages d'un même funnel.",
     "owner": "Leonard",
     "status": "done"
+  },
+  {
+    "id": "sales-calls-claap-import",
+    "title": "Sales Calls — Import Claap + Analyse IA + Profil consolidé",
+    "description": "Pipeline d'import des calls Claap avec analyse IA, profil client consolidé et auto-backfill à la conversion. Filtrage anti-pollution (n'ingest que si participant = vrai client).",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "group-chat-whatsapp-like",
+    "title": "Group Chat — Conversations groupes complètes (WhatsApp-like)",
+    "description": "Conversations de groupe avec invitations membres, affichage 3 avatars, chat bell groupes, réactions emoji, mark-as-unread, attachments fichiers/documents au club messaging.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "community-annuaire-membres-refonte",
+    "title": "Community / Annuaire membres — Refonte (successeur de RESEAU SCALE)",
+    "description": "Annuaire membres, fiches privacy toggle, spotlight club, filtrage par programme actif/ban, exclusion SAAS, breadcrumb interne, posts/comments avec linking interne.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "academie-module-cours",
+    "title": "L'Académie — Module cours",
+    "description": "Page Académie + structure cours/leçons + layout partagé + recherche + navigation course.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "read-only-onboarding-programme-aware",
+    "title": "Read-only mode + Onboarding programme-aware",
+    "description": "Contexte read-only pour clients sans programme actif + onboarding avec redirection program-specific.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "ai-preferences-onboarding-memory-import",
+    "title": "AI Preferences Onboarding + Chat style + Memory import",
+    "description": "Onboarding 3 étapes proactif avec businessLevel, préférences de style de réponse IA, import mémoire ChatGPT.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "capacity-gestion-coachs-refonte",
+    "title": "Capacity & Gestion Coachs — Refonte complète",
+    "description": "Colonnes sales/closing, dashboard d'attribution, fix sync dates programmes, wizard dates programme client, split sessions billing, inclusion SAAS/Copilote, vue 'À venir' trainees.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "coach-billing-management",
+    "title": "Coach Billing Management",
+    "description": "Système complet de gestion de la facturation des coachs.",
+    "owner": "Leonard",
+    "status": "done"
+  },
+  {
+    "id": "ai-suggest-generate-actions-coachs",
+    "title": "AI Suggest/Generate Actions pour Coachs",
+    "description": "Dialog 'AI suggest actions' + bouton génération actions IA + script backfill pour les coachings.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "coaching-integrator-role-noshow",
+    "title": "Coaching — Integrator role + No-show types",
+    "description": "Rôle Integrator avec session type dédié + types no-show free/counted.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "expert-missions-ux-workflow",
+    "title": "Expert Missions — UX & Workflow",
+    "description": "Reschedule de la mission date quand le coaching est déplacé, accès admin+coach aux missions reçues, enforce coaching link + backfill, info programme client sur detail page.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "reflection-form-required-slack",
+    "title": "Reflection Form — Required + Slack",
+    "description": "Feedback + mood obligatoires, notification Slack à chaque réflexion complétée (couplé à Avis clients mais composant distinct).",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "bi-clients-dashboard",
+    "title": "BI Clients Dashboard",
+    "description": "Nouvelle page Clients Dashboard pour le back-office.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "annuaire-prestataires-dashboard",
+    "title": "Annuaire des Prestataires — Management Dashboard",
+    "description": "Dashboard de gestion des partenaires (distinct du système Prestataires).",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "airtable-kill-hubspot",
+    "title": "Airtable kill — Welcome to HubSpot",
+    "description": "Migration complète de Airtable vers HubSpot.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "programs-incub-scaling-quatuor",
+    "title": "Programs — INCUB-CORE / SCALING-CORE / QUATUOR",
+    "description": "Nouveaux types de programmes INCUB-CORE, SCALING-CORE et format QUATUOR.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "sessions-edit-hubspot-mapping",
+    "title": "Sessions — Edit + HubSpot mapping",
+    "description": "Édition de totalSessions avec mapping HubSpot + scripts d'audit.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "billing-access-overrides",
+    "title": "Billing access — Overrides BOARD/SAAS/Copilotes",
+    "description": "Bypass billing block pour BOARD/SAAS, respect override pour clients BLOCKED, defaults cc_access, semantics LeanPay sync.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "agent-prerequisite-gating-universal-constraints",
+    "title": "Agent Prerequisite Gating + Universal Constraints + draftEmail",
+    "description": "Système extensible de prerequisite gating (Étienne ↔ Finance), contraintes universelles sur tous les prompts, restriction des tools roadmap aux SAAS, tool draftEmail gender-aware.",
+    "owner": "Leonard",
+    "status": "done"
   }
 ]
