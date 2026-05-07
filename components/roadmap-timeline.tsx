@@ -212,6 +212,8 @@ function segmentColor(status: DeliverableFrontmatter["status"]) {
       return "bg-status-done";
     case "staging":
       return "bg-accent shadow-[inset_0_0_0_1px_rgba(74,104,0,0.4)]";
+    case "dev":
+      return "bg-status-dev shadow-[inset_0_0_0_1px_rgba(20,60,140,0.4)]";
   }
 }
 
@@ -221,6 +223,8 @@ function dotColor(status: DeliverableFrontmatter["status"]) {
       return "bg-status-done";
     case "staging":
       return "bg-accent border border-accent-text/50";
+    case "dev":
+      return "bg-status-dev border border-blue-700/40";
   }
 }
 
@@ -230,6 +234,8 @@ function phaseTextColor(status: DeliverableFrontmatter["status"]) {
       return "text-status-done";
     case "staging":
       return "text-accent-text";
+    case "dev":
+      return "text-status-dev";
   }
 }
 

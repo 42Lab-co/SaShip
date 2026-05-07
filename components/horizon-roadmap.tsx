@@ -87,6 +87,7 @@ export function HorizonRoadmap({
 
   const shipped = items.filter((i) => i.status === "deployed").length;
   const staging = items.filter((i) => i.status === "staging").length;
+  const dev = items.filter((i) => i.status === "dev").length;
 
   return (
     <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen border-y border-border-default">
@@ -98,9 +99,10 @@ export function HorizonRoadmap({
         <div className="flex items-center gap-3">
           <Legend color="bg-accent" label="Shipped" />
           <Legend color="bg-status-staging" label="Staging" />
+          <Legend color="bg-status-dev" label="In Dev" />
           <Legend color="bg-neutral-300" label="Planned" />
           <span className="ml-1 text-[10px] tracking-[0.12em] text-text-muted">
-            {shipped + staging}/{items.length}
+            {shipped + staging + dev}/{items.length}
           </span>
         </div>
       </div>
@@ -119,14 +121,18 @@ export function HorizonRoadmap({
                   ? "bg-accent"
                   : item.status === "staging"
                     ? "bg-status-staging"
-                    : "bg-neutral-300";
+                    : item.status === "dev"
+                      ? "bg-status-dev"
+                      : "bg-neutral-300";
 
               const textColor =
                 item.status === "deployed"
                   ? "text-accent-text"
                   : item.status === "staging"
                     ? "text-text-primary"
-                    : "text-neutral-400";
+                    : item.status === "dev"
+                      ? "text-text-primary"
+                      : "text-neutral-400";
 
               const isLast = i === items.length - 1;
               const isLastShipped = i === lastShippedIndex;
@@ -157,7 +163,7 @@ export function HorizonRoadmap({
                     <span
                       className={`block h-[10px] w-[10px] rounded-full ${color} border border-white/60`}
                       style={
-                        item.status === "staging"
+                        item.status === "staging" || item.status === "dev"
                           ? { animation: "pulse-dot 2s infinite" }
                           : undefined
                       }

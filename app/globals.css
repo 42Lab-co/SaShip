@@ -31,7 +31,7 @@
 
   /* Status */
   --status-live: #d0f501;
-  --status-dev: #d0f501;
+  --status-dev: #4a9eff;
   --status-prod: #4a9eff;
   --status-error: #c84040;
   --status-done: #5ab870;

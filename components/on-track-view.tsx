@@ -20,10 +20,13 @@ export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackVie
         const shipped = devDeliverables.filter(
           (d) => d.frontmatter.status === "deployed"
         ).length;
-        const inProgress = devDeliverables.filter(
+        const inStaging = devDeliverables.filter(
           (d) => d.frontmatter.status === "staging"
         ).length;
-        const notStarted = planned - shipped - inProgress;
+        const inDev = devDeliverables.filter(
+          (d) => d.frontmatter.status === "dev"
+        ).length;
+        const notStarted = planned - shipped - inStaging - inDev;
         const pct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
 
         return (
@@ -40,14 +43,18 @@ export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackVie
             </div>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 border-b border-border-default">
+            <div className="grid grid-cols-4 border-b border-border-default">
               <div className="border-r border-border-default px-3 py-2.5 text-center">
                 <span className="block text-[10px] uppercase tracking-[0.12em] text-text-muted">Shipped</span>
                 <span className="font-mono text-[16px] font-bold text-accent-text">{shipped}</span>
               </div>
               <div className="border-r border-border-default px-3 py-2.5 text-center">
                 <span className="block text-[10px] uppercase tracking-[0.12em] text-text-muted">Staging</span>
-                <span className="font-mono text-[16px] font-bold text-text-primary">{inProgress}</span>
+                <span className="font-mono text-[16px] font-bold text-text-primary">{inStaging}</span>
+              </div>
+              <div className="border-r border-border-default px-3 py-2.5 text-center">
+                <span className="block text-[10px] uppercase tracking-[0.12em] text-text-muted">In Dev</span>
+                <span className="font-mono text-[16px] font-bold text-status-dev">{inDev}</span>
               </div>
               <div className="px-3 py-2.5 text-center">
                 <span className="block text-[10px] uppercase tracking-[0.12em] text-text-muted">Pending</span>
@@ -66,8 +73,10 @@ export function OnTrackView({ devNames, plannedByDev, deliverables }: OnTrackVie
                   status === "deployed"
                     ? "bg-accent"
                     : status === "staging"
-                      ? "bg-neutral-400"
-                      : "bg-neutral-300";
+                      ? "bg-status-staging"
+                      : status === "dev"
+                        ? "bg-status-dev"
+                        : "bg-neutral-300";
                 return (
                   <div
                     key={name}

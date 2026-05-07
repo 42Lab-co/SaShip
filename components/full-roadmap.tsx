@@ -26,8 +26,11 @@ export function FullRoadmap({
   const totalShipped = deliverables.filter(
     (d) => d.frontmatter.status === "deployed"
   ).length;
-  const totalInDev = deliverables.filter(
+  const totalInStaging = deliverables.filter(
     (d) => d.frontmatter.status === "staging"
+  ).length;
+  const totalInDev = deliverables.filter(
+    (d) => d.frontmatter.status === "dev"
   ).length;
   const pct =
     totalPlanned > 0 ? Math.round((totalShipped / totalPlanned) * 100) : 0;
@@ -44,11 +47,14 @@ export function FullRoadmap({
     const shipped = devDeliverables.filter(
       (d) => d.frontmatter.status === "deployed"
     ).length;
-    const inProgress = devDeliverables.filter(
+    const inStaging = devDeliverables.filter(
       (d) => d.frontmatter.status === "staging"
     ).length;
+    const inDev = devDeliverables.filter(
+      (d) => d.frontmatter.status === "dev"
+    ).length;
     const devPct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
-    return { name, planned, shipped, inProgress, pct: devPct };
+    return { name, planned, shipped, inStaging, inDev, pct: devPct };
   });
 
   return (
@@ -62,6 +68,7 @@ export function FullRoadmap({
           <div className="flex items-center gap-3">
             <Legend dotClass="bg-accent" label="SHIPPED" />
             <Legend dotClass="bg-status-staging" label="STAGING" />
+            <Legend dotClass="bg-status-dev" label="IN DEV" />
             <Legend dotClass="bg-neutral-300" label="PLANNED" />
           </div>
           <span className="font-mono text-[18px] font-bold text-neutral-900">
@@ -79,9 +86,15 @@ export function FullRoadmap({
               style={{ width: `${(totalShipped / totalPlanned) * 100}%` }}
             />
           )}
-          {totalInDev > 0 && (
+          {totalInStaging > 0 && (
             <div
               className="bg-status-staging shadow-[inset_0_0_0_1px_rgba(180,80,0,0.3)]"
+              style={{ width: `${(totalInStaging / totalPlanned) * 100}%` }}
+            />
+          )}
+          {totalInDev > 0 && (
+            <div
+              className="bg-status-dev shadow-[inset_0_0_0_1px_rgba(20,60,140,0.3)]"
               style={{ width: `${(totalInDev / totalPlanned) * 100}%` }}
             />
           )}
@@ -91,7 +104,9 @@ export function FullRoadmap({
             {totalShipped}/{totalPlanned} shipped
           </span>
           <span className="text-[10px] tracking-[0.12em] text-text-muted">
-            {totalInDev} in staging
+            {totalInStaging > 0 && <>{totalInStaging} in staging</>}
+            {totalInStaging > 0 && totalInDev > 0 && <> · </>}
+            {totalInDev > 0 && <>{totalInDev} in dev</>}
           </span>
         </div>
       </div>
@@ -121,17 +136,24 @@ export function FullRoadmap({
                     style={{ width: `${(dev.shipped / dev.planned) * 100}%` }}
                   />
                 )}
-                {dev.inProgress > 0 && (
+                {dev.inStaging > 0 && (
                   <div
                     className="bg-status-staging shadow-[inset_0_0_0_1px_rgba(180,80,0,0.3)]"
-                    style={{ width: `${(dev.inProgress / dev.planned) * 100}%` }}
+                    style={{ width: `${(dev.inStaging / dev.planned) * 100}%` }}
+                  />
+                )}
+                {dev.inDev > 0 && (
+                  <div
+                    className="bg-status-dev shadow-[inset_0_0_0_1px_rgba(20,60,140,0.3)]"
+                    style={{ width: `${(dev.inDev / dev.planned) * 100}%` }}
                   />
                 )}
               </div>
               <div className="mt-0.5">
                 <span className="text-[9px] tracking-[0.12em] text-text-muted">
                   {dev.shipped}/{dev.planned} shipped
-                  {dev.inProgress > 0 && <> · {dev.inProgress} in staging</>}
+                  {dev.inStaging > 0 && <> · {dev.inStaging} in staging</>}
+                  {dev.inDev > 0 && <> · {dev.inDev} in dev</>}
                 </span>
               </div>
             </div>
@@ -300,12 +322,13 @@ function StatusDot({ status }: { status: string | null }) {
   const colorMap: Record<string, string> = {
     deployed: "bg-accent",
     "staging": "bg-status-staging",
+    dev: "bg-status-dev",
   };
   return (
     <span
       className={`inline-block h-[8px] w-[8px] shrink-0 rounded-full ${colorMap[status] ?? "bg-neutral-300"}`}
       style={
-        status === "staging"
+        status === "staging" || status === "dev"
           ? { animation: "pulse-dot 2s infinite" }
           : undefined
       }
