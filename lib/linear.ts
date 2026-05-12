@@ -50,6 +50,71 @@ export function groupByStateType(issues: LinearIssue[]) {
     .sort(([a], [b]) => (STATE_TYPE_ORDER[a] ?? 99) - (STATE_TYPE_ORDER[b] ?? 99));
 }
 
+const TEAM_ISSUES_QUERY = `
+  query TeamIssues($teamKey: String!, $first: Int!) {
+    teams(filter: { key: { eq: $teamKey } }, first: 1) {
+      nodes {
+        id
+        labels(first: 250) {
+          nodes { id name color }
+        }
+        issues(first: $first, orderBy: updatedAt) {
+          nodes {
+            id
+            identifier
+            title
+            url
+            priority
+            priorityLabel
+            labelIds
+            createdAt
+            updatedAt
+            dueDate
+            state { name type color }
+            assignee { displayName name }
+            attachments {
+              nodes { sourceType subtitle title url }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface RawAttachment {
+  sourceType: string | null;
+  subtitle: string | null;
+  title: string | null;
+  url: string;
+}
+
+interface RawIssue {
+  id: string;
+  identifier: string;
+  title: string;
+  url: string;
+  priority: number;
+  priorityLabel: string;
+  labelIds: string[];
+  createdAt: string;
+  updatedAt: string;
+  dueDate: string | null;
+  state: { name: string; type: string; color: string } | null;
+  assignee: { displayName: string | null; name: string | null } | null;
+  attachments: { nodes: RawAttachment[] };
+}
+
+interface RawTeam {
+  id: string;
+  labels: { nodes: { id: string; name: string; color: string }[] };
+  issues: { nodes: RawIssue[] };
+}
+
+interface RawResponse {
+  teams: { nodes: RawTeam[] };
+}
+
 export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResult> {
   const apiKey = process.env.LINEAR_API_KEY;
   if (!apiKey) {
@@ -58,29 +123,19 @@ export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResu
 
   try {
     const client = new LinearClient({ apiKey });
+    const { data } = await client.client.rawRequest<RawResponse, { teamKey: string; first: number }>(
+      TEAM_ISSUES_QUERY,
+      { teamKey, first: 100 },
+    );
 
-    const teams = await client.teams({ filter: { key: { eq: teamKey } } });
-    const team = teams.nodes[0];
+    const team = data?.teams.nodes[0];
     if (!team) {
       return { issues: [], error: `Team with key "${teamKey}" not found` };
     }
 
-    // Fetch team labels once to avoid N+1
-    const teamLabels = await team.labels();
-    const labelMap = new Map(teamLabels.nodes.map((l) => [l.id, { name: l.name, color: l.color }]));
+    const labelMap = new Map(team.labels.nodes.map((l) => [l.id, { name: l.name, color: l.color }]));
 
-    // Fetch issues (exclude completed/cancelled by default for active view)
-    const issueConnection = await team.issues({
-      first: 100,
-      orderBy: "updatedAt" as never,
-    });
-
-    const issues: LinearIssue[] = [];
-
-    for (const issue of issueConnection.nodes) {
-      const state = await issue.state;
-      const assignee = await issue.assignee;
-
+    const issues: LinearIssue[] = team.issues.nodes.map((issue) => {
       const labelNames: string[] = [];
       const labelColors: string[] = [];
       for (const labelId of issue.labelIds) {
@@ -91,39 +146,33 @@ export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResu
         }
       }
 
-      // Fetch Slack thread attachments
       const slackThreads: SlackThread[] = [];
-      try {
-        const attachments = await issue.attachments();
-        for (const att of attachments.nodes) {
-          if (att.sourceType === "slack") {
-            const channel = att.subtitle ?? att.title ?? "Slack";
-            slackThreads.push({ channel, url: att.url });
-          }
+      for (const att of issue.attachments.nodes) {
+        if (att.sourceType === "slack") {
+          const channel = att.subtitle ?? att.title ?? "Slack";
+          slackThreads.push({ channel, url: att.url });
         }
-      } catch {
-        // Attachments may fail if permissions are limited — skip silently
       }
 
-      issues.push({
+      return {
         id: issue.id,
         identifier: issue.identifier,
         title: issue.title,
         url: issue.url,
         priority: issue.priority,
         priorityLabel: issue.priorityLabel,
-        stateName: state?.name ?? "Unknown",
-        stateType: state?.type ?? "unstarted",
-        stateColor: state?.color ?? "#888",
-        assigneeName: assignee?.displayName ?? assignee?.name ?? null,
+        stateName: issue.state?.name ?? "Unknown",
+        stateType: issue.state?.type ?? "unstarted",
+        stateColor: issue.state?.color ?? "#888",
+        assigneeName: issue.assignee?.displayName ?? issue.assignee?.name ?? null,
         labelNames,
         labelColors,
-        createdAt: issue.createdAt,
-        updatedAt: issue.updatedAt,
+        createdAt: new Date(issue.createdAt),
+        updatedAt: new Date(issue.updatedAt),
         dueDate: issue.dueDate ?? null,
         slackThreads,
-      });
-    }
+      };
+    });
 
     return { issues };
   } catch (err) {
