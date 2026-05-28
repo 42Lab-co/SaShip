@@ -1,4 +1,19 @@
 ## Commit Log
+### 2026-05-28
+- fix(circle): order space matchers specific-first so 'Planning des sessions Scaling' targets Scaling only, not everyone — *Quentin H*
+- fix(coaching): prevent client mismatch from colliding secondary emails + audit scripts — *Quentin H*
+- fix(avatar): cesser de confondre l'entrepreneur et son avatar cible dans le prompt IA (#147) — *Quentin H*
+- fix(avatar): cesser de confondre l'entrepreneur et son avatar cible dans le prompt IA — *Quentin H*
+- feat(circle): daily event-of-the-day reminder cron via 42lab admin + Resend batch — *Quentin H*
+- fix(circle): remove agenda button, gate publish on image upload, surface post topics, retry circle mutations on 401 — *Quentin H*
+- revert(circle): drop daily event-of-the-day reminder cron — too costly on Circle API — *Quentin H*
+- refactor(circle): fan-out event reminders into per-client Inngest events for 1000+ clients — *Quentin H*
+- refactor(circle): per-client auth for event reminders so Circle Access Groups enforce eligibility — *Quentin H*
+- feat(circle): daily 8h Paris cron emailing SAAS clients the events happening today — *Quentin H*
+- fix(circle): fallback to tiptap_body when event description html is unrenderable — *Quentin H*
+- feat(matching): promote featured coaches to rank 1 + admin toggle on /admin/coachs (#146) — *Quentin H*
+- feat(matching): promote featured coaches to rank 1 + admin toggle on /admin/coachs — *Quentin H*
+- refactor(onboarding-v2): move porteur projection notice from Acquisition module to pivot question (EOS-254) — *Leonard Mangallon*
 ### 2026-05-27
 - fix(matching): disable capacity overrun fallback (kept as commented block for reactivation) — *Quentin H*
 - fix(capacity): sync coach laboratoire load after onboarding match + UI coherence between main and BOSS-ENERGY pools (#145) — *Quentin H*
