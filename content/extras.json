@@ -222,5 +222,19 @@
     "description": "Système extensible de prerequisite gating (Étienne ↔ Finance), contraintes universelles sur tous les prompts, restriction des tools roadmap aux SAAS, tool draftEmail gender-aware.",
     "owner": "Leonard",
     "status": "done"
+  },
+  {
+    "id": "onboarding-v2",
+    "title": "Onboarding v2 — Typeform-style + input vocal + diagnostic IA",
+    "description": "Refonte complète du parcours onboarding façon Typeform (1 question/écran, motion slide, jump logic adaptatif via nextQuestionId, draft live debounced). Input vocal optionnel via Gladia (sentiment + emotion + NER + dérivation locale tone/energy/hesitation). Génération IA d'un diagnostic complet : archétype, SWOT, Porter pentagon, business score, two-horizon plan, pillar scores, tensions. Reveal multi-sections (cold-open, founder, tension, plan, signature, verdict). Nouvelles tables : onboarding_diagnostic, onboarding_voice_response, onboarding_checkpoint, onboarding_engagement_pact. PR #117.",
+    "owner": "Quentin",
+    "status": "done"
+  },
+  {
+    "id": "ipip-coach-matching",
+    "title": "Test IPIP-NEO + algorithme de matching coach↔client",
+    "description": "Test de personnalité IPIP-NEO Big Five (30 items × 30 facettes, 6 vagues × 5 items) administré aux clients pendant l'onboarding ET aux coachs via /coach/profil. Algorithme de matching coach↔client (lib/onboarding/coach-matching.ts, 401 lignes) basé sur la personnalité, les archétypes préférés, les industries/tailles cibles, les case studies et les langues. Extensions schema coach : case_studies, target_industries, target_size, languages, preferred_archetypes. Nouvelles tables : onboarding_personality_result, onboarding_coach_match. PR #117.",
+    "owner": "Quentin",
+    "status": "done"
   }
 ]
