@@ -51,14 +51,15 @@ export function groupByStateType(issues: LinearIssue[]) {
 }
 
 const TEAM_ISSUES_QUERY = `
-  query TeamIssues($teamKey: String!, $first: Int!) {
+  query TeamIssues($teamKey: String!, $first: Int!, $after: String) {
     teams(filter: { key: { eq: $teamKey } }, first: 1) {
       nodes {
         id
         labels(first: 250) {
           nodes { id name color }
         }
-        issues(first: $first, orderBy: updatedAt) {
+        issues(first: $first, after: $after, orderBy: updatedAt) {
+          pageInfo { hasNextPage endCursor }
           nodes {
             id
             identifier
@@ -108,7 +109,10 @@ interface RawIssue {
 interface RawTeam {
   id: string;
   labels: { nodes: { id: string; name: string; color: string }[] };
-  issues: { nodes: RawIssue[] };
+  issues: {
+    pageInfo: { hasNextPage: boolean; endCursor: string | null };
+    nodes: RawIssue[];
+  };
 }
 
 interface RawResponse {
@@ -123,19 +127,35 @@ export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResu
 
   try {
     const client = new LinearClient({ apiKey });
-    const { data } = await client.client.rawRequest<RawResponse, { teamKey: string; first: number }>(
-      TEAM_ISSUES_QUERY,
-      { teamKey, first: 100 },
-    );
 
-    const team = data?.teams.nodes[0];
-    if (!team) {
-      return { issues: [], error: `Team with key "${teamKey}" not found` };
+    const rawIssues: RawIssue[] = [];
+    let labelNodes: { id: string; name: string; color: string }[] = [];
+    let after: string | null = null;
+
+    while (true) {
+      const variables: Record<string, unknown> = { teamKey, first: 250, after };
+      const { data } = await client.client.rawRequest<RawResponse, typeof variables>(
+        TEAM_ISSUES_QUERY,
+        variables,
+      );
+
+      const team = data?.teams.nodes[0];
+      if (!team) {
+        return { issues: [], error: `Team with key "${teamKey}" not found` };
+      }
+
+      if (after === null) {
+        labelNodes = team.labels.nodes;
+      }
+      rawIssues.push(...team.issues.nodes);
+
+      if (!team.issues.pageInfo.hasNextPage || !team.issues.pageInfo.endCursor) break;
+      after = team.issues.pageInfo.endCursor;
     }
 
-    const labelMap = new Map(team.labels.nodes.map((l) => [l.id, { name: l.name, color: l.color }]));
+    const labelMap = new Map(labelNodes.map((l) => [l.id, { name: l.name, color: l.color }]));
 
-    const issues: LinearIssue[] = team.issues.nodes.map((issue) => {
+    const issues: LinearIssue[] = rawIssues.map((issue) => {
       const labelNames: string[] = [];
       const labelColors: string[] = [];
       for (const labelId of issue.labelIds) {
