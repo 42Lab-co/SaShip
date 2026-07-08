@@ -23,12 +23,25 @@ export function FullRoadmap({
       totalPlanned += entries.length;
     }
   }
-  const totalShipped = deliverables.filter(
-    (d) => d.frontmatter.status === "deployed"
-  ).length;
-  const totalInDev = deliverables.filter(
-    (d) => d.frontmatter.status === "staging"
-  ).length;
+  // True when a schedule entry has its own MDX deliverable (so it's counted via MDX).
+  const isMatched = (title: string, owner: string) =>
+    deliverables.some(
+      (d) =>
+        d.frontmatter.title.toLowerCase() === title.toLowerCase() &&
+        d.frontmatter.owner === owner
+    );
+  let totalShipped = deliverables.filter((d) => d.frontmatter.status === "deployed").length;
+  let totalInDev = deliverables.filter((d) => d.frontmatter.status === "staging").length;
+  // Add manually-flagged entries that have no MDX file (e.g. monthly scopes).
+  for (const week of schedule) {
+    for (const [dev, entries] of Object.entries(week.devs)) {
+      for (const e of entries) {
+        if (!e.status || isMatched(e.title, dev)) continue;
+        if (e.status === "deployed") totalShipped++;
+        else if (e.status === "staging") totalInDev++;
+      }
+    }
+  }
   const pct =
     totalPlanned > 0 ? Math.round((totalShipped / totalPlanned) * 100) : 0;
 
@@ -41,12 +54,19 @@ export function FullRoadmap({
     const devDeliverables = deliverables.filter(
       (d) => d.frontmatter.owner === name
     );
-    const shipped = devDeliverables.filter(
+    let shipped = devDeliverables.filter(
       (d) => d.frontmatter.status === "deployed"
     ).length;
-    const inProgress = devDeliverables.filter(
+    let inProgress = devDeliverables.filter(
       (d) => d.frontmatter.status === "staging"
     ).length;
+    for (const week of schedule) {
+      for (const e of week.devs[name] ?? []) {
+        if (!e.status || isMatched(e.title, name)) continue;
+        if (e.status === "deployed") shipped++;
+        else if (e.status === "staging") inProgress++;
+      }
+    }
     const devPct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
     return { name, planned, shipped, inProgress, pct: devPct };
   });
@@ -56,7 +76,7 @@ export function FullRoadmap({
       {/* Header */}
       <div className="border-b border-border-default px-4 py-3 flex items-center justify-between">
         <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
-          90-Day Roadmap
+          {schedule.length}-Week Roadmap
         </span>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
@@ -169,7 +189,7 @@ export function FullRoadmap({
                     {week.week}
                   </span>
                   <span className="text-[9px] tracking-[0.06em] text-text-muted">
-                    {getWeekDateRange(startDate, wi)}
+                    {week.dateLabel ?? getWeekDateRange(startDate, wi)}
                   </span>
                 </div>
 
@@ -241,7 +261,7 @@ function DeliverableCell({
       d.frontmatter.title.toLowerCase() === entry.title.toLowerCase() &&
       d.frontmatter.owner === devName
   );
-  const status = match?.frontmatter.status ?? null;
+  const status = match?.frontmatter.status ?? entry.status ?? null;
   const slug = match?.slug;
   const lastEntry = match ? extractLatestEntry(match.content) : null;
 

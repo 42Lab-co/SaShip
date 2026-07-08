@@ -1,52 +1,82 @@
 import fs from "fs/promises";
 import path from "path";
+import { DEFAULT_SCOPE } from "./config";
 
 export interface DeliverableEntry {
   title: string;
   description: string;
+  /** Manual status for entries without an MDX file (e.g. monthly scopes). */
+  status?: "deployed" | "staging";
 }
 
 export interface WeekSchedule {
   week: string;
   label: string;
   sync?: string;
+  /** Overrides the computed 6-day date range (e.g. a month span for monthly scopes). */
+  dateLabel?: string;
   devs: Record<string, DeliverableEntry[]>;
 }
 
+export interface ScopeSchedule {
+  id: string;
+  weeks?: WeekSchedule[];
+}
+
 export interface Roadmap {
-  startDate: string;
-  weeks: WeekSchedule[];
+  scopes: ScopeSchedule[];
+}
+
+/** Legacy pre-scope shape: { startDate, weeks }. Still read for backward compatibility. */
+interface RoadmapFile {
+  startDate?: string;
+  weeks?: WeekSchedule[];
+  scopes?: ScopeSchedule[];
 }
 
 const ROADMAP_PATH = path.join(process.cwd(), "content", "roadmap.json");
 
 let cachedRoadmap: Roadmap | null = null;
+let legacyStartDate = "";
 
 async function getRoadmap(): Promise<Roadmap> {
   if (cachedRoadmap) return cachedRoadmap;
   try {
     const raw = await fs.readFile(ROADMAP_PATH, "utf-8");
-    cachedRoadmap = JSON.parse(raw) as Roadmap;
+    const parsed = JSON.parse(raw) as RoadmapFile;
+    if (parsed.scopes && parsed.scopes.length > 0) {
+      cachedRoadmap = { scopes: parsed.scopes };
+    } else {
+      // Normalize the legacy { startDate, weeks } shape into a single default scope.
+      legacyStartDate = parsed.startDate ?? "";
+      cachedRoadmap = { scopes: [{ id: DEFAULT_SCOPE, weeks: parsed.weeks ?? [] }] };
+    }
     return cachedRoadmap;
   } catch {
-    return { startDate: "", weeks: [] };
+    cachedRoadmap = { scopes: [] };
+    return cachedRoadmap;
   }
 }
 
+/** Weeks for a specific scope (empty if the scope has none or doesn't exist). */
+export async function getScopeWeeks(scopeId: string): Promise<WeekSchedule[]> {
+  const roadmap = await getRoadmap();
+  return roadmap.scopes.find((s) => s.id === scopeId)?.weeks ?? [];
+}
+
+/** Back-compat: the first scope's weeks. */
 export async function getSchedule(): Promise<WeekSchedule[]> {
   const roadmap = await getRoadmap();
-  return roadmap.weeks;
+  return roadmap.scopes[0]?.weeks ?? [];
 }
 
+/** Back-compat: the legacy top-level startDate (empty once migrated to per-scope dates). */
 export async function getStartDate(): Promise<string> {
-  const roadmap = await getRoadmap();
-  return roadmap.startDate;
+  await getRoadmap();
+  return legacyStartDate;
 }
 
-export function getWeekDateRange(
-  startDate: string,
-  weekIndex: number
-): string {
+export function getWeekDateRange(startDate: string, weekIndex: number): string {
   const start = new Date(startDate);
   start.setDate(start.getDate() + weekIndex * 7);
   const end = new Date(start);

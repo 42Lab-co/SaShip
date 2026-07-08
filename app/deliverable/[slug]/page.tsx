@@ -21,12 +21,13 @@ export default async function DeliverablePage({ params }: Props) {
   if (!deliverable) notFound();
 
   const { frontmatter, content } = deliverable;
+  const scope = frontmatter.scope ?? "scope-1";
 
   return (
     <div className="space-y-6 animate-enter">
-      {/* Back link */}
+      {/* Back link — returns to this deliverable's own phase */}
       <Link
-        href="/"
+        href={`/?scope=${scope}`}
         className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.12em] text-text-muted hover:text-text-primary transition-colors"
       >
         ← Back to Roadmap

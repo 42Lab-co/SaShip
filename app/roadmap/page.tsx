@@ -1,35 +1,47 @@
 import { getAllDeliverables } from "@/lib/mdx";
-import { getConfig } from "@/lib/config";
+import { getConfig, getScopeMeta } from "@/lib/config";
 import { FullRoadmap } from "@/components/full-roadmap";
-import { getSchedule, getStartDate } from "@/lib/schedule";
+import { ScopeEmpty } from "@/components/scope-empty";
+import { getScopeWeeks } from "@/lib/schedule";
+import { getScopeStartDate, resolveScope } from "@/lib/scope";
 
-export default async function RoadmapPage() {
-  const [config, deliverables, schedule, startDate] = await Promise.all([
+export default async function RoadmapPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scope?: string }>;
+}) {
+  const scopeId = await resolveScope(await searchParams);
+  const [config, deliverables, weeks, startDate] = await Promise.all([
     getConfig(),
-    getAllDeliverables(),
-    getSchedule(),
-    getStartDate(),
+    getAllDeliverables(scopeId),
+    getScopeWeeks(scopeId),
+    getScopeStartDate(scopeId),
   ]);
 
   const devNames = config.devs;
+  const scopeLabel = getScopeMeta(config, scopeId)?.label ?? scopeId;
 
   return (
     <div className="space-y-6 animate-enter">
       <div>
         <h1 className="font-display text-[clamp(24px,4vw,40px)] font-bold uppercase leading-[0.9] tracking-tight text-neutral-900">
-          Roadmap 90 jours
+          Roadmap — {scopeLabel}
         </h1>
         <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-text-muted">
-          {config.project} — {devNames.join(" + ")} — 13 semaines
+          {config.project} — {devNames.join(" + ")}
         </p>
       </div>
 
-      <FullRoadmap
-        schedule={schedule}
-        deliverables={deliverables}
-        devNames={devNames}
-        startDate={startDate}
-      />
+      {weeks.length === 0 ? (
+        <ScopeEmpty scopeLabel={scopeLabel} kind="jalon" />
+      ) : (
+        <FullRoadmap
+          schedule={weeks}
+          deliverables={deliverables}
+          devNames={devNames}
+          startDate={startDate}
+        />
+      )}
     </div>
   );
 }

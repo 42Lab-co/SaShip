@@ -1,169 +1,469 @@
 {
-  "startDate": "2026-02-16",
-  "weeks": [
+  "scopes": [
     {
-      "week": "S1",
-      "label": "Sprint 0 — Socle Commun",
-      "sync": "S0 — 5 jours ensemble",
-      "devs": {
-        "Quentin": [
-          { "title": "Socle Commun", "description": "Schema DB, conventions, architecture" },
-          { "title": "Agent Guide", "description": "Composant React overlay, highlight, steps" },
-          { "title": "Systeme de Credits", "description": "Grille tarification, dashboard, Stripe" }
-        ],
-        "Leonard": [
-          { "title": "Socle Commun", "description": "Schema DB, conventions, architecture" },
-          { "title": "Agent Guide", "description": "Integration IA, mode conversationnel" },
-          { "title": "Systeme de Credits", "description": "Tables credit_balance/transaction, API" }
-        ]
-      }
+      "id": "scope-1",
+      "weeks": [
+        {
+          "week": "S1",
+          "label": "Sprint 0 — Socle Commun",
+          "sync": "S0 — 5 jours ensemble",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Socle Commun",
+                "description": "Schema DB, conventions, architecture"
+              },
+              {
+                "title": "Agent Guide",
+                "description": "Composant React overlay, highlight, steps"
+              },
+              {
+                "title": "Systeme de Credits",
+                "description": "Grille tarification, dashboard, Stripe"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Socle Commun",
+                "description": "Schema DB, conventions, architecture"
+              },
+              {
+                "title": "Agent Guide",
+                "description": "Integration IA, mode conversationnel"
+              },
+              {
+                "title": "Systeme de Credits",
+                "description": "Tables credit_balance/transaction, API"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S2",
+          "label": "Fondations positionnement + Finances onboarding",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Avatar Client",
+                "description": "Interview guidee IA, 3 personas, carte d'empathie"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI - Onboarding Wizard",
+                "description": "Schema DB financier, wizard 5 etapes, import CSV"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S3",
+          "label": "Offre + Dashboard financier",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Offre Irresistible",
+                "description": "Value Equation Hormozi, stack de valeur, pitch-ready"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI - Dashboard Pilotage",
+                "description": "Revenue, rentabilite, cash, KPI cards"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S4",
+          "label": "CMO Strategie + Alertes financieres",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "CMO AI - Strategie & Voix",
+                "description": "S'adapter a la marque et comm voulue, audit LinkedIn, matrice contenu"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI - Alertes & Saisie",
+                "description": "Moteur alertes Inngest, saisie mensuelle, resume IA"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S5",
+          "label": "CMO Copywriter + Finances release",
+          "sync": "SYNC 1 — Finances dispo pour agents, Avatar/Offre dans Brain",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "CMO AI - Copywriter & Calendrier",
+                "description": "Generation Schwartz/Halbert/Cialdini, batch, calendrier"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI - Polish & Release",
+                "description": "Objectifs vs Realite, detection business model, release"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S6",
+          "label": "CMO Publication + Brain profil",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "CMO AI - Publication & Analytics",
+                "description": "LinkedIn API, autopilot, analytics, community manager"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Brain Client - Profil & Veille",
+                "description": "Architecture Brain, fiche business, scan concurrents"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S7",
+          "label": "Landing Pages builder + Brain fiches",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Landing Pages - Builder & Sections",
+                "description": "Architecture builder, 15 sections, 3 templates funnels"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Brain Client - Fiches & Playbooks",
+                "description": "Fiches concurrentielles, playbooks, validation humaine"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S8",
+          "label": "Landing Pages editeur + Brain release",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Landing Pages - Copywriting IA & Editeur",
+                "description": "Copywriting Hook/Story/Offer, editeur Webflow, Agent AI V1"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Brain Client - Integration & Release",
+                "description": "Timeline business, score completude, integration agents"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S9",
+          "label": "Funnels armada + Previsionnel",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Landing Pages - Funnels & Value Ladder",
+                "description": "6 types funnels, Value Ladder, connexion entre pages"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI P2 - Previsionnel",
+                "description": "Projections 3 scenarios, simulations What-if, objectifs"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S10",
+          "label": "Pages live + Rapports financiers",
+          "sync": "SYNC 2 — Landing Pages connectees aux KPIs finances",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Landing Pages - Publication & Domaines",
+                "description": "Publication 1 clic, domaine custom, CNAME + SSL"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Finances AI P2 - Rapports & Release",
+                "description": "P&L mensuel auto, resume executif IA, partage securise"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S11",
+          "label": "Landing Pages release + Brain V2",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Landing Pages - Agent AI & Release",
+                "description": "Agent AI V2, 30+ sections, duplication, optimisations"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Brain V2 - Intelligence Sectorielle",
+                "description": "Benchmarks INSEE/SaaS, opportunites, recommandations"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S12",
+          "label": "Branding AI + Agent Guide V2",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Branding AI - Generation",
+                "description": "Colorimetrie IA, logos, brand board, retroactif"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Agent Guide V2 - Contexte Enrichi",
+                "description": "Brain complet, mode proactif, navigation cross-module"
+              }
+            ]
+          }
+        },
+        {
+          "week": "S13",
+          "label": "Integration finale + Demo",
+          "sync": "SYNC 3 — 3 jours integration, tests E2E, demo finale",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Branding AI - Integration Finale",
+                "description": "Visuels brandes, theming complet, demo finale"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Integration Finale",
+                "description": "Test E2E parcours complet, feature flags, polish"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "week": "S2",
-      "label": "Fondations positionnement + Finances onboarding",
-      "devs": {
-        "Quentin": [
-          { "title": "Avatar Client", "description": "Interview guidee IA, 3 personas, carte d'empathie" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI - Onboarding Wizard", "description": "Schema DB financier, wizard 5 etapes, import CSV" }
-        ]
-      }
-    },
-    {
-      "week": "S3",
-      "label": "Offre + Dashboard financier",
-      "devs": {
-        "Quentin": [
-          { "title": "Offre Irresistible", "description": "Value Equation Hormozi, stack de valeur, pitch-ready" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI - Dashboard Pilotage", "description": "Revenue, rentabilite, cash, KPI cards" }
-        ]
-      }
-    },
-    {
-      "week": "S4",
-      "label": "CMO Strategie + Alertes financieres",
-      "devs": {
-        "Quentin": [
-          { "title": "CMO AI - Strategie & Voix", "description": "S'adapter a la marque et comm voulue, audit LinkedIn, matrice contenu" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI - Alertes & Saisie", "description": "Moteur alertes Inngest, saisie mensuelle, resume IA" }
-        ]
-      }
-    },
-    {
-      "week": "S5",
-      "label": "CMO Copywriter + Finances release",
-      "sync": "SYNC 1 — Finances dispo pour agents, Avatar/Offre dans Brain",
-      "devs": {
-        "Quentin": [
-          { "title": "CMO AI - Copywriter & Calendrier", "description": "Generation Schwartz/Halbert/Cialdini, batch, calendrier" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI - Polish & Release", "description": "Objectifs vs Realite, detection business model, release" }
-        ]
-      }
-    },
-    {
-      "week": "S6",
-      "label": "CMO Publication + Brain profil",
-      "devs": {
-        "Quentin": [
-          { "title": "CMO AI - Publication & Analytics", "description": "LinkedIn API, autopilot, analytics, community manager" }
-        ],
-        "Leonard": [
-          { "title": "Brain Client - Profil & Veille", "description": "Architecture Brain, fiche business, scan concurrents" }
-        ]
-      }
-    },
-    {
-      "week": "S7",
-      "label": "Landing Pages builder + Brain fiches",
-      "devs": {
-        "Quentin": [
-          { "title": "Landing Pages - Builder & Sections", "description": "Architecture builder, 15 sections, 3 templates funnels" }
-        ],
-        "Leonard": [
-          { "title": "Brain Client - Fiches & Playbooks", "description": "Fiches concurrentielles, playbooks, validation humaine" }
-        ]
-      }
-    },
-    {
-      "week": "S8",
-      "label": "Landing Pages editeur + Brain release",
-      "devs": {
-        "Quentin": [
-          { "title": "Landing Pages - Copywriting IA & Editeur", "description": "Copywriting Hook/Story/Offer, editeur Webflow, Agent AI V1" }
-        ],
-        "Leonard": [
-          { "title": "Brain Client - Integration & Release", "description": "Timeline business, score completude, integration agents" }
-        ]
-      }
-    },
-    {
-      "week": "S9",
-      "label": "Funnels armada + Previsionnel",
-      "devs": {
-        "Quentin": [
-          { "title": "Landing Pages - Funnels & Value Ladder", "description": "6 types funnels, Value Ladder, connexion entre pages" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI P2 - Previsionnel", "description": "Projections 3 scenarios, simulations What-if, objectifs" }
-        ]
-      }
-    },
-    {
-      "week": "S10",
-      "label": "Pages live + Rapports financiers",
-      "sync": "SYNC 2 — Landing Pages connectees aux KPIs finances",
-      "devs": {
-        "Quentin": [
-          { "title": "Landing Pages - Publication & Domaines", "description": "Publication 1 clic, domaine custom, CNAME + SSL" }
-        ],
-        "Leonard": [
-          { "title": "Finances AI P2 - Rapports & Release", "description": "P&L mensuel auto, resume executif IA, partage securise" }
-        ]
-      }
-    },
-    {
-      "week": "S11",
-      "label": "Landing Pages release + Brain V2",
-      "devs": {
-        "Quentin": [
-          { "title": "Landing Pages - Agent AI & Release", "description": "Agent AI V2, 30+ sections, duplication, optimisations" }
-        ],
-        "Leonard": [
-          { "title": "Brain V2 - Intelligence Sectorielle", "description": "Benchmarks INSEE/SaaS, opportunites, recommandations" }
-        ]
-      }
-    },
-    {
-      "week": "S12",
-      "label": "Branding AI + Agent Guide V2",
-      "devs": {
-        "Quentin": [
-          { "title": "Branding AI - Generation", "description": "Colorimetrie IA, logos, brand board, retroactif" }
-        ],
-        "Leonard": [
-          { "title": "Agent Guide V2 - Contexte Enrichi", "description": "Brain complet, mode proactif, navigation cross-module" }
-        ]
-      }
-    },
-    {
-      "week": "S13",
-      "label": "Integration finale + Demo",
-      "sync": "SYNC 3 — 3 jours integration, tests E2E, demo finale",
-      "devs": {
-        "Quentin": [
-          { "title": "Branding AI - Integration Finale", "description": "Visuels brandes, theming complet, demo finale" }
-        ],
-        "Leonard": [
-          { "title": "Integration Finale", "description": "Test E2E parcours complet, feature flags, polish" }
-        ]
-      }
+      "id": "scope-2",
+      "weeks": [
+        {
+          "week": "Juin",
+          "dateLabel": "01–30/06",
+          "label": "Proactivité & premiers piliers humains",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Module Immersion (réservation & achat)",
+                "description": "Finalisation intégration WAP",
+                "status": "staging"
+              },
+              {
+                "title": "Migration messagerie — sortie Callbell/WhatsApp",
+                "description": "Migration terminée · sortie Callbell (WhatsApp) · historique archivé · ~3 500 €/mois économisés",
+                "status": "deployed"
+              },
+              {
+                "title": "Vidéo de présentation plateforme",
+                "description": "Réalisée par Quentin · feature prête, en attente de la vidéo"
+              },
+              {
+                "title": "Timeline 90 jours par segment client",
+                "description": ""
+              },
+              {
+                "title": "Page récap des programmes clients",
+                "description": ""
+              },
+              {
+                "title": "Répartition des tickets Zendesk",
+                "description": "Par type + coût · cible < 100 / 90 j"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Application mobile iOS & Android",
+                "description": "Projet tech terminé · bloqué Apple (compte dev / DUNS) · publication via compte perso (Henri)",
+                "status": "staging"
+              },
+              {
+                "title": "Remplacement Claap — note-taker Engram AI",
+                "description": "Infra Recall.ai · ÷3 la note Claap (~20 k€/an) · coachs mi-juillet",
+                "status": "staging"
+              },
+              {
+                "title": "Dashboard usage & adoption clients",
+                "description": "BI + OKR + NPS + heatmap churn par cohorte"
+              },
+              {
+                "title": "Process de release — communication interne",
+                "description": "Récap Tella hebdo",
+                "status": "staging"
+              },
+              {
+                "title": "Stress-test sécurité",
+                "description": "Pentest · cadence semestrielle · à cadrer avec Boris"
+              }
+            ]
+          }
+        },
+        {
+          "week": "Juil.",
+          "dateLabel": "01–31/07",
+          "label": "Proactivité, agents IA & cost-killing",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Cockpit quotidien entrepreneur",
+                "description": ""
+              },
+              {
+                "title": "Conciergerie entrepreneurs.com",
+                "description": "Scaling / Board"
+              },
+              {
+                "title": "Sessions live & Masterclass",
+                "description": "Bandeau live (barre rouge, clignotant) + notif push + tuile app · Zoom → Google Workspace à trancher"
+              },
+              {
+                "title": "Module Ambassadeur & fidélité — sortie YouCan",
+                "description": "Paiement in-plateform des ambassadeurs · ligne de revenu réactivée"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Notifications push & proactivité",
+                "description": "Postulat 3 types de clients (autonome / conciergerie)"
+              },
+              {
+                "title": "Optimisation des agents IA personnifiés",
+                "description": "Refonte du contexte · rapidité"
+              },
+              {
+                "title": "Notifications de fin de session",
+                "description": "coaching & live"
+              },
+              {
+                "title": "MCP entrepreneurs.com",
+                "description": "Cheval de Troie · Entrepreneurs dans le cloud/ChatGPT du client"
+              },
+              {
+                "title": "Agent IA vocal",
+                "description": "Appel de relance onboarding / OKR (≠ Live AI Coaching)"
+              }
+            ]
+          }
+        },
+        {
+          "week": "Août",
+          "dateLabel": "01–31/08",
+          "label": "Indépendance technique, communauté & coaching augmenté",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Pré-lancement communauté gratuite",
+                "description": "Bêta fermée 10 août · objectif 100 k membres (≠ clients) · sur l'app mobile"
+              },
+              {
+                "title": "Cadrage détaillé du brief communauté (Abdel)",
+                "description": "Stratégie communauté · calibre les specs d'août"
+              },
+              {
+                "title": "Annuaire prestataires & partenaires — refonte + affiliation",
+                "description": "Reco proactive · LegalPlace / banques / assurances / Oudou · cadrage juillet"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "LMS maison",
+                "description": "Remplacement de Circle"
+              },
+              {
+                "title": "Proactivité post-coaching enrichie",
+                "description": "2 layers (anticipation via module Eloïse + notifs de suivi) + reco prestataire auto"
+              },
+              {
+                "title": "Live AI Coaching",
+                "description": "PRIORITÉ ABSOLUE · dev juillet → livraison mi-août · l'agent DRIVE le coach · +~1$/h · ROI 3-4 M€/an"
+              }
+            ]
+          }
+        },
+        {
+          "week": "Sept.",
+          "dateLabel": "01–30/09",
+          "label": "Lancement communauté & automatisation",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Lancement officiel — soirée Paris",
+                "description": "4 septembre · lancement communauté (pas le Moonshot)"
+              },
+              {
+                "title": "Onboarding « membre » vs « client »",
+                "description": "en production"
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Daily accountability agent",
+                "description": "Relances + gestion de tâches (Soubless.1) + adoption par appartenance & capture passive (leçon Marcus)"
+              },
+              {
+                "title": "Note-taker live côté sales",
+                "description": "Analyse + prompts par team · récup. modules Alchemy / Anis"
+              },
+              {
+                "title": "Recouvrement d'impayés & upsell automatisé",
+                "description": "Détection d'intention IA · anticipe les impayés · au plus tard septembre"
+              },
+              {
+                "title": "Monétisation plateforme — démarrage du cadrage",
+                "description": "Call Aziz d'abord · volet B2B avec Fabrice"
+              }
+            ]
+          }
+        },
+        {
+          "week": "Q4",
+          "dateLabel": "Oct–Déc",
+          "label": "Monétisation & R&D · trimestre à fort potentiel",
+          "sync": "⚠ Trimestre encore ouvert — partenariats, calendrier de monétisation & périmètre du moonshot à arbitrer avec Quentin, Fabrice & Alec",
+          "devs": {
+            "Quentin": [
+              {
+                "title": "Monétisation plateforme — déploiement",
+                "description": "Affiliation, partenariats (banques, assurances, SaaS)"
+              },
+              {
+                "title": "Roadmap Q1 2027 & préparation Scale Mars",
+                "description": ""
+              }
+            ],
+            "Leonard": [
+              {
+                "title": "Moonshot — Entrepreneur OS",
+                "description": "V0 R&D · plug dans le quotidien · app terrain voix/WhatsApp · verrou = adoption des clients peu digitaux"
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

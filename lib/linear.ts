@@ -50,7 +50,10 @@ export function groupByStateType(issues: LinearIssue[]) {
     .sort(([a], [b]) => (STATE_TYPE_ORDER[a] ?? 99) - (STATE_TYPE_ORDER[b] ?? 99));
 }
 
-export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResult> {
+export async function getLinearIssues(
+  teamKey: string,
+  opts?: { labelName?: string }
+): Promise<LinearIssuesResult> {
   const apiKey = process.env.LINEAR_API_KEY;
   if (!apiKey) {
     return { issues: [], error: "LINEAR_API_KEY environment variable is not set" };
@@ -125,7 +128,11 @@ export async function getLinearIssues(teamKey: string): Promise<LinearIssuesResu
       });
     }
 
-    return { issues };
+    const filtered = opts?.labelName
+      ? issues.filter((i) => i.labelNames.includes(opts.labelName!))
+      : issues;
+
+    return { issues: filtered };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error querying Linear";
     return { issues: [], error: message };
