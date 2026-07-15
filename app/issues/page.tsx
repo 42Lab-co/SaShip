@@ -1,5 +1,6 @@
-import { getConfig } from "@/lib/config";
+import { getConfig, getScopeMeta } from "@/lib/config";
 import { getLinearIssues, groupByStateType, type LinearIssue } from "@/lib/linear";
+import { resolveScope } from "@/lib/scope";
 
 export const dynamic = "force-dynamic";
 
@@ -79,9 +80,14 @@ function IssueRow({ issue }: { issue: LinearIssue }) {
   );
 }
 
-export default async function IssuesPage() {
+export default async function IssuesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scope?: string }>;
+}) {
   const config = await getConfig();
   const teamKey = config.linearTeamKey;
+  const scopeId = await resolveScope(await searchParams);
 
   if (!teamKey) {
     return (
@@ -100,7 +106,11 @@ export default async function IssuesPage() {
     );
   }
 
-  const { issues, error } = await getLinearIssues(teamKey);
+  const linearLabel = getScopeMeta(config, scopeId)?.linearLabel;
+  const { issues, error } = await getLinearIssues(
+    teamKey,
+    linearLabel ? { labelName: linearLabel } : undefined
+  );
 
   if (error) {
     return (

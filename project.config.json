@@ -3,5 +3,19 @@
   "devs": ["Quentin", "Leonard"],
   "environments": ["staging", "prod"],
   "commitPrefix": "[entrepreneurs-os]",
-  "linearTeamKey": "EOS"
+  "linearTeamKey": "EOS",
+  "scopes": [
+    {
+      "id": "scope-1",
+      "label": "90 jours · Fév–Mai 2026",
+      "startDate": "2026-02-16",
+      "status": "done"
+    },
+    {
+      "id": "scope-2",
+      "label": "Q3–Q4 2026",
+      "startDate": "2026-06-01",
+      "status": "active"
+    }
+  ]
 }

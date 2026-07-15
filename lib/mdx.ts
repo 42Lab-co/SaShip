@@ -1,12 +1,15 @@
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
+import { DEFAULT_SCOPE } from "./config";
 
 export interface DeliverableFrontmatter {
   title: string;
   owner: string;
   status: "dev" | "staging" | "deployed";
   environment: "dev" | "staging" | "prod";
+  /** Scope this deliverable belongs to; absent files default to scope-1. */
+  scope?: string;
 }
 
 /** Normalize status values the Action may write to UI-safe values */
@@ -30,7 +33,7 @@ export interface Deliverable {
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
-export async function getAllDeliverables(): Promise<Deliverable[]> {
+export async function getAllDeliverables(scopeId?: string): Promise<Deliverable[]> {
   try {
     const files = await fs.readdir(CONTENT_DIR);
     const mdxFiles = files.filter((f) => f.endsWith(".mdx") && f !== "commits.mdx");
@@ -42,6 +45,8 @@ export async function getAllDeliverables(): Promise<Deliverable[]> {
         const { data, content } = matter(raw);
         const frontmatter = data as DeliverableFrontmatter;
         normalizeStatus(frontmatter);
+        // Untagged deliverables belong to the first scope.
+        if (!frontmatter.scope) frontmatter.scope = DEFAULT_SCOPE;
         return {
           slug: filename.replace(/\.mdx$/, ""),
           frontmatter,
@@ -50,7 +55,11 @@ export async function getAllDeliverables(): Promise<Deliverable[]> {
       })
     );
 
-    return deliverables.sort((a, b) =>
+    const scoped = scopeId
+      ? deliverables.filter((d) => d.frontmatter.scope === scopeId)
+      : deliverables;
+
+    return scoped.sort((a, b) =>
       a.frontmatter.title.localeCompare(b.frontmatter.title)
     );
   } catch {
@@ -67,6 +76,7 @@ export async function getDeliverable(
     const { data, content } = matter(raw);
     const frontmatter = data as DeliverableFrontmatter;
     normalizeStatus(frontmatter);
+    if (!frontmatter.scope) frontmatter.scope = DEFAULT_SCOPE;
     return {
       slug,
       frontmatter,

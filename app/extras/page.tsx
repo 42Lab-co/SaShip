@@ -1,8 +1,18 @@
 import { getExtras } from "@/lib/extras";
-import { getConfig } from "@/lib/config";
+import { getConfig, getScopeMeta, hasMultipleScopes } from "@/lib/config";
+import { resolveScope } from "@/lib/scope";
+import { ScopeEmpty } from "@/components/scope-empty";
 
-export default async function ExtrasPage() {
-  const [config, extras] = await Promise.all([getConfig(), getExtras()]);
+export default async function ExtrasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scope?: string }>;
+}) {
+  const scopeId = await resolveScope(await searchParams);
+  const config = await getConfig();
+  const multi = hasMultipleScopes(config);
+  const extras = await getExtras(multi ? scopeId : undefined);
+  const scopeLabel = getScopeMeta(config, scopeId)?.label ?? scopeId;
 
   const pending = extras.filter((e) => e.status === "pending");
   const done = extras.filter((e) => e.status === "done");
@@ -14,16 +24,20 @@ export default async function ExtrasPage() {
           Extras
         </h1>
         <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-text-muted">
-          {config.project} — additional developments
+          {config.project} — {multi ? scopeLabel : "additional developments"}
         </p>
       </div>
 
       {extras.length === 0 ? (
-        <div className="border border-border-default p-8 text-center">
-          <p className="text-[12px] text-text-muted">
-            No additional developments yet. Use <code>/extra</code> to add one.
-          </p>
-        </div>
+        multi ? (
+          <ScopeEmpty scopeLabel={scopeLabel} kind="développement additionnel" />
+        ) : (
+          <div className="border border-border-default p-8 text-center">
+            <p className="text-[12px] text-text-muted">
+              No additional developments yet. Use <code>/extra</code> to add one.
+            </p>
+          </div>
+        )
       ) : (
         <>
           {/* Pending */}
