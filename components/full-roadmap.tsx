@@ -8,6 +8,8 @@ interface FullRoadmapProps {
   deliverables: Deliverable[];
   devNames: string[];
   startDate: string;
+  /** When true (a completed scope), render every deliverable as done. */
+  scopeDone?: boolean;
 }
 
 export function FullRoadmap({
@@ -15,6 +17,7 @@ export function FullRoadmap({
   deliverables,
   devNames,
   startDate,
+  scopeDone = false,
 }: FullRoadmapProps) {
   // Count totals across all weeks
   let totalPlanned = 0;
@@ -32,7 +35,7 @@ export function FullRoadmap({
     );
   let totalShipped = deliverables.filter((d) => d.frontmatter.status === "deployed").length;
   let totalInStaging = deliverables.filter((d) => d.frontmatter.status === "staging").length;
-  const totalInDev = deliverables.filter((d) => d.frontmatter.status === "dev").length;
+  let totalInDev = deliverables.filter((d) => d.frontmatter.status === "dev").length;
   // Add manually-flagged entries that have no MDX file (e.g. monthly scopes).
   for (const week of schedule) {
     for (const [dev, entries] of Object.entries(week.devs)) {
@@ -42,6 +45,12 @@ export function FullRoadmap({
         else if (e.status === "staging") totalInStaging++;
       }
     }
+  }
+  // A completed scope: everything reads as done.
+  if (scopeDone) {
+    totalShipped = totalPlanned;
+    totalInStaging = 0;
+    totalInDev = 0;
   }
   const pct =
     totalPlanned > 0 ? Math.round((totalShipped / totalPlanned) * 100) : 0;
@@ -61,7 +70,7 @@ export function FullRoadmap({
     let inStaging = devDeliverables.filter(
       (d) => d.frontmatter.status === "staging"
     ).length;
-    const inDev = devDeliverables.filter(
+    let inDev = devDeliverables.filter(
       (d) => d.frontmatter.status === "dev"
     ).length;
     for (const week of schedule) {
@@ -70,6 +79,11 @@ export function FullRoadmap({
         if (e.status === "deployed") shipped++;
         else if (e.status === "staging") inStaging++;
       }
+    }
+    if (scopeDone) {
+      shipped = planned;
+      inStaging = 0;
+      inDev = 0;
     }
     const devPct = planned > 0 ? Math.round((shipped / planned) * 100) : 0;
     return { name, planned, shipped, inStaging, inDev, pct: devPct };
@@ -239,6 +253,7 @@ export function FullRoadmap({
                             entry={entry}
                             devName={devName}
                             deliverables={deliverables}
+                            scopeDone={scopeDone}
                           />
                         )}
                       </div>
@@ -271,17 +286,19 @@ function DeliverableCell({
   entry,
   devName,
   deliverables,
+  scopeDone,
 }: {
   entry: DeliverableEntry;
   devName: string;
   deliverables: Deliverable[];
+  scopeDone: boolean;
 }) {
   const match = deliverables.find(
     (d) =>
       d.frontmatter.title.toLowerCase() === entry.title.toLowerCase() &&
       d.frontmatter.owner === devName
   );
-  const status = match?.frontmatter.status ?? entry.status ?? null;
+  const status = scopeDone ? "deployed" : (match?.frontmatter.status ?? entry.status ?? null);
   const slug = match?.slug;
   const lastEntry = match ? extractLatestEntry(match.content) : null;
 

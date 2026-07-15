@@ -19,7 +19,9 @@ export default async function Home({
   ]);
 
   const devNames = config.devs;
-  const scopeLabel = getScopeMeta(config, scopeId)?.label ?? scopeId;
+  const scopeMeta = getScopeMeta(config, scopeId);
+  const scopeLabel = scopeMeta?.label ?? scopeId;
+  const scopeDone = scopeMeta?.status === "done";
 
   return (
     <div className="space-y-6 animate-enter">
@@ -40,6 +42,7 @@ export default async function Home({
           deliverables={deliverables}
           devNames={devNames}
           startDate={startDate}
+          scopeDone={scopeDone}
         />
       )}
     </div>
