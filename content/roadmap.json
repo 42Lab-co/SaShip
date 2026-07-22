@@ -330,11 +330,11 @@
           "dateLabel": "01–30/06",
           "label": "Proactivité & premiers piliers humains",
           "devs": {
-            "Quentin": [
+            "team": [
               {
                 "title": "Module Immersion (réservation & achat)",
                 "description": "Finalisation intégration WAP",
-                "status": "staging"
+                "status": "deployed"
               },
               {
                 "title": "Migration messagerie — sortie Callbell/WhatsApp",
@@ -342,45 +342,24 @@
                 "status": "deployed"
               },
               {
-                "title": "Vidéo de présentation plateforme",
-                "description": "Réalisée par Quentin · feature prête, en attente de la vidéo"
-              },
-              {
                 "title": "Timeline 90 jours par segment client",
-                "description": ""
+                "description": "Tous les délivrables cadencés segment par segment · socle de la proactivité (quoi pousser, à qui, quand) · ownership du contenu par segment non tranchée",
+                "status": "deployed"
               },
               {
                 "title": "Page récap des programmes clients",
-                "description": ""
+                "description": "Le client clique et obtient le récapitulatif complet de son programme",
+                "status": "deployed"
               },
-              {
-                "title": "Répartition des tickets Zendesk",
-                "description": "Par type + coût · cible < 100 / 90 j"
-              }
-            ],
-            "Leonard": [
               {
                 "title": "Application mobile iOS & Android",
                 "description": "Projet tech terminé · bloqué Apple (compte dev / DUNS) · publication via compte perso (Henri)",
-                "status": "staging"
-              },
-              {
-                "title": "Remplacement Claap — note-taker Engram AI",
-                "description": "Infra Recall.ai · ÷3 la note Claap (~20 k€/an) · coachs mi-juillet",
-                "status": "staging"
+                "status": "deployed"
               },
               {
                 "title": "Dashboard usage & adoption clients",
-                "description": "BI + OKR + NPS + heatmap churn par cohorte"
-              },
-              {
-                "title": "Process de release — communication interne",
-                "description": "Récap Tella hebdo",
-                "status": "staging"
-              },
-              {
-                "title": "Stress-test sécurité",
-                "description": "Pentest · cadence semestrielle · à cadrer avec Boris"
+                "description": "BI + OKR + NPS + heatmap churn par cohorte",
+                "status": "deployed"
               }
             ]
           }
@@ -390,32 +369,32 @@
           "dateLabel": "01–31/07",
           "label": "Proactivité, agents IA & cost-killing",
           "devs": {
-            "Quentin": [
+            "team": [
               {
-                "title": "Cockpit quotidien entrepreneur",
-                "description": ""
-              },
-              {
-                "title": "Conciergerie entrepreneurs.com",
-                "description": "Scaling / Board"
+                "title": "Daily Accountability",
+                "description": "Ex-« Cockpit quotidien » · débloqué par l'app mobile + push · piste : bloc dashboard avec vocal enregistré par le client · à consolider avec le Daily accountability agent de septembre"
               },
               {
                 "title": "Sessions live & Masterclass",
-                "description": "Bandeau live (barre rouge, clignotant) + notif push + tuile app · Zoom → Google Workspace à trancher"
-              },
-              {
-                "title": "Module Ambassadeur & fidélité — sortie YouCan",
-                "description": "Paiement in-plateform des ambassadeurs · ligne de revenu réactivée"
-              }
-            ],
-            "Leonard": [
-              {
-                "title": "Notifications push & proactivité",
-                "description": "Postulat 3 types de clients (autonome / conciergerie)"
+                "description": "Barre live affichée quand un événement est en cours (barre rouge, clignotant, nom + horaires + bouton se connecter) + notif push · hébergement Zoom vs Google à trancher"
               },
               {
                 "title": "Optimisation des agents IA personnifiés",
-                "description": "Refonte du contexte · rapidité"
+                "description": "Refonte du contexte · rapidité · livré le 10 juillet",
+                "status": "deployed"
+              },
+              {
+                "title": "Exit Callbell / WhatsApp",
+                "description": "Deadline mi-juillet avant renouvellement annuel · Cal.com → iClosed (licence à vie)"
+              },
+              {
+                "title": "Remplacement Claap — note-taker Engram AI",
+                "description": "Infra Recall.ai · ÷3 la note Claap (~20 k€/an, 3 500 €/mois) · livré aux coachs fin juillet · sales en août",
+                "status": "deployed"
+              },
+              {
+                "title": "Notifications push & proactivité",
+                "description": "Postulat 3 types de clients (autonome / conciergerie)"
               },
               {
                 "title": "Notifications de fin de session",
@@ -423,11 +402,21 @@
               },
               {
                 "title": "MCP entrepreneurs.com",
-                "description": "Cheval de Troie · Entrepreneurs dans le cloud/ChatGPT du client"
+                "description": "Cheval de Troie · Entrepreneurs dans le cloud/ChatGPT du prospect · repo + base séparés, mcp.entrepreneurs.com · outils : savoir académie, « Outils Entrepreneurs recommandés » (affiliations), « Masterclass à venir »"
               },
               {
-                "title": "Agent IA vocal",
-                "description": "Appel de relance onboarding / OKR (≠ Live AI Coaching)"
+                "title": "Admin Masterclass — back-office Charlotte",
+                "description": "Charlotte (ou son équipe) ajoute/édite les liens d'inscription aux masterclass sans déploiement (titre, date, description, lien, visibilité prospect, publié) · lu par le MCP · recoupe le B7 communauté + la barre Live → modéliser les événements une seule fois"
+              },
+              {
+                "title": "Module Ambassadeur & fidélité — sortie Yuccan",
+                "description": "Paiement in-plateform des ambassadeurs · ligne de revenu réactivée · ajouté pendant le call",
+                "status": "dev"
+              },
+              {
+                "title": "UI/UX — dashboard & sidebar (V2)",
+                "description": "Sidebar unifiée : tous les programmes partagent le même parcours guidé (La Méthode + « Se former » par produit, piliers → Mes outils) + refonte du dashboard · direction « Adoption & proactivité » · passage en prod = annonce nouvelle UI via /admin/push",
+                "status": "staging"
               }
             ]
           }
@@ -437,32 +426,35 @@
           "dateLabel": "01–31/08",
           "label": "Indépendance technique, communauté & coaching augmenté",
           "devs": {
-            "Quentin": [
+            "team": [
               {
                 "title": "Pré-lancement communauté gratuite",
-                "description": "Bêta fermée 10 août · objectif 100 k membres (≠ clients) · sur l'app mobile"
+                "description": "Bêta fermée 17 août (100–200 clients tests Boss Energy / Incubateur) · objectif 100 k membres (≠ clients) · sur l'app mobile · tous les P0 du cahier des charges d'Abdel dus à cette date"
               },
               {
-                "title": "Cadrage détaillé du brief communauté (Abdel)",
-                "description": "Stratégie communauté · calibre les specs d'août"
+                "title": "Annuaire prestataires — refonte",
+                "description": "Détection auto du besoin client → reco du bon prestataire · ajouté pendant le call"
               },
               {
-                "title": "Annuaire prestataires & partenaires — refonte + affiliation",
-                "description": "Reco proactive · LegalPlace / banques / assurances / Oudou · cadrage juillet"
-              }
-            ],
-            "Leonard": [
-              {
-                "title": "LMS maison",
-                "description": "Remplacement de Circle"
+                "title": "Partenariats proactifs",
+                "description": "Push LegalPlace / banques / assurances (« crée ta boîte gratuitement… ») · ajouté pendant le call · EN ATTENTE DE FABRICE : où placer ces pushs dans la plateforme"
               },
               {
                 "title": "Proactivité post-coaching enrichie",
-                "description": "2 layers (anticipation via module Eloïse + notifs de suivi) + reco prestataire auto"
+                "description": "Bouton sur l'action issue du coaching permettant de déléguer la tâche à un agent (quand un agent couvre le besoin, ex. fiche de poste → Héloïse) · 2e layer : notifications de suivi sur ce qui s'est dit en session"
               },
               {
-                "title": "Live AI Coaching",
-                "description": "PRIORITÉ ABSOLUE · dev juillet → livraison mi-août · l'agent DRIVE le coach · +~1$/h · ROI 3-4 M€/an"
+                "title": "Live Coaching Agent + Live Sales Agent",
+                "description": "PRIORITÉ ABSOLUE · ~15 août · l'agent DRIVE le coach · scoring des calls · +~1 $/h realtime accepté · collab Anis / Alchemy (Romain Nussmann)"
+              },
+              {
+                "title": "Sales sur le note-taker → exit SuperSales",
+                "description": "Zéro licence Claap + SuperSales dès septembre"
+              },
+              {
+                "title": "LMS maison",
+                "description": "Remplacement de Circle · héberge « Les 5 Piliers »",
+                "status": "staging"
               }
             ]
           }
@@ -472,7 +464,7 @@
           "dateLabel": "01–30/09",
           "label": "Lancement communauté & automatisation",
           "devs": {
-            "Quentin": [
+            "team": [
               {
                 "title": "Lancement officiel — soirée Paris",
                 "description": "4 septembre · lancement communauté (pas le Moonshot)"
@@ -480,9 +472,7 @@
               {
                 "title": "Onboarding « membre » vs « client »",
                 "description": "en production"
-              }
-            ],
-            "Leonard": [
+              },
               {
                 "title": "Daily accountability agent",
                 "description": "Relances + gestion de tâches (Soubless.1) + adoption par appartenance & capture passive (leçon Marcus)"
@@ -492,8 +482,8 @@
                 "description": "Analyse + prompts par team · récup. modules Alchemy / Anis"
               },
               {
-                "title": "Recouvrement d'impayés & upsell automatisé",
-                "description": "Détection d'intention IA · anticipe les impayés · au plus tard septembre"
+                "title": "Recouvrement d'impayés automatisé",
+                "description": "Ramené du Q4 (idéalement août) · détection d'intention IA · anticipe les impayés"
               },
               {
                 "title": "Monétisation plateforme — démarrage du cadrage",
@@ -508,7 +498,7 @@
           "label": "Monétisation & R&D · trimestre à fort potentiel",
           "sync": "⚠ Trimestre encore ouvert — partenariats, calendrier de monétisation & périmètre du moonshot à arbitrer avec Quentin, Fabrice & Alec",
           "devs": {
-            "Quentin": [
+            "team": [
               {
                 "title": "Monétisation plateforme — déploiement",
                 "description": "Affiliation, partenariats (banques, assurances, SaaS)"
@@ -516,12 +506,14 @@
               {
                 "title": "Roadmap Q1 2027 & préparation Scale Mars",
                 "description": ""
-              }
-            ],
-            "Leonard": [
+              },
               {
                 "title": "Moonshot — Entrepreneur OS",
                 "description": "V0 R&D · plug dans le quotidien · app terrain voix/WhatsApp · verrou = adoption des clients peu digitaux"
+              },
+              {
+                "title": "Upsell automatisé via IA",
+                "description": ""
               }
             ]
           }
