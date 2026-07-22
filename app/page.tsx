@@ -1,5 +1,5 @@
 import { getAllDeliverables } from "@/lib/mdx";
-import { getConfig, getScopeMeta } from "@/lib/config";
+import { getConfig, getScopeMeta, scopeHasOwnership } from "@/lib/config";
 import { FullRoadmap } from "@/components/full-roadmap";
 import { ScopeEmpty } from "@/components/scope-empty";
 import { getScopeWeeks } from "@/lib/schedule";
@@ -18,10 +18,15 @@ export default async function Home({
     getScopeStartDate(scopeId),
   ]);
 
-  const devNames = config.devs;
   const scopeMeta = getScopeMeta(config, scopeId);
   const scopeLabel = scopeMeta?.label ?? scopeId;
   const scopeDone = scopeMeta?.status === "done";
+  const ownership = scopeHasOwnership(config, scopeId);
+  // Unattributed scopes carry a single bucket in roadmap.json; read the keys from
+  // the data rather than the project-wide dev list.
+  const devNames = ownership
+    ? config.devs
+    : Array.from(new Set(weeks.flatMap((w) => Object.keys(w.devs))));
 
   return (
     <div className="space-y-6 animate-enter">
@@ -30,7 +35,7 @@ export default async function Home({
           Roadmap — {scopeLabel}
         </h1>
         <p className="mt-2 text-[11px] uppercase tracking-[0.15em] text-text-muted">
-          {config.project} — {devNames.join(" + ")}
+          {config.project} — {config.devs.join(" + ")}
         </p>
       </div>
 
@@ -43,6 +48,7 @@ export default async function Home({
           devNames={devNames}
           startDate={startDate}
           scopeDone={scopeDone}
+          ownership={ownership}
         />
       )}
     </div>

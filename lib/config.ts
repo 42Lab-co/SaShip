@@ -10,6 +10,12 @@ export interface ScopeConfig {
   status: ScopeStatus;
   /** Optional Linear label used to filter the Issues page to this phase. */
   linearLabel?: string;
+  /**
+   * Whether deliverables are attributed per developer. Defaults to true (legacy
+   * scopes ship a column per dev). Set false for scopes delivered as one team:
+   * the roadmap then renders a single unattributed track.
+   */
+  ownership?: boolean;
 }
 
 export interface ProjectConfig {
@@ -70,6 +76,11 @@ export function getScopeMeta(config: ProjectConfig, id: string): ScopeConfig | u
 
 export function hasMultipleScopes(config: ProjectConfig): boolean {
   return getScopes(config).length > 1;
+}
+
+/** Per-developer attribution is on unless a scope explicitly opts out. */
+export function scopeHasOwnership(config: ProjectConfig, id: string): boolean {
+  return getScopeMeta(config, id)?.ownership !== false;
 }
 
 /**

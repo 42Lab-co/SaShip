@@ -10,6 +10,11 @@ interface FullRoadmapProps {
   startDate: string;
   /** When true (a completed scope), render every deliverable as done. */
   scopeDone?: boolean;
+  /**
+   * Per-developer attribution. When false the roadmap drops the dev columns and
+   * renders one unattributed track — the work reads as the team's, not a person's.
+   */
+  ownership?: boolean;
 }
 
 export function FullRoadmap({
@@ -18,6 +23,7 @@ export function FullRoadmap({
   devNames,
   startDate,
   scopeDone = false,
+  ownership = true,
 }: FullRoadmapProps) {
   // Count totals across all weeks
   let totalPlanned = 0;
@@ -94,7 +100,7 @@ export function FullRoadmap({
       {/* Header */}
       <div className="border-b border-border-default px-4 py-3 flex items-center justify-between">
         <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-text-primary">
-          {schedule.length}-Week Roadmap
+          {ownership ? `${schedule.length}-Week Roadmap` : "Roadmap"}
         </span>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
@@ -143,7 +149,8 @@ export function FullRoadmap({
         </div>
       </div>
 
-      {/* Column headers with per-dev progress bars */}
+      {/* Column headers with per-dev progress bars — attributed scopes only */}
+      {ownership && (
       <div className="grid grid-cols-[72px_1fr_1fr] border-b border-t border-border-default">
         <div className="border-r border-border-default px-3 py-2" />
         {devNames.map((name) => {
@@ -192,6 +199,7 @@ export function FullRoadmap({
           );
         })}
       </div>
+      )}
 
       {/* Week rows — one row per week */}
       {schedule.map((week, wi) => (
@@ -205,7 +213,15 @@ export function FullRoadmap({
             </div>
           )}
 
-          {(() => {
+          {!ownership ? (
+            <UnattributedWeek
+              week={week}
+              index={wi}
+              startDate={startDate}
+              scopeDone={scopeDone}
+              last={wi === schedule.length - 1}
+            />
+          ) : (() => {
             const maxEntries = Math.max(
               ...devNames.map((d) => (week.devs[d] ?? []).length)
             );
@@ -281,6 +297,98 @@ export function FullRoadmap({
 }
 
 /* ─── Sub-components ─── */
+
+/** Status → the hairline that lets a month be scanned vertically. */
+const RAIL: Record<string, string> = {
+  deployed: "border-l-accent",
+  staging: "border-l-status-staging",
+  dev: "border-l-status-dev",
+};
+
+/**
+ * A month rendered as one unattributed track. With the dev columns gone, the
+ * scan axis becomes status: each row carries a status-tinted hairline and the
+ * rail shows how much of the month has landed.
+ */
+function UnattributedWeek({
+  week,
+  index,
+  startDate,
+  scopeDone,
+  last,
+}: {
+  week: WeekSchedule;
+  index: number;
+  startDate: string;
+  scopeDone: boolean;
+  last: boolean;
+}) {
+  const entries = Object.values(week.devs).flat();
+  const done = scopeDone
+    ? entries.length
+    : entries.filter((e) => e.status === "deployed").length;
+
+  return (
+    <div
+      className={`grid grid-cols-[80px_1fr] ${last ? "" : "border-b border-border-default"}`}
+    >
+      {/* Month rail */}
+      <div className="flex flex-col gap-0.5 border-r border-border-default px-3 py-3">
+        <span className="text-[13px] font-bold tracking-[0.04em] text-text-primary">
+          {week.week}
+        </span>
+        <span className="text-[9px] tracking-[0.06em] text-text-muted">
+          {week.dateLabel ?? getWeekDateRange(startDate, index)}
+        </span>
+        {entries.length > 0 && (
+          <span className="mt-1 font-mono text-[10px] tracking-[0.08em] text-text-muted tabular-nums">
+            {done}/{entries.length}
+          </span>
+        )}
+      </div>
+
+      {/* Theme + deliverables */}
+      <div>
+        <div className="border-b border-border-default/40 bg-bg-surface/50 px-3 py-1.5">
+          <span className="text-[10px] tracking-[0.08em] text-text-secondary">
+            {week.label}
+          </span>
+        </div>
+        <div className="flex flex-col gap-px py-1.5">
+          {entries.map((entry, i) => {
+            const status = scopeDone ? "deployed" : (entry.status ?? null);
+            return (
+              <div
+                key={`${entry.title}-${i}`}
+                className={`border-l-2 px-3 py-1 ${status ? RAIL[status] : "border-l-transparent"}`}
+              >
+                <div className="flex items-baseline gap-2">
+                  <StatusDot status={status} />
+                  <span
+                    className={`text-[11px] font-medium tracking-[0.04em] ${
+                      status === "deployed"
+                        ? "text-text-muted line-through decoration-accent"
+                        : status
+                          ? "text-text-primary"
+                          : "text-text-muted"
+                    }`}
+                  >
+                    {entry.title}
+                  </span>
+                </div>
+                {entry.description && (
+                  <p className="ml-[18px] mt-0.5 text-[10px] leading-snug text-text-secondary">
+                    {entry.description}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function DeliverableCell({
   entry,
