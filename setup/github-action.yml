@@ -9,7 +9,9 @@
 # Required variables:
 #   TRACKING_REPO        — e.g. "org/saship-tracking"
 #   TRACKING_BRANCH      — e.g. "project-x"
-#   COMMIT_PREFIX        — e.g. "[project-x]"
+#   COMMIT_PREFIX        — optional, e.g. "[project-x]": only commits carrying it reach
+#                          the AI digest, the Slack post and the MDX updates. Leave it
+#                          unset to feed every commit.
 #
 # Collection window: every commit since the last successful sync (`lastSync` in
 # sync-log.json on the tracking repo), so weekends and failed runs are caught up
@@ -69,6 +71,7 @@ jobs:
           else
             SINCE=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
           fi
+          echo "since=$SINCE" >> "$GITHUB_OUTPUT"
           echo "until=$UNTIL" >> "$GITHUB_OUTPUT"
           echo "Looking for commits from $SINCE to $UNTIL (last sync: ${LAST_SYNC:-none})"
 
@@ -315,9 +318,21 @@ jobs:
         id: summary
         env:
           AI_GATEWAY_API_KEY: ${{ secrets.AI_GATEWAY_API_KEY }}
+          SINCE: ${{ steps.commits.outputs.since }}
         run: |
           TODAY=$(date +%Y-%m-%d)
           YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d)
+
+          # The window runs from the last sync: a Monday digest covers the whole weekend,
+          # so it must not call three days of work "hier".
+          SINCE_DAY="${SINCE:0:10}"
+          if [ -z "$SINCE_DAY" ] || [[ ! "$SINCE_DAY" < "$YESTERDAY" ]]; then
+            PERIOD="$YESTERDAY"
+            DELIVERED="hier"
+          else
+            PERIOD="du $SINCE_DAY au $YESTERDAY"
+            DELIVERED="depuis le $SINCE_DAY"
+          fi
 
           # Read the inputs from the files the previous steps wrote (not env vars: see header note)
           COMMITS=$(cat /tmp/commits.json)
@@ -355,7 +370,7 @@ jobs:
           7. Ecris une entree de changelog EN FRANCAIS pour chaque livrable associe. N'inclus PAS le nom de l'auteur dans l'entree (le owner est deja dans le frontmatter et affiche par colonne). Format :
              ### $TODAY
              <resume concis en francais>
-          8. Ecris un digest Slack quotidien EN FRANCAIS en utilisant la syntaxe Slack mrkdwn (PAS du markdown standard). Regles mrkdwn Slack : *gras* (asterisque simple), _italique_ (underscores), pas de ## titres (utilise *texte en gras* sur sa propre ligne), puces avec •. Groupe par developpeur, puis par environnement. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui"). Ecris en francais avec un langage simple et non-technique.
+          8. Ecris un digest Slack quotidien EN FRANCAIS en utilisant la syntaxe Slack mrkdwn (PAS du markdown standard). Regles mrkdwn Slack : *gras* (asterisque simple), _italique_ (underscores), pas de ## titres (utilise *texte en gras* sur sa propre ligne), puces avec •. Groupe par developpeur, puis par environnement. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement". Le titre du message doit etre "Suivi des livraisons — $PERIOD" (recopie cette periode telle quelle : ce sont les dates des commits rapportes, pas la date d'aujourd'hui). En bas du message, ecris "X changement(s) livré(s) $DELIVERED" (PAS "aujourd'hui"). Ecris en francais avec un langage simple et non-technique.
           9. Si un commit resout ou complete clairement un element des DEVELOPPEMENTS SUPPLEMENTAIRES, inclus-le dans "extras_updates" avec l'"id" exact de l'element et le statut "done". Ne marque comme done que si le commit traite reellement l'extra — ne force pas d'associations.
 
           Reponds au format JSON :
@@ -388,7 +403,7 @@ jobs:
           echo "Calling AI Gateway (model: anthropic/claude-haiku-4-5)"
 
           # Build request JSON to a file, then send with @file
-          jq -n --rawfile content /tmp/ai_prompt.txt '{model:"anthropic/claude-haiku-4-5",max_tokens:2048,messages:[{role:"user",content:$content}]}' > /tmp/ai_request.json
+          jq -n --rawfile content /tmp/ai_prompt.txt '{model:"anthropic/claude-haiku-4-5",max_tokens:8192,messages:[{role:"user",content:$content}]}' > /tmp/ai_request.json
 
           HTTP_CODE=$(curl -s -o /tmp/ai_response.json -w "%{http_code}" \
             https://ai-gateway.vercel.sh/v1/chat/completions \
