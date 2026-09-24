@@ -6,7 +6,7 @@ export interface DeliverableEntry {
   title: string;
   description: string;
   /** Manual status for entries without an MDX file (e.g. monthly scopes). */
-  status?: "deployed" | "staging";
+  status?: "deployed" | "staging" | "dev";
 }
 
 export interface WeekSchedule {

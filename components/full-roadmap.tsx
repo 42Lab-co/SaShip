@@ -49,6 +49,7 @@ export function FullRoadmap({
         if (!e.status || isMatched(e.title, dev)) continue;
         if (e.status === "deployed") totalShipped++;
         else if (e.status === "staging") totalInStaging++;
+        else if (e.status === "dev") totalInDev++;
       }
     }
   }
@@ -84,6 +85,7 @@ export function FullRoadmap({
         if (!e.status || isMatched(e.title, name)) continue;
         if (e.status === "deployed") shipped++;
         else if (e.status === "staging") inStaging++;
+        else if (e.status === "dev") inDev++;
       }
     }
     if (scopeDone) {
