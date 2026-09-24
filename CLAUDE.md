@@ -24,7 +24,7 @@ This is the **tracking repo**. It is a passive receiver — it does not contain 
 ## Data flow
 
 1. Devs commit in the client repo using the `/ship` slash command (proper prefix + conventional format)
-2. A daily GitHub Action on the client repo collects today's commits, determines environment from branch (staging → `staging`, main/production → `deployed`)
+2. A daily GitHub Action on the client repo collects every commit since the last sync (`lastSync` in `sync-log.json`, so weekends and failed runs are caught up), determines environment from branch (staging → `staging`, main/production → `deployed`)
 3. The Action appends ALL collected commits to `content/commits.mdx` (no AI — direct formatting, prefix stripped)
 4. The Action fetches roadmap context from the tracking repo: `project.config.json` + all existing MDX frontmatter (excluding `commits.mdx`)
 5. Commits + roadmap context + extras are sent to Claude API — Claude matches commits to existing deliverables, writes plain-English changelog entries, and marks resolved extras as done; unmatched commits are skipped in MDX but included in the Slack digest
@@ -65,7 +65,7 @@ This produces entries like `— *Quentin H*` in MDX files. Currently disabled be
 
 ## GitHub Actions (installed on client dev repo, templates in `setup/`)
 
-- `saship-digest.yml` — daily cron (7:30 AM UTC+1 weekdays) + manual trigger. Collects all commits from the previous day across all branches for the commit log page, then filters by project prefix for AI matching. Updates MDX/extras/stats/sync-log on the tracking repo, posts daily Slack digest.
+- `saship-digest.yml` — daily cron (7:30 AM UTC+1 weekdays) + manual trigger. Collects all commits since the last sync (`lastSync` in `sync-log.json`; the last 24h on a first run) across all branches for the commit log page, one section per commit date, then filters by project prefix for AI matching. Payloads travel through files (`jq --rawfile`), never argv or env vars: Linux caps a single argument at 128 KiB, and `commits.mdx` outgrew that in July 2026. Updates MDX/extras/stats/sync-log on the tracking repo, posts daily Slack digest.
 - `slack-merge-notify.yml` — triggers on push to `main`, `staging`, or `dev/*`. Waits for Vercel deployment to succeed (skipped for dev branches), collects all commits in the merge, rephrases them in customer-friendly language via AI, and posts to Slack. Dev branches post in French with the author's name ("Léonard a ajouté à l'environnement de développement"). Posts a failure alert if Vercel deploy fails.
 
 **IMPORTANT — keep workflows in sync:** The live workflow files live in the client dev repo (`.github/workflows/`). The templates in `setup/` on this repo must always mirror them. When editing a workflow, update BOTH the client repo copy and the `setup/` template here. The only acceptable differences are project-specific values (Slack user IDs, project names).
@@ -73,7 +73,7 @@ This produces entries like `— *Quentin H*` in MDX files. Currently disabled be
 ## Slash commands (installed on client dev repo, templates in `setup/`)
 
 - `/ship` — drafts and creates a properly prefixed commit from staged changes
-- `/roadmap` — reads local `.saship/roadmap.json`, shows current sprint week, planned deliverables, and cross-references with recent commits
+- `/roadmap` — reads `content/roadmap.json` live from this repo (via `gh` and the client repo's `TRACKING_REPO` / `TRACKING_BRANCH` variables; a local `.saship/roadmap.json` is only an offline fallback), shows the active scope's current period, its deliverables and statuses, and cross-references recent commits
 - `/extra` — adds a new additional development request to `content/extras.json` on the tracking repo
 
 ## What lives where (`main` vs project branches)

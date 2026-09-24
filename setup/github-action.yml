@@ -10,13 +10,21 @@
 #   TRACKING_REPO        — e.g. "org/saship-tracking"
 #   TRACKING_BRANCH      — e.g. "project-x"
 #   COMMIT_PREFIX        — e.g. "[project-x]"
+#
+# Collection window: every commit since the last successful sync (`lastSync` in
+# sync-log.json on the tracking repo), so weekends and failed runs are caught up
+# by the next run. Falls back to the last 24h when there is no sync log yet.
+#
+# Large payloads (commit lists, base64 file bodies) travel through files, never
+# through argv or env vars: Linux caps a single argument at 128 KiB, and
+# commits.mdx outgrew that in July 2026 (`jq: Argument list too long`).
 
 name: SaShip Daily Digest
 
 on:
   schedule:
     - cron: "30 5 * * 1-5" # Weekdays at ~7:30 AM CET (5:30 UTC + GH Actions delay)
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,140 +41,175 @@ jobs:
       - name: Fetch all branches
         run: git fetch --all
 
-      - name: Collect today's commits
+      - name: Collect commits since the last sync
         id: commits
+        env:
+          TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
+          TRACKING_REPO: ${{ vars.TRACKING_REPO }}
+          TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
-          SINCE=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
           PREFIX="${{ vars.COMMIT_PREFIX }}"
           echo "::group::Commit collection"
-          echo "Looking for commits since $SINCE"
 
-          # Get ALL commits from all branches (for the commit log page)
-          ALL_RAW=$(git log --all --since="$SINCE" --pretty=format:'%H|%an|%s' || true)
+          # Window: [lastSync, now). The upper bound is frozen here and becomes the next
+          # lastSync, so a commit pushed while this job runs is picked up next time.
+          UNTIL=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          FLOOR=$(date -u -d "90 days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-90d +%Y-%m-%dT%H:%M:%SZ)
+          LAST_SYNC=$(curl -s \
+            -H "Authorization: token $TRACKING_REPO_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/$TRACKING_REPO/contents/sync-log.json?ref=$TRACKING_BRANCH" \
+            | jq -r '.content // empty' | base64 -d 2>/dev/null | jq -r '.lastSync // empty' 2>/dev/null || true)
 
-          if [ -z "$ALL_RAW" ]; then
+          if [[ "$LAST_SYNC" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$ ]]; then
+            SINCE="$LAST_SYNC"
+            # Never reach back more than 90 days, however long the outage was.
+            if [[ "$SINCE" < "$FLOOR" ]]; then SINCE="$FLOOR"; fi
+          else
+            SINCE=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
+          fi
+          echo "until=$UNTIL" >> "$GITHUB_OUTPUT"
+          echo "Looking for commits from $SINCE to $UNTIL (last sync: ${LAST_SYNC:-none})"
+
+          # Get ALL commits from all branches (for the commit log page). Fields are
+          # separated by 0x1f so a "|" in a subject cannot shift them.
+          git log --all --since="$SINCE" --until="$UNTIL" \
+            --pretty=format:'%H%x1f%cs%x1f%an%x1f%s' > /tmp/all_commits.txt || true
+          jq -R -s '
+            split("\n") | map(select(length > 0) | split("\u001f")
+              | {hash: .[0], date: .[1], author: .[2], message: (.[3:] | join("\u001f"))})
+          ' /tmp/all_commits.txt > /tmp/all_commits.json
+
+          ALL_COUNT=$(jq 'length' /tmp/all_commits.json)
+          if [ "$ALL_COUNT" = "0" ]; then
             echo "no_all_commits=true" >> "$GITHUB_OUTPUT"
             echo "no_commits=true" >> "$GITHUB_OUTPUT"
-            echo "::warning::No commits found in the last 24h"
+            echo "::warning::No commits found since $SINCE"
             echo "::endgroup::"
             exit 0
           fi
 
           echo "no_all_commits=false" >> "$GITHUB_OUTPUT"
-
-          # Build JSON array for ALL commits (used by commit log page)
-          echo "$ALL_RAW" | while IFS= read -r line; do
-            HASH=$(echo "$line" | cut -d'|' -f1)
-            AUTHOR=$(echo "$line" | cut -d'|' -f2)
-            MESSAGE=$(echo "$line" | cut -d'|' -f3-)
-            jq -n --arg h "$HASH" --arg a "$AUTHOR" --arg m "$MESSAGE" \
-              '{hash:$h, author:$a, message:$m}'
-          done | jq -s '.' > /tmp/all_commits.json
-
-          ALL_COUNT=$(jq 'length' /tmp/all_commits.json)
           echo "Found $ALL_COUNT total commit(s)"
 
-          echo "all_commits_json<<EOF" >> "$GITHUB_OUTPUT"
-          cat /tmp/all_commits.json >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
           # Get prefix-filtered commits (for AI matching and MDX updates)
-          COMMITS=$(echo "$ALL_RAW" | grep -F "$PREFIX" || true)
+          jq --arg p "$PREFIX" '[.[] | select(.message | contains($p))]' /tmp/all_commits.json > /tmp/prefixed_commits.json
+          COMMIT_COUNT=$(jq 'length' /tmp/prefixed_commits.json)
 
-          if [ -z "$COMMITS" ]; then
+          if [ "$COMMIT_COUNT" = "0" ]; then
             echo "no_commits=true" >> "$GITHUB_OUTPUT"
             echo "::warning::No commits with prefix $PREFIX found (but $ALL_COUNT total commits logged)"
             echo "::endgroup::"
             exit 0
           fi
 
-          COMMIT_COUNT=$(echo "$COMMITS" | wc -l | tr -d ' ')
           echo "Found $COMMIT_COUNT prefixed commit(s)"
-          echo "$COMMITS"
+          jq -r '.[] | .hash[0:9] + " " + .message' /tmp/prefixed_commits.json
           echo "no_commits=false" >> "$GITHUB_OUTPUT"
 
-          # Build JSON array of prefixed commits using jq for safe encoding
-          echo "$COMMITS" | while IFS= read -r line; do
-            HASH=$(echo "$line" | cut -d'|' -f1)
-            AUTHOR=$(echo "$line" | cut -d'|' -f2)
-            MESSAGE=$(echo "$line" | cut -d'|' -f3-)
-            # Determine environment by checking which branches contain this commit
-            ENV="dev"
-            if git branch -a --contains "$HASH" 2>/dev/null | grep -qE "remotes/origin/staging$|staging$"; then
-              ENV="staging"
-            fi
-            if git branch -a --contains "$HASH" 2>/dev/null | grep -qE "main$|master$|production$|remotes/origin/main$|remotes/origin/master$|remotes/origin/production$"; then
+          # Determine environment by checking which branches contain each commit
+          jq -c '.[]' /tmp/prefixed_commits.json | while IFS= read -r commit; do
+            HASH=$(echo "$commit" | jq -r '.hash')
+            BRANCHES=$(git branch -a --contains "$HASH" 2>/dev/null || true)
+            if echo "$BRANCHES" | grep -qE "main$|master$|production$|remotes/origin/main$|remotes/origin/master$|remotes/origin/production$"; then
               ENV="prod"
-            fi
-            # Determine status from branch
-            STATUS="dev"
-            if [ "$ENV" = "staging" ]; then
-              STATUS="staging"
-            elif [ "$ENV" = "prod" ]; then
               STATUS="deployed"
+            elif echo "$BRANCHES" | grep -qE "staging$|remotes/origin/staging$"; then
+              ENV="staging"
+              STATUS="in-staging"
+            else
+              ENV="dev"
+              STATUS="in-development"
             fi
-            jq -n --arg h "$HASH" --arg a "$AUTHOR" --arg m "$MESSAGE" --arg e "$ENV" --arg s "$STATUS" \
-              '{hash:$h, author:$a, message:$m, env:$e, status:$s}'
+            echo "$commit" | jq --arg e "$ENV" --arg s "$STATUS" \
+              '{hash, author, message, env: $e, status: $s}'
           done | jq -s '.' > /tmp/commits.json
 
-          echo "commits_json<<EOF" >> "$GITHUB_OUTPUT"
-          cat /tmp/commits.json >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
           echo "Commits JSON:"
           cat /tmp/commits.json
           echo "::endgroup::"
 
       - name: Update commit log on tracking repo
+        id: commitlog
         if: steps.commits.outputs.no_all_commits != 'true'
         env:
           TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
-          ALL_COMMITS_JSON: ${{ steps.commits.outputs.all_commits_json }}
         run: |
           TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
           echo "::group::Update commit log"
 
-          printenv ALL_COMMITS_JSON > /tmp/commits_for_log.json
-
-          # Format commits as markdown bullet list, stripping the project prefix
-          # Add a date heading so the frontend can group commits by day
-          YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d)
-          TODAY_HEADING="### $YESTERDAY"
-          BULLET_LIST=$(printf '%s\n%s' "$TODAY_HEADING" "$(jq -r '.[] | "- " + (.message | gsub("^\\[.*?\\] *"; "")) + " — *" + .author + "*"' /tmp/commits_for_log.json)")
-
-          if [ -z "$BULLET_LIST" ]; then
-            echo "No commits to add to commit log"
-            echo "::endgroup::"
-            exit 0
-          fi
-
-          COMMIT_COUNT=$(echo "$BULLET_LIST" | wc -l | tr -d ' ')
+          COMMIT_COUNT=$(jq 'length' /tmp/all_commits.json)
           echo "Adding $COMMIT_COUNT commit(s) to commit log"
 
-          # Fetch current commits.mdx from tracking repo
+          # Fetch current commits.mdx: sha from the JSON API, body from the raw media
+          # type (the JSON API stops inlining file content above 1 MB).
           FILE_PATH="content/commits.mdx"
-          EXISTING=$(curl -s \
+          FILE_URL="https://api.github.com/repos/$TRACKING_REPO/contents/$FILE_PATH?ref=$TRACKING_BRANCH"
+          SHA=$(curl -s \
             -H "Authorization: token $TRACKING_REPO_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$TRACKING_REPO/contents/$FILE_PATH?ref=$TRACKING_BRANCH")
-
-          SHA=$(echo "$EXISTING" | jq -r '.sha // empty')
-          CURRENT_CONTENT=$(echo "$EXISTING" | jq -r '.content // empty' | base64 -d 2>/dev/null || true)
-
-          if [ -n "$CURRENT_CONTENT" ]; then
-            # Prepend new commits after the "## Commit Log" heading
-            printf '%s\n' "$BULLET_LIST" > /tmp/new_commits.txt
-            echo "$CURRENT_CONTENT" | sed '/^## Commit Log$/r /tmp/new_commits.txt' > /tmp/commits_updated.mdx
-          else
-            # Create the file from scratch
-            printf '## Commit Log\n%s\n' "$BULLET_LIST" > /tmp/commits_updated.mdx
+            "$FILE_URL" | jq -r '.sha // empty')
+          HTTP=$(curl -s -o /tmp/commits_current.mdx -w "%{http_code}" \
+            -H "Authorization: token $TRACKING_REPO_TOKEN" \
+            -H "Accept: application/vnd.github.raw+json" \
+            "$FILE_URL")
+          if [ "$HTTP" = "404" ]; then
+            : > /tmp/commits_current.mdx
+          elif [ "$HTTP" != "200" ]; then
+            echo "::error::Could not read $FILE_PATH (HTTP $HTTP) — leaving it untouched"
+            exit 1
           fi
 
-          # Push updated file
-          B64=$(base64 -w 0 /tmp/commits_updated.mdx)
+          # Merge the new commits in: one "### YYYY-MM-DD" section per commit date,
+          # newest first, project prefix stripped. A date that already has a section
+          # gets the new lines on top of it instead of a second heading.
+          python3 - <<'PY'
+          import json, re
+          from collections import OrderedDict
+
+          commits = json.load(open("/tmp/all_commits.json", encoding="utf-8"))
+          lines = open("/tmp/commits_current.mdx", encoding="utf-8").read().split("\n")
+
+          if "## Commit Log" in lines:
+              i = lines.index("## Commit Log")
+              head, body = lines[: i + 1], lines[i + 1 :]
+          else:
+              head, body = [l for l in lines if l.strip()] + ["## Commit Log"], []
+
+          preamble, sections, date = [], OrderedDict(), None
+          for line in body:
+              m = re.match(r"^### (\d{4}-\d{2}-\d{2})\s*$", line)
+              if m:
+                  date = m.group(1)
+                  sections.setdefault(date, [])
+              elif date is None:
+                  preamble.append(line)
+              else:
+                  sections[date].append(line)
+
+          new = OrderedDict()
+          for c in commits:  # git log order: newest first
+              message = re.sub(r"^\[.*?\] *", "", c["message"], count=1)
+              new.setdefault(c["date"], []).append(f"- {message} — *{c['author']}*")
+          for d, entries in new.items():
+              sections[d] = entries + sections.get(d, [])
+
+          out = head + [l for l in preamble if l.strip()]
+          for d in sorted(sections, reverse=True):
+              out.append(f"### {d}")
+              out.extend(l for l in sections[d] if l.strip())
+          with open("/tmp/commits_updated.mdx", "w", encoding="utf-8") as f:
+              f.write("\n".join(out) + "\n")
+          print(f"{len(new)} day(s) touched, {len(sections)} day(s) in the log")
+          PY
+
+          # Push updated file (base64 body goes through a file: see header note)
+          base64 -w 0 /tmp/commits_updated.mdx > /tmp/commits_updated.b64
           jq -n --arg msg "[bot] update: commit-log $(date +%Y-%m-%d)" \
-            --arg content "$B64" \
+            --rawfile content /tmp/commits_updated.b64 \
             --arg branch "$TRACKING_BRANCH" \
             --arg sha "$SHA" \
             'if $sha == "" then {message:$msg, content:$content, branch:$branch}
@@ -181,6 +224,8 @@ jobs:
           else
             echo "::error::Failed to update $FILE_PATH"
             cat /tmp/commits_response.json
+            # Fail the step: the sync log then keeps its lastSync and the next run retries.
+            exit 1
           fi
           echo "::endgroup::"
 
@@ -192,6 +237,9 @@ jobs:
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
+          # Sanitize token (strip stray newlines/carriage returns)
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
+
           echo "::group::Fetch roadmap context"
 
           # Fetch project.config.json
@@ -254,27 +302,11 @@ jobs:
           EXTRAS=$(echo "$EXTRAS_RESP" | jq -r '.content // empty' | base64 -d 2>/dev/null || echo '[]')
           echo "Extras fetched: $(echo "$EXTRAS" | jq 'length') items"
 
-          # Write to temp files for the next step (avoids shell quoting issues)
+          # Write to temp files for the next step (files, not step outputs: see header note)
           echo "$PROJECT_CONFIG" > /tmp/project_config.json
           echo "$ROADMAP_ENTRIES" > /tmp/roadmap_entries.json
           echo "$SCHEDULE" > /tmp/schedule.json
           echo "$EXTRAS" > /tmp/extras.json
-
-          echo "project_config<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$PROJECT_CONFIG" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "roadmap_entries<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$ROADMAP_ENTRIES" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "schedule<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$SCHEDULE" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "extras<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$EXTRAS" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
 
           echo "::endgroup::"
 
@@ -287,18 +319,12 @@ jobs:
           TODAY=$(date +%Y-%m-%d)
           YESTERDAY=$(date -u -d "yesterday" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d)
 
-          # Write commits, config, roadmap, and schedule to temp files (already there from previous steps)
-          echo '${{ steps.commits.outputs.commits_json }}' > /tmp/commits_input.json
-          echo '${{ steps.roadmap.outputs.project_config }}' > /tmp/config_input.json
-          echo '${{ steps.roadmap.outputs.roadmap_entries }}' > /tmp/roadmap_input.json
-          echo '${{ steps.roadmap.outputs.schedule }}' > /tmp/schedule_input.json
-          echo '${{ steps.roadmap.outputs.extras }}' > /tmp/extras_input.json
-
-          COMMITS=$(cat /tmp/commits_input.json)
-          CONFIG=$(cat /tmp/config_input.json)
-          ROADMAP=$(cat /tmp/roadmap_input.json)
-          SCHEDULE=$(cat /tmp/schedule_input.json)
-          EXTRAS=$(cat /tmp/extras_input.json)
+          # Read the inputs from the files the previous steps wrote (not env vars: see header note)
+          COMMITS=$(cat /tmp/commits.json)
+          CONFIG=$(cat /tmp/project_config.json)
+          ROADMAP=$(cat /tmp/roadmap_entries.json)
+          SCHEDULE=$(cat /tmp/schedule.json)
+          EXTRAS=$(cat /tmp/extras.json)
 
           # Build the prompt as a file to avoid shell quoting issues
           cat > /tmp/ai_prompt.txt <<PROMPT_EOF
@@ -323,13 +349,13 @@ jobs:
           1. Associe chaque commit a un livrable EXISTANT de la roadmap en utilisant le slug exact des entrees roadmap ci-dessus.
           2. Si un commit correspond clairement a un livrable du PLANNING DES SPRINTS qui n'a PAS encore de fichier MDX, cree une nouvelle entree en suivant la convention : kebab-case-titre-prenomdev (ex: "finances-ai-onboarding-wizard-leonard").
           3. Si un commit ne correspond clairement a AUCUN livrable, IGNORE-LE — ne force pas d'association. Inclus-le uniquement dans le digest Slack sous une section "Autres changements".
-          4. NE determine PAS le statut toi-meme. Chaque commit a deja un champ "status" derive de sa branche (staging = "staging", main/production = "deployed"). Utilise cette valeur telle quelle.
+          4. NE determine PAS le statut toi-meme. Chaque commit a deja un champ "status" derive de sa branche (staging = "in-staging", main/production = "deployed"). Utilise cette valeur telle quelle.
           5. Pour le champ "owner", utilise TOUJOURS le prenom exact tel qu'il apparait dans le PLANNING DES SPRINTS, PAS le nom complet de l'auteur du commit git. Fais correspondre l'auteur du commit au dev le plus proche dans le planning.
           6. Pour le champ "title" des NOUVEAUX fichiers, utilise EXACTEMENT le titre tel qu'il apparait dans le PLANNING DES SPRINTS. Ne traduis pas et n'invente pas de titre different.
           7. Ecris une entree de changelog EN FRANCAIS pour chaque livrable associe. N'inclus PAS le nom de l'auteur dans l'entree (le owner est deja dans le frontmatter et affiche par colonne). Format :
              ### $TODAY
              <resume concis en francais>
-          8. Ecris un digest Slack quotidien EN FRANCAIS groupe par developpeur, puis par environnement. Utilise du francais simple, pas les messages de commit bruts. Pour le gras, utilise *simple asterisques* (format Slack mrkdwn), JAMAIS **double asterisques**. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement (dev)". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui").
+          8. Ecris un digest Slack quotidien EN FRANCAIS en utilisant la syntaxe Slack mrkdwn (PAS du markdown standard). Regles mrkdwn Slack : *gras* (asterisque simple), _italique_ (underscores), pas de ## titres (utilise *texte en gras* sur sa propre ligne), puces avec •. Groupe par developpeur, puis par environnement. IMPORTANT : N'utilise PAS de termes techniques comme [PROD], [STAGING], [DEV]. Utilise des termes simples : pour prod/deployed ecris "En production", pour staging ecris "En validation (staging)", pour dev ecris "En développement". Le titre du message doit etre "Suivi des livraisons — $YESTERDAY" (utilise la date d'HIER, pas d'aujourd'hui, car les commits rapportes sont ceux de la veille). En bas du message, ecris "X changement(s) livré(s) hier" (PAS "aujourd'hui"). Ecris en francais avec un langage simple et non-technique.
           9. Si un commit resout ou complete clairement un element des DEVELOPPEMENTS SUPPLEMENTAIRES, inclus-le dans "extras_updates" avec l'"id" exact de l'element et le statut "done". Ne marque comme done que si le commit traite reellement l'extra — ne force pas d'associations.
 
           Reponds au format JSON :
@@ -341,7 +367,7 @@ jobs:
                 "title": "<titre du livrable — uniquement pour les nouveaux fichiers>",
                 "owner": "<prenom exact du dev depuis le planning>",
                 "environment": "<staging|prod du commit>",
-                "status": "<staging|deployed du commit>",
+                "status": "<in-staging|deployed du commit>",
                 "entry": "### $TODAY\n<resume en francais>"
               }
             ],
@@ -355,18 +381,14 @@ jobs:
 
           Si aucun commit ne correspond a un livrable, renvoie un tableau mdx_updates vide.
           Si aucun commit ne resout un extra, renvoie un tableau extras_updates vide.
+          IMPORTANT : Reponds uniquement en JSON brut. N'encadre PAS ta reponse dans des blocs de code markdown.
           PROMPT_EOF
 
           echo "::group::AI Gateway request"
           echo "Calling AI Gateway (model: anthropic/claude-haiku-4-5)"
 
-          # Use jq to safely encode the prompt into JSON
-          PROMPT_CONTENT=$(cat /tmp/ai_prompt.txt)
-          jq -n --arg content "$PROMPT_CONTENT" '{
-            model: "anthropic/claude-haiku-4-5",
-            max_tokens: 2048,
-            messages: [{role: "user", content: $content}]
-          }' > /tmp/ai_request.json
+          # Build request JSON to a file, then send with @file
+          jq -n --rawfile content /tmp/ai_prompt.txt '{model:"anthropic/claude-haiku-4-5",max_tokens:2048,messages:[{role:"user",content:$content}]}' > /tmp/ai_request.json
 
           HTTP_CODE=$(curl -s -o /tmp/ai_response.json -w "%{http_code}" \
             https://ai-gateway.vercel.sh/v1/chat/completions \
@@ -387,6 +409,9 @@ jobs:
           # Extract the text content (OpenAI-compatible response format)
           CONTENT=$(echo "$RESPONSE" | jq -r '.choices[0].message.content')
 
+          # Strip markdown code blocks if the model wrapped JSON in ```json ... ```
+          CONTENT=$(echo "$CONTENT" | sed '/^```\(json\)\?$/d')
+
           if [ -z "$CONTENT" ] || [ "$CONTENT" = "null" ]; then
             echo "::error::AI Gateway returned empty content"
             echo "Raw response: $RESPONSE"
@@ -395,21 +420,28 @@ jobs:
           fi
 
           echo "AI Gateway response received (${#CONTENT} chars)"
-          echo "::endgroup::"
 
-          echo "response<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$CONTENT" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          # Write cleaned content to temp file for downstream steps
+          echo "$CONTENT" > /tmp/ai_content.json
+
+          # Validate JSON
+          if ! jq . /tmp/ai_content.json > /dev/null 2>&1; then
+            echo "::error::AI response is not valid JSON"
+            echo "Content: $CONTENT"
+            echo "::endgroup::"
+            exit 1
+          fi
+
+          echo "AI content validated as JSON"
+          echo "::endgroup::"
 
       - name: Post to Slack
         if: steps.commits.outputs.no_commits != 'true'
+        continue-on-error: true
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          RESPONSE='${{ steps.summary.outputs.response }}'
-          SLACK_MSG=$(echo "$RESPONSE" | jq -r '.slack_message // empty')
-          # Append SaShip tracking link
-          SLACK_MSG=$(printf '%s\n\n<https://eos.saship.42lab.co/|Voir l'\''avancée sur SaShip>' "$SLACK_MSG")
+          SLACK_MSG=$(jq -r '.slack_message // empty' /tmp/ai_content.json)
 
           if [ -z "$SLACK_MSG" ]; then
             echo "::warning::No slack_message found in AI response — skipping Slack post"
@@ -417,15 +449,16 @@ jobs:
           fi
 
           echo "::group::Slack post"
+          SLACK_PAYLOAD=$(jq -n --arg text "$SLACK_MSG" '{text: $text}')
           SLACK_HTTP=$(curl -s -o /tmp/slack_response.txt -w "%{http_code}" \
             -X POST "$SLACK_WEBHOOK_URL" \
             -H "Content-Type: application/json" \
-            -d "{\"text\": $(echo "$SLACK_MSG" | jq -Rs .)}")
+            -d "$SLACK_PAYLOAD") || true
 
           echo "Slack HTTP status: $SLACK_HTTP"
           if [ "$SLACK_HTTP" != "200" ]; then
-            echo "::error::Slack webhook returned HTTP $SLACK_HTTP"
-            cat /tmp/slack_response.txt
+            echo "::warning::Slack webhook returned HTTP $SLACK_HTTP (non-blocking)"
+            cat /tmp/slack_response.txt 2>/dev/null || true
           else
             echo "Slack digest posted successfully"
           fi
@@ -438,9 +471,10 @@ jobs:
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
-          RESPONSE='${{ steps.summary.outputs.response }}'
+          # Sanitize token (strip stray newlines/carriage returns)
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
 
-          UPDATE_COUNT=$(echo "$RESPONSE" | jq '.mdx_updates | length')
+          UPDATE_COUNT=$(jq '.mdx_updates | length' /tmp/ai_content.json)
           echo "::group::MDX updates ($UPDATE_COUNT file(s))"
 
           if [ "$UPDATE_COUNT" = "0" ]; then
@@ -449,7 +483,7 @@ jobs:
             exit 0
           fi
 
-          echo "$RESPONSE" | jq -c '.mdx_updates[]' | while read -r update; do
+          jq -c '.mdx_updates[]' /tmp/ai_content.json | while read -r update; do
             SLUG=$(echo "$update" | jq -r '.deliverable_slug')
             ENTRY=$(echo "$update" | jq -r '.entry')
             OWNER=$(echo "$update" | jq -r '.owner')
@@ -470,17 +504,18 @@ jobs:
             CURRENT_CONTENT=$(echo "$EXISTING" | jq -r '.content // empty' | base64 -d 2>/dev/null || true)
 
             if [ -n "$CURRENT_CONTENT" ]; then
-              # Prepend new entry after "## Changelog" line
-              NEW_CONTENT=$(echo "$CURRENT_CONTENT" | awk -v entry="$ENTRY" '/^## Changelog$/{print; print ""; print entry; next}1')
+              # Insert new entry after "## Changelog" line using temp file (avoids awk newline issues)
+              printf '\n%s\n' "$ENTRY" > /tmp/changelog_entry.txt
+              echo "$CURRENT_CONTENT" | sed '/^## Changelog$/r /tmp/changelog_entry.txt' > /tmp/mdx_updated.txt
               # Update frontmatter status and environment
-              NEW_CONTENT=$(echo "$NEW_CONTENT" | sed "s/^status: .*/status: $STATUS/")
-              NEW_CONTENT=$(echo "$NEW_CONTENT" | sed "s/^environment: .*/environment: $ENV/")
+              sed -i "s/^status: .*/status: $STATUS/" /tmp/mdx_updated.txt
+              sed -i "s/^environment: .*/environment: $ENV/" /tmp/mdx_updated.txt
             else
               # Create new file — use title from AI response or derive from slug
               if [ -z "$TITLE" ]; then
                 TITLE=$(echo "$SLUG" | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1')
               fi
-              NEW_CONTENT=$(printf '%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n\n%s' \
+              printf '%s\n%s\n%s\n%s\n%s\n%s\n\n%s\n\n%s\n' \
                 "---" \
                 "title: $TITLE" \
                 "owner: $OWNER" \
@@ -488,35 +523,32 @@ jobs:
                 "environment: $ENV" \
                 "---" \
                 "## Changelog" \
-                "$ENTRY")
+                "$ENTRY" > /tmp/mdx_updated.txt
             fi
 
             # Validate MDX (basic check — ensure frontmatter is intact)
-            if ! echo "$NEW_CONTENT" | head -1 | grep -q "^---$"; then
+            if ! head -1 /tmp/mdx_updated.txt | grep -q "^---$"; then
               echo "ERROR: Invalid MDX for $SLUG — skipping"
               continue
             fi
 
-            # Commit to tracking repo
-            ENCODED=$(echo "$NEW_CONTENT" | base64 | tr -d '\n')
-
-            PAYLOAD=$(jq -n --arg msg "[bot] update: $SLUG digest $(date +%Y-%m-%d)" \
-              --arg content "$ENCODED" \
+            # Build payload: base64 encode the file, then build JSON with jq
+            base64 -w 0 /tmp/mdx_updated.txt > /tmp/mdx_updated.b64
+            jq -n --arg msg "update: $SLUG digest $(date +%Y-%m-%d)" \
+              --rawfile content /tmp/mdx_updated.b64 \
               --arg branch "$TRACKING_BRANCH" \
               --arg sha "$SHA" \
               'if $sha == "" then {message:$msg, content:$content, branch:$branch}
-               else {message:$msg, content:$content, branch:$branch, sha:$sha} end')
+               else {message:$msg, content:$content, branch:$branch, sha:$sha} end' \
+              > /tmp/mdx_payload.json
 
-            MDX_HTTP=$(curl -s -o /tmp/mdx_response.json -w "%{http_code}" -X PUT \
-              -H "Authorization: token $TRACKING_REPO_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/$TRACKING_REPO/contents/$FILE_PATH" \
-              -d "$PAYLOAD")
-
-            if [ "$MDX_HTTP" = "200" ] || [ "$MDX_HTTP" = "201" ]; then
-              echo "Updated $FILE_PATH (HTTP $MDX_HTTP)"
+            if GH_TOKEN="$TRACKING_REPO_TOKEN" gh api \
+              -X PUT \
+              "/repos/$TRACKING_REPO/contents/$FILE_PATH" \
+              --input /tmp/mdx_payload.json > /tmp/mdx_response.json 2>&1; then
+              echo "Updated $FILE_PATH"
             else
-              echo "::error::Failed to update $FILE_PATH (HTTP $MDX_HTTP)"
+              echo "::error::Failed to update $FILE_PATH"
               cat /tmp/mdx_response.json
             fi
           done
@@ -531,10 +563,9 @@ jobs:
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
           TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
-          RESPONSE='${{ steps.summary.outputs.response }}'
           echo "::group::Extras update"
 
-          EXTRAS_COUNT=$(echo "$RESPONSE" | jq '.extras_updates // [] | length')
+          EXTRAS_COUNT=$(jq '.extras_updates // [] | length' /tmp/ai_content.json)
 
           if [ "$EXTRAS_COUNT" = "0" ] || [ "$EXTRAS_COUNT" = "null" ]; then
             echo "No extras updates"
@@ -556,7 +587,7 @@ jobs:
 
           # Apply status updates from AI response
           UPDATED="$CURRENT"
-          echo "$RESPONSE" | jq -c '.extras_updates // [] | .[]' | while read -r update; do
+          jq -c '.extras_updates // [] | .[]' /tmp/ai_content.json | while read -r update; do
             EID=$(echo "$update" | jq -r '.id')
             ESTATUS=$(echo "$update" | jq -r '.status')
             echo "  Marking extra '$EID' as $ESTATUS"
@@ -572,28 +603,23 @@ jobs:
             exit 0
           fi
 
-          UPDATED=$(cat /tmp/extras_updated.json)
-
           # Push updated extras.json
-          ENCODED=$(echo "$UPDATED" | jq -c '.' | base64 | tr -d '\n')
-
-          PAYLOAD=$(jq -n --arg msg "[bot] update: extras $(date +%Y-%m-%d)" \
-            --arg content "$ENCODED" \
+          jq -c '.' /tmp/extras_updated.json | base64 -w 0 > /tmp/extras_updated.b64
+          jq -n --arg msg "[bot] update: extras $(date +%Y-%m-%d)" \
+            --rawfile content /tmp/extras_updated.b64 \
             --arg branch "$TRACKING_BRANCH" \
             --arg sha "$SHA" \
             'if $sha == "" then {message:$msg, content:$content, branch:$branch}
-             else {message:$msg, content:$content, branch:$branch, sha:$sha} end')
+             else {message:$msg, content:$content, branch:$branch, sha:$sha} end' \
+            > /tmp/extras_payload.json
 
-          EXTRAS_HTTP=$(curl -s -o /tmp/extras_response.json -w "%{http_code}" -X PUT \
-            -H "Authorization: token $TRACKING_REPO_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$TRACKING_REPO/contents/$FILE_PATH" \
-            -d "$PAYLOAD")
-
-          if [ "$EXTRAS_HTTP" = "200" ] || [ "$EXTRAS_HTTP" = "201" ]; then
-            echo "Updated $FILE_PATH (HTTP $EXTRAS_HTTP)"
+          if GH_TOKEN="$TRACKING_REPO_TOKEN" gh api \
+            -X PUT \
+            "/repos/$TRACKING_REPO/contents/$FILE_PATH" \
+            --input /tmp/extras_payload.json > /tmp/extras_response.json 2>&1; then
+            echo "Updated $FILE_PATH"
           else
-            echo "::error::Failed to update $FILE_PATH (HTTP $EXTRAS_HTTP)"
+            echo "::error::Failed to update $FILE_PATH"
             cat /tmp/extras_response.json
           fi
           echo "::endgroup::"
@@ -605,8 +631,10 @@ jobs:
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
         run: |
-          echo '${{ steps.commits.outputs.commits_json }}' > /tmp/commits_stats.json
-          COMMITS=$(cat /tmp/commits_stats.json)
+          # Sanitize token (strip stray newlines/carriage returns)
+          TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
+
+          COMMITS=$(cat /tmp/commits.json)
           echo "::group::Stats update"
 
           # Count lines added per author from today's commits
@@ -643,51 +671,46 @@ jobs:
             > /tmp/stats_updated.json
 
           # Push updated stats.json
-          ENCODED=$(jq -c '.' /tmp/stats_updated.json | base64 | tr -d '\n')
-
-          PAYLOAD=$(jq -n --arg msg "[bot] stats: update $(date +%Y-%m-%d)" \
-            --arg content "$ENCODED" \
+          jq -c '.' /tmp/stats_updated.json | base64 -w 0 > /tmp/stats_updated.b64
+          jq -n --arg msg "stats: update $(date +%Y-%m-%d)" \
+            --rawfile content /tmp/stats_updated.b64 \
             --arg branch "$TRACKING_BRANCH" \
             --arg sha "$SHA" \
             'if $sha == "" then {message:$msg, content:$content, branch:$branch}
-             else {message:$msg, content:$content, branch:$branch, sha:$sha} end')
+             else {message:$msg, content:$content, branch:$branch, sha:$sha} end' \
+            > /tmp/stats_payload.json
 
-          STATS_HTTP=$(curl -s -o /tmp/stats_response.json -w "%{http_code}" -X PUT \
-            -H "Authorization: token $TRACKING_REPO_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$TRACKING_REPO/contents/stats.json" \
-            -d "$PAYLOAD")
-
-          if [ "$STATS_HTTP" = "200" ] || [ "$STATS_HTTP" = "201" ]; then
-            echo "Updated stats.json (HTTP $STATS_HTTP)"
+          if GH_TOKEN="$TRACKING_REPO_TOKEN" gh api \
+            -X PUT \
+            "/repos/$TRACKING_REPO/contents/stats.json" \
+            --input /tmp/stats_payload.json > /tmp/stats_response.json 2>&1; then
+            echo "Updated stats.json"
           else
-            echo "::error::Failed to update stats.json (HTTP $STATS_HTTP)"
+            echo "::error::Failed to update stats.json"
             cat /tmp/stats_response.json
           fi
           echo "::endgroup::"
 
       - name: Update sync log
-        if: always()
+        # Runs whenever the commit log was written, even if a later step failed:
+        # lastSync has to move with the commit log, or the next run logs the same
+        # commits twice.
+        if: ${{ !cancelled() && steps.commitlog.outcome == 'success' }}
         env:
           TRACKING_REPO_TOKEN: ${{ secrets.TRACKING_REPO_TOKEN }}
           TRACKING_REPO: ${{ vars.TRACKING_REPO }}
           TRACKING_BRANCH: ${{ vars.TRACKING_BRANCH }}
+          UNTIL: ${{ steps.commits.outputs.until }}
         run: |
           TRACKING_REPO_TOKEN=$(printf '%s' "$TRACKING_REPO_TOKEN" | tr -d '\n\r')
           echo "::group::Sync log update"
           NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
           TODAY=$(date +%Y-%m-%d)
 
-          RESPONSE='${{ steps.summary.outputs.response }}'
-          ALL_COMMITS='${{ steps.commits.outputs.all_commits_json }}'
-          if [ -n "$ALL_COMMITS" ]; then
-            COMMIT_COUNT=$(echo "$ALL_COMMITS" | jq 'length // 0' 2>/dev/null || echo 0)
-          else
-            COMMIT_COUNT=0
-          fi
-          if [ -n "$RESPONSE" ]; then
-            MDX_COUNT=$(echo "$RESPONSE" | jq '.mdx_updates | length // 0' 2>/dev/null || echo 0)
-            FILES_TOUCHED=$(echo "$RESPONSE" | jq -r '[.mdx_updates[]?.deliverable_slug] | join(", ")' 2>/dev/null || echo "")
+          COMMIT_COUNT=$(jq 'length' /tmp/all_commits.json)
+          if [ -f /tmp/ai_content.json ]; then
+            MDX_COUNT=$(jq '.mdx_updates | length // 0' /tmp/ai_content.json)
+            FILES_TOUCHED=$(jq -r '[.mdx_updates[]?.deliverable_slug] | join(", ")' /tmp/ai_content.json)
           else
             MDX_COUNT=0
             FILES_TOUCHED=""
@@ -710,29 +733,27 @@ jobs:
             --arg files "$FILES_TOUCHED" \
             '{timestamp: $ts, commitsProcessed: $commits, filesUpdated: $mdx, deliverables: $files}')
 
-          # Append run (keep last 30 entries) and update lastSync
-          UPDATED=$(echo "$CURRENT" | jq --argjson run "$NEW_RUN" --arg ts "$NOW" \
+          # Append run (keep last 30 entries). lastSync is the end of the window this run
+          # collected, which is where the next run starts.
+          UPDATED=$(echo "$CURRENT" | jq --argjson run "$NEW_RUN" --arg ts "${UNTIL:-$NOW}" \
             '{lastSync: $ts, runs: ([.runs[], $run] | .[-30:])}')
 
-          ENCODED=$(echo "$UPDATED" | jq -c '.' | base64 | tr -d '\n')
-
-          PAYLOAD=$(jq -n --arg msg "[bot] sync-log: $TODAY" \
-            --arg content "$ENCODED" \
+          echo "$UPDATED" | jq -c '.' | base64 -w 0 > /tmp/sync_updated.b64
+          jq -n --arg msg "[bot] sync-log: $TODAY" \
+            --rawfile content /tmp/sync_updated.b64 \
             --arg branch "$TRACKING_BRANCH" \
             --arg sha "$SHA" \
             'if $sha == "" then {message:$msg, content:$content, branch:$branch}
-             else {message:$msg, content:$content, branch:$branch, sha:$sha} end')
+             else {message:$msg, content:$content, branch:$branch, sha:$sha} end' \
+            > /tmp/sync_payload.json
 
-          LOG_HTTP=$(curl -s -o /tmp/log_response.json -w "%{http_code}" -X PUT \
-            -H "Authorization: token $TRACKING_REPO_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$TRACKING_REPO/contents/sync-log.json" \
-            -d "$PAYLOAD")
-
-          if [ "$LOG_HTTP" = "200" ] || [ "$LOG_HTTP" = "201" ]; then
-            echo "Updated sync-log.json (HTTP $LOG_HTTP)"
+          if GH_TOKEN="$TRACKING_REPO_TOKEN" gh api \
+            -X PUT \
+            "/repos/$TRACKING_REPO/contents/sync-log.json" \
+            --input /tmp/sync_payload.json > /tmp/sync_response.json 2>&1; then
+            echo "Updated sync-log.json"
           else
-            echo "::error::Failed to update sync-log.json (HTTP $LOG_HTTP)"
-            cat /tmp/log_response.json
+            echo "::error::Failed to update sync-log.json"
+            cat /tmp/sync_response.json
           fi
           echo "::endgroup::"
