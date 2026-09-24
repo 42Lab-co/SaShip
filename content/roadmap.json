@@ -372,11 +372,13 @@
             "team": [
               {
                 "title": "Daily Accountability",
-                "description": "Ex-« Cockpit quotidien » · débloqué par l'app mobile + push · piste : bloc dashboard avec vocal enregistré par le client · à consolider avec le Daily accountability agent de septembre"
+                "description": "Ex-« Cockpit quotidien » · débloqué par l'app mobile + push · piste : bloc dashboard avec vocal enregistré par le client · à consolider avec le Daily accountability agent de septembre",
+                "status": "deployed"
               },
               {
                 "title": "Sessions live & Masterclass",
-                "description": "Barre live affichée quand un événement est en cours (barre rouge, clignotant, nom + horaires + bouton se connecter) + notif push · hébergement Zoom vs Google à trancher"
+                "description": "Barre live affichée quand un événement est en cours (barre rouge, clignotant, nom + horaires + bouton se connecter) + notif push · hébergement Zoom vs Google à trancher",
+                "status": "dev"
               },
               {
                 "title": "Optimisation des agents IA personnifiés",
@@ -385,7 +387,8 @@
               },
               {
                 "title": "Exit Callbell / WhatsApp",
-                "description": "Deadline mi-juillet avant renouvellement annuel · Cal.com → iClosed (licence à vie)"
+                "description": "Deadline mi-juillet avant renouvellement annuel · Cal.com → iClosed (licence à vie)",
+                "status": "deployed"
               },
               {
                 "title": "Remplacement Claap — note-taker Engram AI",
@@ -394,29 +397,33 @@
               },
               {
                 "title": "Notifications push & proactivité",
-                "description": "Postulat 3 types de clients (autonome / conciergerie)"
+                "description": "Postulat 3 types de clients (autonome / conciergerie)",
+                "status": "deployed"
               },
               {
                 "title": "Notifications de fin de session",
-                "description": "coaching & live"
+                "description": "coaching & live",
+                "status": "dev"
               },
               {
                 "title": "MCP entrepreneurs.com",
-                "description": "Cheval de Troie · Entrepreneurs dans le cloud/ChatGPT du prospect · repo + base séparés, mcp.entrepreneurs.com · outils : savoir académie, « Outils Entrepreneurs recommandés » (affiliations), « Masterclass à venir »"
+                "description": "Cheval de Troie · Entrepreneurs dans le cloud/ChatGPT du prospect · repo + base séparés, mcp.entrepreneurs.com · outils : savoir académie, « Outils Entrepreneurs recommandés » (affiliations), « Masterclass à venir »",
+                "status": "deployed"
               },
               {
                 "title": "Admin Masterclass — back-office Charlotte",
-                "description": "Charlotte (ou son équipe) ajoute/édite les liens d'inscription aux masterclass sans déploiement (titre, date, description, lien, visibilité prospect, publié) · lu par le MCP · recoupe le B7 communauté + la barre Live → modéliser les événements une seule fois"
+                "description": "Charlotte (ou son équipe) ajoute/édite les liens d'inscription aux masterclass sans déploiement (titre, date, description, lien, visibilité prospect, publié) · lu par le MCP · recoupe le B7 communauté + la barre Live → modéliser les événements une seule fois",
+                "status": "dev"
               },
               {
                 "title": "Module Ambassadeur & fidélité — sortie Yuccan",
                 "description": "Paiement in-plateform des ambassadeurs · ligne de revenu réactivée · ajouté pendant le call",
-                "status": "dev"
+                "status": "deployed"
               },
               {
                 "title": "UI/UX — dashboard & sidebar (V2)",
                 "description": "Sidebar unifiée : tous les programmes partagent le même parcours guidé (La Méthode + « Se former » par produit, piliers → Mes outils) + refonte du dashboard · direction « Adoption & proactivité » · passage en prod = annonce nouvelle UI via /admin/push",
-                "status": "staging"
+                "status": "deployed"
               }
             ]
           }
@@ -429,7 +436,8 @@
             "team": [
               {
                 "title": "Pré-lancement communauté gratuite",
-                "description": "Bêta fermée 17 août (100–200 clients tests Boss Energy / Incubateur) · objectif 100 k membres (≠ clients) · sur l'app mobile · tous les P0 du cahier des charges d'Abdel dus à cette date"
+                "description": "Bêta fermée 17 août (100–200 clients tests Boss Energy / Incubateur) · objectif 100 k membres (≠ clients) · sur l'app mobile · tous les P0 du cahier des charges d'Abdel dus à cette date",
+                "status": "deployed"
               },
               {
                 "title": "Annuaire prestataires — refonte",
@@ -445,11 +453,13 @@
               },
               {
                 "title": "Live Coaching Agent + Live Sales Agent",
-                "description": "PRIORITÉ ABSOLUE · ~15 août · l'agent DRIVE le coach · scoring des calls · +~1 $/h realtime accepté · collab Anis / Alchemy (Romain Nussmann)"
+                "description": "PRIORITÉ ABSOLUE · ~15 août · l'agent DRIVE le coach · scoring des calls · +~1 $/h realtime accepté · collab Anis / Alchemy (Romain Nussmann)",
+                "status": "staging"
               },
               {
                 "title": "Sales sur le note-taker → exit SuperSales",
-                "description": "Zéro licence Claap + SuperSales dès septembre"
+                "description": "Zéro licence Claap + SuperSales dès septembre",
+                "status": "dev"
               },
               {
                 "title": "LMS maison",
@@ -471,11 +481,13 @@
               },
               {
                 "title": "Onboarding « membre » vs « client »",
-                "description": "en production"
+                "description": "en production",
+                "status": "deployed"
               },
               {
                 "title": "Daily accountability agent",
-                "description": "Relances + gestion de tâches (Soubless.1) + adoption par appartenance & capture passive (leçon Marcus)"
+                "description": "Relances + gestion de tâches (Soubless.1) + adoption par appartenance & capture passive (leçon Marcus)",
+                "status": "deployed"
               },
               {
                 "title": "Note-taker live côté sales",
@@ -483,7 +495,8 @@
               },
               {
                 "title": "Recouvrement d'impayés automatisé",
-                "description": "Ramené du Q4 (idéalement août) · détection d'intention IA · anticipe les impayés"
+                "description": "Ramené du Q4 (idéalement août) · détection d'intention IA · anticipe les impayés",
+                "status": "dev"
               },
               {
                 "title": "Monétisation plateforme — démarrage du cadrage",
