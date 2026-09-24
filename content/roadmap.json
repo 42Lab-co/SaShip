@@ -464,7 +464,7 @@
               {
                 "title": "LMS maison",
                 "description": "Remplacement de Circle · héberge « Les 5 Piliers »",
-                "status": "staging"
+                "status": "deployed"
               }
             ]
           }
@@ -477,7 +477,8 @@
             "team": [
               {
                 "title": "Lancement officiel — soirée Paris",
-                "description": "4 septembre · lancement communauté (pas le Moonshot)"
+                "description": "4 septembre · lancement communauté (pas le Moonshot)",
+                "status": "deployed"
               },
               {
                 "title": "Onboarding « membre » vs « client »",
