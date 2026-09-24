@@ -82,7 +82,7 @@ All commits on the tracking repo should be prefixed with `[bot]` (e.g. `[bot] up
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| No commits found | Commits older than 24h or wrong prefix | Re-run the `git commit --allow-empty` commands and trigger immediately |
+| No commits found | Commits older than the last sync (`lastSync` in `sync-log.json`) or wrong prefix | Re-run the `git commit --allow-empty` commands and trigger immediately |
 | AI Gateway 401 | Bad API key | Check `AI_GATEWAY_API_KEY` secret |
 | MDX update 404 | Wrong `TRACKING_REPO` or `TRACKING_BRANCH` | Verify variables match the actual repo/branch |
 | MDX update 409 | SHA conflict — file changed between read and write | Re-run the action |
