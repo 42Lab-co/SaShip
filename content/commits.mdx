@@ -1,5 +1,912 @@
 ## Commit Log
+### 2026-09-24
+- chore(saship): resynchroniser l'instantané local de la roadmap (Q3–Q4) — *Leonard Mangallon*
+- fix(saship): le digest rattrape depuis la dernière synchro et ne casse plus sur un gros journal — *Leonard Mangallon*
+- feat(attribution-email): programmes détectés, correctifs de revue, opt-out retiré — *Leonard Mangallon*
+- feat(coachings): offboarding and retention session types, import detection, out-of-program statuses — *Leonard Mangallon*
+- fix(social): un post rejeté ne bloque plus sa journée — le créneau est libéré et le plafond ignore les posts écartés (EOS-575) — *Leonard Mangallon*
+- refactor(okr): un seul menu ⋯ sur la carte de mesure du détail — *Leonard Mangallon*
+- style(okr): l'identité de l'objectif en pleine largeur, en tête du détail — *Leonard Mangallon*
+- fix(okr): transition vers le détail — double clic, héros, mouvement réduit — *Leonard Mangallon*
+- feat(okr): animer le passage d'une carte de la liste vers le détail — *Leonard Mangallon*
+- chore(deps): Next 15.3.6 → 15.3.9 (correctifs de sécurité) et React 19.2.1 → 19.3.0 — *Leonard Mangallon*
+- fix(academie): rapatrier les pièces jointes insérées dans le corps des leçons Circle (EOS-519) — *Leonard Mangallon*
+- style(académie): page leçon en verre et marge autour du contenu — *Leonard Mangallon*
+- fix(académie): le corps des leçons s'affichait sans mise en forme côté client — *Leonard Mangallon*
+- refactor(okr): un seul menu ⋯ sur la carte de mesure du détail — *Leonard Mangallon*
+- style(okr): l'identité de l'objectif en pleine largeur, en tête du détail — *Leonard Mangallon*
+- fix(academie): rapatrier les pièces jointes insérées dans le corps des leçons Circle (EOS-519) — *Leonard Mangallon*
+- fix(okr): transition vers le détail — double clic, héros, mouvement réduit — *Leonard Mangallon*
+- feat(okr): animer le passage d'une carte de la liste vers le détail — *Leonard Mangallon*
+- chore(deps): Next 15.3.6 → 15.3.9 (correctifs de sécurité) et React 19.2.1 → 19.3.0 — *Leonard Mangallon*
+### 2026-09-23
+- docs(pause): plus de pointeur vers `lib/access-pause.ts`, supprimé par cette dépose — *Leonard Mangallon*
+- chore(pause): dépose d'EOS-390 « Accès sur pause » (étape 12) — *Leonard Mangallon*
+- docs(pause): §11 — revue du 23/09/2026 (vérifications, coût, corrections) — *Leonard Mangallon*
+- fix(pause): startPause verrouille la ligne programme, et l'aperçu ne verrouille plus rien — *Leonard Mangallon*
+- fix(pause): plus aucune copie ne promet au client de reprendre lui-même — *Leonard Mangallon*
+- fix(pause): le verrou des agents et l'infobulle des outils ne disent plus « terminé » en pause — *Leonard Mangallon*
+- test(pause): le cliquet anti-`=== 'read_only'` ne dépasse plus son timeout — *Leonard Mangallon*
+- fix(pause): l'onboarding reste réellement ouvert en démarrage différé — *Leonard Mangallon*
+- fix(chat): un tableau vierge est un livrable, et une attente n'est pas un silence — *Leonard Mangallon*
+- feat(attribution-email): écran /admin/emails-attribution, seed et doc — *Leonard Mangallon*
+- feat(attribution-email): envoi Inngest, webhook Resend, alertes — *Leonard Mangallon*
+- feat(attribution-email): schéma, DDL et logique pure du mail de bienvenue — *Leonard Mangallon*
+- feat(email): sendCoachEmail au nom d'un coach, porte de livraison partagée — *Leonard Mangallon*
+- fix(pause): plus de « terminé » pendant une pause, reprise anticipée via le support, jours restants — *Leonard Mangallon*
+- fix(chat): pièces jointes visibles dans l'historique — miniatures, nom et lien (EOS-573) — *Leonard Mangallon*
+- fix(pause): la carte « Mon accompagnement » suit une reprise lancée depuis le bandeau — *Leonard Mangallon*
+- style(messages): bulle envoyée en teinte translucide au lieu du rouge plein (EOS-569) — *Leonard Mangallon*
+- fix(social): expliquer pourquoi un pilier ne se supprime pas à 3, et ce que fait « Changer » — *Leonard Mangallon*
+- fix(communauté): afficher le seuil de 80 caractères de la description d'entreprise (EOS-572) — *Leonard Mangallon*
+- style(attribution): agrandir l'avatar de l'assigné, 18 px → 24 px — *Leonard Mangallon*
+- chore(staging): aligner le schéma staging sur db/schema.ts (joué le 23/09/2026) — *Leonard Mangallon*
+- refactor(okr): un seul menu ⋯ sur la mesure, au lieu de deux icônes muettes — *Leonard Mangallon*
+- fix(okr): pastille illisible en sombre, attribution d'action manquante, icône muette — *Leonard Mangallon*
+- docs(pause): état d'implémentation et écarts au plan — *Leonard Mangallon*
+- style(okr): donner à la carte d'objectif le padding vertical qu'elle n'avait pas — *Leonard Mangallon*
+- style(okr): alléger la carte d'objectif de la liste coach — *Leonard Mangallon*
+- feat(pause): démarrage différé — statut not_started (étape 10) — *Leonard Mangallon*
+- feat(pause): fiche coach + console cycle de vie (étape 9) — *Leonard Mangallon*
+- style(tâches): aligner le tableau client sur les colonnes sans encadré du coach — *Leonard Mangallon*
+- feat(pause): interface client (étape 8) — *Leonard Mangallon*
+- feat(pause): relances de reprise J-7 / J-0 + clôture des pauses échues (étape 7) — *Leonard Mangallon*
+- feat(pause): module serveur, actions, notifications (étapes 4-6) — *Leonard Mangallon*
+- feat(social): catalogue de piliers — ajouter ou remplacer un pilier depuis un choix — *Leonard Mangallon*
+- fix(chat): réparer les ids de document mal recopiés et élargir le garde livrable manquant (EOS-568) — *Leonard Mangallon*
+- feat(pause): statut d'accès `paused` + règles pures (étapes 2-3) — *Leonard Mangallon*
+- Merge pull request #365 from 42Lab-co/codex/leanpay-actionable-review-queue — *Quentin H*
+- fix(leanpay): separate actionable reconciliation cases — *Quentin H*
+- feat(social): clarify publications and post editor — status panel, variant tabs, side-by-side compare — *Leonard Mangallon*
+- Merge pull request #364 from 42Lab-co/codex/fix-leanpay-new-account-migration — *Quentin H*
+- feat(leanpay): add reconciliation operations console — *Quentin H*
+- fix(leanpay): make current account authoritative — *Quentin H*
+- Merge pull request #363 from 42Lab-co/codex/corriger-accs-nouveaux-programmes — *Quentin H*
+- Refactor application workflows and supporting components — *Quentin H*
+- feat(pause): schéma de la pause d'accompagnement (étape 1) — *Leonard Mangallon*
+- docs(pause): plan pause d'accompagnement + démarrage différé — *Leonard Mangallon*
+- feat(documents): accepter HTML (affiché en texte) et Pages/Numbers/Keynote, signaler les fichiers refusés (EOS-563) — *Leonard Mangallon*
+- fix(coaching): recherche client insensible aux accents dans la validation — *Leonard Mangallon*
+- fix(academie): servir les pièces jointes de leçon sous leur vrai nom (EOS-564) — *Leonard Mangallon*
+- Merge main into staging — *Leonard Mangallon*
+### 2026-09-22
+- docs(pause): plan pause d'accompagnement + démarrage différé — *Leonard Mangallon*
+- style(coaching): passer la carte de validation au vocabulaire verre — *Leonard Mangallon*
+- fix(coaching): laisser le coach dire si un no-show est offert ou décompté — *Leonard Mangallon*
+- feat(offre): changer d'avatar, brouillons visibles, garde de navigation (EOS-561) — *Leonard Mangallon*
+- feat(offre): Oxana peut voir et lier l'avatar client (EOS-561) — *Leonard Mangallon*
+- feat(chat): un micro dans le panneau des agents, et qui ne disparaît plus (EOS-562) — *Leonard Mangallon*
+- Polish Mac Catalyst window and desktop rendering — *Quentin H*
+- fix(coaching): créer la séance quand l'enregistrement est muet (no-show) — *Leonard Mangallon*
+- fix(messages): des clés distinctes pour le fil et le composeur, sinon l'ancienne conversation reste dans le DOM — *Leonard Mangallon*
+- Merge pull request #362 from 42Lab-co/claude/rapports-vers-mes-documents-7572b0 — *lmangall-42lab*
+- feat(rapports): faire atterrir les rapports du client dans « Mes Documents » — *Leonard Mangallon*
+- feat(coach): « Envoyer à » prépare un brouillon avec l'action citée — *Leonard Mangallon*
+- fix(ui): espacer l'icône du libellé dans un sous-menu, et montrer l'attente — *Leonard Mangallon*
+- feat(coach): Modifier, Envoyer à et Supprimer dans le menu ⋯ d'une action — *Leonard Mangallon*
+- fix(coach): souligner chaque en-tête de colonne pour rendre les rails lisibles — *Leonard Mangallon*
+- refactor(coach): un seul plan de travail plutôt que trois colonnes encadrées — *Leonard Mangallon*
+- fix(coach): rendre les 32 px que le menu ⋯ prenait sur toute la carte — *Leonard Mangallon*
+- feat(mon-espace): barre d'onglets ancrée et adaptative, onglets coach en ambre — *Leonard Mangallon*
+- feat(sales-calls): recherche insensible aux accents et à la casse, raccourci ⌘K — *Leonard Mangallon*
+- Add standalone Mac Catalyst app and push bridge — *Quentin H*
+- feat(okr): attribuer une mesure à un membre de la fiche — *Leonard Mangallon*
+- feat(tâches): attribuer une tâche depuis « Mes tâches » — *Leonard Mangallon*
+- feat(coach): attribuer une action depuis la fiche client — *Leonard Mangallon*
+- feat(actions): fermer et notifier l'attribution d'une action — *Leonard Mangallon*
+- feat(associés): le sélecteur d'assignation marche enfin côté coach — *Leonard Mangallon*
+- feat(associés): unir titulaire et associés actifs pour l'assignation — *Leonard Mangallon*
+- feat(ariane): préparation des briefs experts — annuaire, questions de l'expert, rédaction sourcée et validation humaine — *Leonard Mangallon*
+- fix(reports): rendre lisibles en mode sombre les compteurs et cartes teintés — *Leonard Mangallon*
+- feat(reports): téléchargement PDF de marque ou Markdown, cartes en verre et vraie vue tableau — *Leonard Mangallon*
+- fix(coach): réparer la recherche du sélecteur de client et y rendre les associés visibles — *Leonard Mangallon*
+### 2026-09-21
+- fix(social): injecter la voix du client dans les outils de rédaction de Noah en chat (EOS-538) — *Leonard Mangallon*
+- Merge pull request #360 from 42Lab-co/codex/coaching-source-review-fix — *Quentin H*
+- feat(coaching): preview source choice before confirmation — *Quentin H*
+- Merge pull request #351 from 42Lab-co/codex/corriger-les-bugs-des-funnels — *Quentin H*
+- Make landing page lead capture retry-safe and filterable — *Quentin H*
+- fix(coaching): clarify source reviews and migrate Trustpilot references — *Quentin H*
+- feat(mon-espace): un voyant vert / ambre / rouge sur l'en-tête « Mes paiements » — *Leonard Mangallon*
+- refactor(mon-espace): « Mes paiements » en accordéon, replié par défaut — *Leonard Mangallon*
+- feat(mon-espace): « Mes paiements » — le facturier du client et son portail — *Leonard Mangallon*
+- feat(mon-espace): les quatre programmes du catalogue, plus l'écosystème commun — *Leonard Mangallon*
+- fix(bi): couvrir tous les programmes sur /bi/adoption et s'aligner sur la règle /bi/clients — *Leonard Mangallon*
+- fix(access): un seul CTA de renouvellement — la prise de rendez-vous (EOS-550) — *Leonard Mangallon*
+- feat(coaching): reconcile Engram and Claap recordings (#359) — *Quentin H*
+- fix(scripts): run reconciliation tools with server conditions — *Quentin H*
+- feat(access): rendre le mode lecture seule effectif (EOS-550) — *Leonard Mangallon*
+- fix(personnalité): une repasse du test IPIP repart réellement de zéro (EOS-551) — *Leonard Mangallon*
+- feat(mon-espace): le logo LegalPlace sur la carte du bonus partenaire — *Leonard Mangallon*
+- feat(mon-espace): onglet « Mon accompagnement » — le détail du programme du client — *Leonard Mangallon*
+- refactor(contracts): one source for contract retrieval, plus a client download route — *Leonard Mangallon*
+- fix(mon-espace): profile photo in the hero, tidier account tab — *Leonard Mangallon*
+- feat(mon-espace): let a client change their login email — *Leonard Mangallon*
+- Merge pull request #354 from 42Lab-co/claude/546-bandeau-impaye-d46767 — *Quentin H*
+- fix(billing): preserve existing delinquency during repair audit — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into claude/546-bandeau-impaye-d46767 — *Quentin H*
+- feat(coaching): reconcile Engram and Claap recordings — *Quentin H*
+- feat(messages): staff-only message deletion, and no conversation deletion at all — *Leonard Mangallon*
+- fix(finances): le pitch ne masque plus un tableau de bord existant, même avec ?onboarding=true (EOS-543) — *Leonard Mangallon*
+- Merge pull request #358 from 42Lab-co/quentinhgt/audit-clients-actifs — *Quentin H*
+- fix(bi): unify active client and capacity metrics — *Quentin H*
+- Merge pull request #357 from 42Lab-co/quentinhgt/coupe-1er-message-support — *Quentin H*
+- feat(conciergerie): cut Support first message, keep Conciergerie intro — *Quentin H*
+- fix(onboarding): render the questionnaire from BUSINESS_QUESTIONS (EOS-544) — *Leonard Mangallon*
+- fix(méthode): le titre d'étape ouvre l'espace de travail dès que le pilier est commencé (EOS-543) — *Leonard Mangallon*
+- Merge pull request #356 from 42Lab-co/quentinhgt/activer-espace-communaute — *Quentin H*
+- feat: expose community switch for demo account — *Quentin H*
+- Merge pull request #355 from 42Lab-co/quentinhgt/trainees-page-filters — *Quentin H*
+- feat(trainees): revamp « Mes Coachés » — /coachings UI, date filters & onboarding state — *Quentin H*
+- fix(facturation): ne jamais lire « aucune facture » comme « à jour » (EOS-546) — *Leonard Mangallon*
+- fix(avatar): l'avatar existant n'est plus introuvable depuis la nouvelle interface (EOS-543) — *Leonard Mangallon*
+### 2026-09-18
+- Merge pull request #352 from 42Lab-co/codex/locate-accountabilityemitdaily — *Quentin H*
+- Merge pull request #350 from 42Lab-co/codex/android-play-readiness — *Quentin H*
+- Prepare Android app for Google Play review — *Quentin H*
+- feat(android): prepare signed Google Play release (#349) — *Quentin H*
+- feat(android): prepare signed Google Play release — *Quentin H*
+- Batch accountability events for concurrent processing — *Quentin H*
+- Merge pull request #348 from 42Lab-co/codex/community-link-admin-only — *Quentin H*
+- fix: restrict community switcher to admins — *Quentin H*
+- Merge pull request #347 from 42Lab-co/codex/native-mac-black-sso — *Quentin H*
+- fix: improve iPad responsive layouts — *Quentin H*
+- Merge pull request #346 from 42Lab-co/codex/amliorer-ui-conciergerie-support — *Quentin H*
+- Clarify internal concierge team orientation — *Quentin H*
+- Merge pull request #344 from 42Lab-co/codex/diagnostiquer-sync-hubspot-clients — *Quentin H*
+- Merge pull request #345 from 42Lab-co/codex/native-mac-black-sso — *Quentin H*
+- feat: refresh native app branding and Mac experience — *Quentin H*
+- Support activation deal alias resolution — *Quentin H*
+- Merge pull request #343 from 42Lab-co/codex/compter-les-coachings-daot — *Quentin H*
+- Refactor application workflows and supporting components — *Quentin H*
+- Add concierge task transfer notes and client links — *Quentin H*
+- Merge pull request #341 from 42Lab-co/quentin/eos-547-parametrage-davatars-ia-distincts-pour-deux-associes — *Quentin H*
+- Merge pull request #342 from 42Lab-co/codex/activer-le-lien-ambassadeurs — *Quentin H*
+- Add associate navigation for group programs — *Quentin H*
+- style: add color to AI personalization settings — *Quentin H*
+- feat: tailor AI personalization by program format — *Quentin H*
+- Merge pull request #340 from 42Lab-co/quentin/eos-548-ressources-manquantes-pour-la-formation-incubateur — *Quentin H*
+- Import legacy lesson files and hide unknown file sizes — *Quentin H*
+- feat: expose AI preferences in guide chat — *Quentin H*
+- refactor: move associate AI setup into preferences dialog — *Quentin H*
+- feat: centralize personal AI setup for associates — *Quentin H*
+- Merge pull request #338 from 42Lab-co/codex/amliorer-laffichage-des-3-dates — *Quentin H*
+- Add program milestone timeline to client dashboard — *Quentin H*
+- Merge pull request #339 from 42Lab-co/codex/ajouter-les-stats-landing — *Quentin H*
+- Add historical Landing analytics to activation reports — *Quentin H*
+### 2026-09-17
+- Merge pull request #337 from 42Lab-co/codex/ajouter-dates-signature-et-dmarrage — *Quentin H*
+- Show commercial and coaching milestone dates — *Quentin H*
+- Merge pull request #334 from 42Lab-co/codex/diagnostiquer-coach-invisible — *Quentin H*
+- Prevent duplicate reflection submissions and update notes in place — *Quentin H*
+- feat(expert): afficher le template standard et lister les experts sans brief — *Leonard Mangallon*
+- Merge pull request #335 from 42Lab-co/codex/valuer-lautomatisation-trustpilot — *Quentin H*
+- feat(missions): retrouver les missions d'un coach depuis la palette ⌘K — *Leonard Mangallon*
+- Add Trustpilot review verification and client bonus flow — *Quentin H*
+- fix(social): faire respecter le ton et les tournures interdites par le Copywriter (EOS-538) — *Leonard Mangallon*
+- fix(success-score): bypass prompts for Apple review accounts — *Quentin H*
+- Fix booking summary active program selection — *Quentin H*
+- refactor(nav): une seule ligne pour le compte du client — Mon espace porte l'onglet — *Leonard Mangallon*
+- feat(nav): « Mes intégrations » rejoint le menu utilisateur du client — *Leonard Mangallon*
+- Merge pull request #333 from 42Lab-co/codex/fix-bot-faq-slack — *Quentin H*
+- Améliore la déflection FAQ Slack — *Quentin H*
+- fix(coach-message): deliver in the fiche's shared thread and fix the review link crash — *Leonard Mangallon*
+- Merge pull request #332 from 42Lab-co/codex/fix-builder-program — *Quentin H*
+- fix(programs): separate Builder from Boss Energy — *Quentin H*
+- fix(messages): wire up the delete-message trigger in the UI — *Leonard Mangallon*
+- fix(success-score): use branded email template — *Quentin H*
+- Merge pull request #329 from 42Lab-co/quentinhgt/engram-notetaker-page — *Quentin H*
+- fix(missions): retirer « Rejoindre la visio » du menu d'actions — *Leonard Mangallon*
+- chore(engram): hide sidebar entry during pilot — *Quentin H*
+- fix(missions): adapter actions, groupes et accès fiche au référent, et proposer les dossiers en Markdown — *Leonard Mangallon*
+- feat(engram): add notetaker workspace and integrations — *Quentin H*
+- feat(messages): enregistrer et envoyer des mémos vocaux, avec transcription — *Leonard Mangallon*
+- feat(missions): une page à deux onglets, tri par séance et compteur dans la barre latérale — *Leonard Mangallon*
+- fix(landing): rendre la variante du bloc CTA sur la page publiée (EOS-541) — *Leonard Mangallon*
+- fix(social): rendre les créneaux programmés dans le fuseau de publication du client — *Leonard Mangallon*
+### 2026-09-16
+- Merge pull request #331 from 42Lab-co/codex/tester-la-branche-pr-328 — *Quentin H*
+- Implement Success Score module and client progression flows — *Quentin H*
+- feat(attribution): distinguer réattribution et première attribution dans Slack, brouillon de bienvenue du nouveau coach — *Leonard Mangallon*
+- fix(finance): conserver le modèle économique après réinitialisation et expliquer le bouton Continuer bloqué (EOS-539) — *Leonard Mangallon*
+- fix(coach): remettre le menu statut d'accompagnement dans l'en-tête de la fiche client — *Leonard Mangallon*
+- docs(codex): ajouter le guide générique des worktrees — *Quentin H*
+- docs(codex): partager les ports déterministes par worktree — *Quentin H*
+- feat(sales-calls): rendre les calls d'un client atteignables depuis sa fiche — *Leonard Mangallon*
+- fix(success-score): keep scoring internal and harden access — *Quentin H*
+- docs(success-score): add AI QA runbook — *Quentin H*
+- feat(success-score): add client progress questionnaires — *Quentin H*
+- fix(meet-addon): rendre visible l'échec du handshake Meet au lieu d'un chargement sans fin — *Leonard Mangallon*
+- Merge pull request #330 from 42Lab-co/codex/investiguer-et-relancer-dealsync — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/investiguer-et-relancer-dealsync — *Quentin H*
+- Ajoute le relancement ciblé du sync des deals qualifiants — *Quentin H*
+- fix(sales-calls): rendre la vidéo lisible en re-signant l'URL à la lecture — *Leonard Mangallon*
+### 2026-09-15
+- feat(nav): retrouver « En Fin de Programme » dans ⌘K en tapant « formulaires » — *Leonard Mangallon*
+- chore(codex): configure worktree dotenv environment — *Quentin H*
+- fix(coach): tronquer la vision dans l'en-tête de la fiche client, texte entier au survol — *Leonard Mangallon*
+- feat(coach): nouvelle vue d'ensemble client, accordéon « Ses outils » et onglets réservés au coach — *Leonard Mangallon*
+- feat(ariane): give coaches' AI assistant access to client and DUO/TRIO contact info — *Leonard Mangallon*
+- fix(social): rendre les posts LinkedIn du chat visibles et programmables — *Leonard Mangallon*
+- fix(onboarding): surface the personal personality test to associates — *Leonard Mangallon*
+- fix(branding): accepter un domaine nu comme adresse de site à importer — *Leonard Mangallon*
+- fix(messages): ne plus classer les pièces jointes du chat dans Mes Documents — *Leonard Mangallon*
+- fix(circle): import admin-only course spaces (#327) — *Quentin H*
+- fix(circle): import admin-only course spaces — *Quentin H*
+- fix: prevent LeanPay sync from unlocking delinquent clients (#326) — *Quentin H*
+- fix: prevent LeanPay sync from unlocking delinquent clients — *Quentin H*
+- feat(nav): make Adoption produit findable in ⌘K via usage/stats synonyms — *Leonard Mangallon*
+- fix(sidebar): unlock La bibliothèque IA in Mes outils (wrongly marked coming since V2) — *Leonard Mangallon*
+- feat(coach): hover-open glass client selector with a scrollable, larger client list — *Leonard Mangallon*
+- feat(chat): bouton de téléchargement sur tous les documents de l'assistant — *Leonard Mangallon*
+- fix(dashboard): give each DUO/TRIO avatar its own hover tooltip — *Leonard Mangallon*
+- fix(client): point stale Mon profil links at Mon espace — *Leonard Mangallon*
+### 2026-09-14
+- feat(push): open YouTube links in native app (#325) — *Quentin H*
+- fix(chat): tous les fils guidés reçoivent enfin un vrai titre au premier message — *Leonard Mangallon*
+- feat(push): open YouTube links in native app — *Quentin H*
+- fix(lifecycle): console pleine largeur, et plus de pastille « BLOCKED » à côté de « Bloqué » — *Leonard Mangallon*
+- feat(mes-documents): proposer au client de prévenir son coach quand il ajoute un document — *Leonard Mangallon*
+- fix(mon-espace): rendre la surface lisible en mode sombre (palette teintée centralisée) — *Leonard Mangallon*
+- fix(expert): afficher le brief dans l'ordre des questions du template — *Leonard Mangallon*
+- fix(mes-documents): la bulle « Télécharger » ne recouvre plus le bouton « Voir dans le chat » — *Leonard Mangallon*
+### 2026-09-11
+- fix(social/settings): ajouter le bouton pour déconnecter LinkedIn — *Leonard Mangallon*
+- fix(finance): lire le solde initial débiteur ou créditeur quand une date sépare le label du montant — *Leonard Mangallon*
+- feat(activation): API de suivi d'activation par deal HubSpot (#324) — *Quentin H*
+- fix(activation): neutraliser l'injection de formule CSV et borner deal_id — *Quentin H*
+- test(activation): couvrir les paramètres externes et les règles dérivées — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into quentinhgt/api-tracking-activation-hubspot — *Quentin H*
+- docs(activation): contrat d'API et limites connues — *Quentin H*
+- feat(scripts): outillage CLI de l'API d'activation — *Quentin H*
+- feat(admin): écran d'émission des tokens d'API — *Quentin H*
+- feat(activation): API de suivi par deal HubSpot (lecture seule) — *Quentin H*
+- feat(auth): horodater la première et la dernière connexion — *Quentin H*
+- feat(sorties): persister le motif de clôture d'un programme — *Quentin H*
+- refactor(coaching): exposer la règle de quota des séances en SQL — *Quentin H*
+- feat(db): tracer le motif de sortie, les connexions et les tokens d'API — *Quentin H*
+- fix(ui): les écrans de chargement suivent le thème et n'apparaissent plus par à-coups — *Leonard Mangallon*
+- feat(conciergerie): trier les conversations non lues en premier, par défaut (#323) — *Quentin H*
+- feat(conciergerie): trier les conversations non lues en premier, par défaut — *Quentin H*
+- fix(attribution): la trace et la notif Slack ne sont plus perdues au retour de la server action — *Leonard Mangallon*
+### 2026-09-10
+- feat(messages): expliquer ce qu'est une action dans le volet de relecture — *Leonard Mangallon*
+- fix(coach-message): les liens de relecture ouvrent la conversation du client et l'onglet Ma voix — *Leonard Mangallon*
+- fix(onboarding): la relance J+7 rattrape les clients temporairement inéligibles (EOS-309) — *Leonard Mangallon*
+- feat(landing): exclure les bots du tracking, signaler les liens sortants et rendre les étapes cliquables — *Leonard Mangallon*
+- feat(community): portail d'entrée sur profil complet + harmonisation V2 (#322) — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into quentinhgt/communaute-glass-profil-gate — *Quentin H*
+- feat(community): portail d'entrée sur profil complet + harmonisation V2 — *Quentin H*
+- feat(expert): le tableau de bord v2 devient /expert/missions, l'ancienne route redirige — *Leonard Mangallon*
+- chore(docs): retirer les docs mortes de Circle et du merge V2, et poser la file de nettoyage — *Leonard Mangallon*
+- feat(sales-calls): refonte UI/UX — tableau, vue « Par client » par défaut avec accordéon, tris serveur — *Leonard Mangallon*
+### 2026-09-09
+- fix(coach/profil): la barre d'enregistrement de « Ma voix » ne flotte plus au repos — *Leonard Mangallon*
+- feat(finances/reglages): solde initial éditable en ligne, catégories accessibles, surfaces en verre pleine largeur — *Leonard Mangallon*
+- fix(coach/personnalité): plus d'aplat coloré derrière un groupe de facettes déplié — *Leonard Mangallon*
+- fix(coach/personnalité): variantes dark pour les teintes et pastilles du reveal — *Leonard Mangallon*
+- fix(coach/personnalité): les 34 facettes ne tombent plus à 0 juste après le test — *Leonard Mangallon*
+- feat(admin/coachs): grouper les marqueurs d'état à gauche, affermir le menu — *Leonard Mangallon*
+- feat(admin/coachs): « Pilotage incomplet » devient un pictogramme, le mot passe dans l'infobulle — *Leonard Mangallon*
+- feat(admin/coachs): resserrer l'étagère — le pourcentage et l'archétype sortent de la vignette — *Leonard Mangallon*
+- feat(admin/coachs): une seule surface par vignette — portrait plein cadre et étagère de verre — *Leonard Mangallon*
+- feat(admin/coachs): la surcouche des cartes passe au verre liquide maison — *Leonard Mangallon*
+- feat(admin/coachs): « Pilotage incomplet » remonte en haut de la carte, centré — *Leonard Mangallon*
+- feat(admin/coachs): le menu d'actions passe en haut à droite, et la modale ouvre sur le travail à faire — *Leonard Mangallon*
+- fix(admin/coachs): le badge « Pilotage incomplet » n'existait que dans la vue tableau — *Leonard Mangallon*
+- merge: reprendre les 6 derniers commits de main avant livraison — *Leonard Mangallon*
+- fix(finance): rapprocher chaque relevé importé aux totaux imprimés par la banque (EOS-480) — *Leonard Mangallon*
+- docs(matching): deux messages de relance — pilotage côté Claire, fiche côté coachs — *Leonard Mangallon*
+- feat(admin/coachs): distinguer l'archétype de pilotage de celui du test de personnalité — *Leonard Mangallon*
+- Merge pull request #321 from 42Lab-co/claude/ariane-side-panel — *lmangall-42lab*
+- docs(matching): message à Claire, rédigé et sous embargo jusqu'à la livraison — *Leonard Mangallon*
+- docs(matching): verdict en trois blocs — prêt, prêt-non-prouvé, à ne pas livrer — *Leonard Mangallon*
+- docs(matching): remesure du 09/09 sur la prod, A/B dos à dos après merge — *Leonard Mangallon*
+- docs(matching): relecture adversariale — ce qui tient, ce qui est à requalifier — *Leonard Mangallon*
+- fix(chat): montrer toutes les conversations dans « Mes Conversations », tous agents confondus — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/ariane-side-panel — *Leonard Mangallon*
+- feat(expert): « En parler à Ariane » ouvre le dock, plus le plein écran — *Leonard Mangallon*
+- fix(guides): halo du hero coupé, lien de retour et bouton PDF sur mobile (#320) — *Quentin H*
+- fix(guides): halo du hero coupé, lien de retour et bouton PDF sur mobile — *Quentin H*
+- merge: intégrer origin/main (133 commits) dans la branche matching — *Leonard Mangallon*
+- docs(matching): donner l'adresse du worktree dans les deux prompts — *Leonard Mangallon*
+- feat(nps): passer le diagnostic en semestriel — le trimestriel spammait les clients (#319) — *Quentin H*
+- feat(nps): passer le diagnostic en semestriel — le trimestriel spammait les clients — *Quentin H*
+- docs(matching): prompt de reprise — integrer main, relire, remesurer, trancher — *Leonard Mangallon*
+- Merge pull request #317 from 42Lab-co/claude/coach-missions-dashboard-91d351 — *lmangall-42lab*
+- merge: main dans la branche du tableau de bord expert — *Leonard Mangallon*
+- fix(chat): rendre l'écran d'accueil de /chat lisible sur mobile (#318) — *Quentin H*
+- fix(chat): rendre l'écran d'accueil de /chat lisible sur mobile — *Quentin H*
+- feat(expert): servir le nouveau tableau de bord sur /expert/missionsv2 — *Leonard Mangallon*
+- fix(expert): l'ellipse du domaine ne s'affichait jamais — *Leonard Mangallon*
+- refactor(expert): supprimer les deux panneaux qui redisaient le tableau — *Leonard Mangallon*
+- feat(expert): sections repliables et cartes de filtre compactes — *Leonard Mangallon*
+- fix(expert): borner les colonnes du tableau et retirer le chevron des lignes — *Leonard Mangallon*
+- feat(expert): un menu d'actions par mission — Ariane, référent, dossier client — *Leonard Mangallon*
+- fix(expert): ne plus escamoter « Charge à venir » quand elle est vide — *Leonard Mangallon*
+- feat(expert): deux histogrammes qui survivent aux données réelles — *Leonard Mangallon*
+- feat(expert): passer les missions en tableau et poser le verre de l'app-shell — *Leonard Mangallon*
+- feat(expert): un vrai tableau de bord des missions, trié sur ce qui arrive — *Leonard Mangallon*
+- fix(community): les posts s'affichaient en pâté — `prose` ne produit aucun CSS (#316) — *Quentin H*
+- fix(community): les posts s'affichaient en pâté — `prose` ne produit aucun CSS — *Quentin H*
+- fix(hooks): rendre le nombre de hooks stable dans trois composants (React #310) — *Leonard Mangallon*
+- La Plateforme V2 (#315) — *Quentin H*
+### 2026-09-08
+- feat(ui): afficher Ctrl au lieu de ⌘ dans les raccourcis pour les utilisateurs Windows — *Leonard Mangallon*
+- merge: bandeau cookies « affichage seul » dans staging (à valider par Boris avant la prod) — *Leonard Mangallon*
+- fix(landing): le bandeau cookies n'est plus qu'un affichage — seul un « Refuser » coupe quelque chose — *Leonard Mangallon*
+- fix(expert): révoquer l'accès expert pour de bon — le cron le rouvrait — *Leonard Mangallon*
+- fix(expert): révoquer l'accès expert pour de bon — le cron le rouvrait — *Leonard Mangallon*
+- feat(ariane): les missions expert existent enfin — 625 fiches introuvables, et un portefeuille vide qui mentait — *Leonard Mangallon*
+- docs(migration): une checklist unique, à jouer d'un bout à l'autre avant le merge — *Quentin H*
+- docs(migration): il manque un événement dans Circle — et le « sync » n'est dangereux que parce qu'il enchaîne — *Quentin H*
+- fix(circle-mig): le sweep de progression n'enterre plus les membres qu'il n'a pas su lire — *Quentin H*
+- docs(migration): le runbook devient une marche à suivre, et le DDL un tout-ou-rien — *Quentin H*
+- fix(migration): deux DDL oubliées, et un fichier que j'avais écrit pour rien — *Quentin H*
+- merge: origin/main dans staging — et retrait du « On revient bientôt » de /community — *Quentin H*
+- chore(migration): préparer la bascule staging → main — runbook, DDL manquante, garde-fous — *Quentin H*
+- feat: barre de statut iOS, Académie (réorg Codex + revue liens), agents/guide, coachings (#314) — *Quentin H*
+- feat: barre de statut iOS, Académie (réorg Codex + revue liens), agents/guide, coachings — *Quentin H*
+- fix(social): réalimenter le calendrier de publication, il s'était vidé pour tout le monde — *Leonard Mangallon*
+- docs(matching): prompt de relecture adversariale, points faibles compris — *Leonard Mangallon*
+- mesure(matching): committer les preuves des A/B, sans les donnees client — *Leonard Mangallon*
+- docs(matching): revérifier sur données fraîches, et corriger deux affirmations — *Leonard Mangallon*
+- docs(matching): decisions, implementations, et ce que chacune ameliore — *Leonard Mangallon*
+- mesure(matching): sortir les diagnostics de DEV/, ou ils etaient condamnes — *Leonard Mangallon*
+- feat(social): une vraie corbeille sur le CMO — « Rejeter » n'en était pas une (EOS-482) — *Leonard Mangallon*
+- feat(community): afficher « On revient bientôt » sur /community pendant la migration (#313) — *Quentin H*
+- feat(community): afficher « On revient bientôt » sur /community pendant la migration — *Quentin H*
+### 2026-09-07
+- feat(whop): rendre Whop info-only — ne jamais bloquer un client (#312) — *Quentin H*
+- feat(admin): renommer l'onglet Recouvrement + acter Whop info-only — *Quentin H*
+- feat(mobile+booking+notifications): couleurs top bar mobile, RDV coach en embed direct, uniformisation notifications (#311) — *Quentin H*
+- feat(whop): rendre Whop info-only, ne jamais bloquer un client — *Quentin H*
+- Merge remote-tracking branch 'origin/staging' into quentinhgt/mobile-topbar-colors — *Quentin H*
+- feat(mobile+booking+notifications): couleurs top bar mobile, RDV coach en embed direct, uniformisation notifications — *Quentin H*
+- fix(landing): expliquer qu'une page est en brouillon au lieu de rediriger vers l'accueil — *Leonard Mangallon*
+- feat(agents): « Dernier utilisé » devient une pastille verte — *Leonard Mangallon*
+- fix(agents): rafraîchir le dernier interlocuteur sans recharger la page — *Leonard Mangallon*
+- feat(agents): repère « Dernier échange » sur le panneau du dock — *Leonard Mangallon*
+- feat(ariane): « Qu'est-ce que tu sais faire ? » dans les amorces du survol — *Leonard Mangallon*
+- fix(coach-messages): lever le blocage de rédaction pendant une impersonation — *Leonard Mangallon*
+- fix(chat): plus de bande opaque en haut du fil, juste l'icône — *Leonard Mangallon*
+- fix(chat): le panneau de verre va jusqu'au bord du pane — *Leonard Mangallon*
+- feat(chat): l'accent du chat passe au rouge de marque, plus à la couleur de l'agent — *Leonard Mangallon*
+- fix(chat): le composeur ne reste plus bloqué en pleine hauteur — *Leonard Mangallon*
+- feat(chat): le mot d'accueil de l'agent prend la forme d'une bulle — *Leonard Mangallon*
+- feat(chat): un mot d'accueil de l'agent à l'ouverture du chat, qui entre au fil au premier message — *Leonard Mangallon*
+- feat(admin): tracer dans l'audit log qui modifie le quota de sessions d'un programme — *Leonard Mangallon*
+- fix(méthode): rétablir le rouge de marque dans les guides et les intros piliers — *Leonard Mangallon*
+- feat(mon-espace): cartes du guide « Ma vision » alignées sur le système d'accents — *Leonard Mangallon*
+- fix(dashboard): la ligne effacée sous « Tout voir » ne réagit plus au survol — *Leonard Mangallon*
+- fix(ui): les dalles opaques repassent au verre — Landing, Académie, Notifications, Communauté — *Leonard Mangallon*
+- feat(faq): intégrer les vidéos dans la réponse et permettre d'ajouter un GIF — *Leonard Mangallon*
+- docs: corriger le commentaire de seed-faq (ep-autumn-hat = prod, pas staging) — *Leonard Mangallon*
+- feat(méthode): parcours en 9 étapes, Marketing & Com. et Sales & Closing — *Leonard Mangallon*
+### 2026-09-04
+- fix(login): refuser le magic link aux adresses sans compte (#309) — *Quentin H*
+- fix(login): refuser le magic link aux adresses sans compte — *Claude*
+- feat(login): écran dédié pour les visiteurs non-clients (#308) — *Quentin H*
+- refactor(focus): « Revoir la visite » passe sous la barre d'horizons — *Leonard Mangallon*
+- feat(ambassadeurs): afficher le programme suivi à côté du nom dans la console admin (#307) — *Quentin H*
+- feat(ambassadeurs): afficher le programme suivi à côté du nom dans la console admin — *Quentin H*
+- feat(nav): sidebar admin + client, UX support et communauté (#306) — *Quentin H*
+- feat(nav): sidebar admin + client, UX support et communauté — *Quentin H*
+- fix(focus): « Revoir la visite » rejoue TOUT l'onboarding, pas la seule visite — *Leonard Mangallon*
+- feat(focus): « Revoir la visite » sur Mon Focus, comme sur le tableau de bord — *Leonard Mangallon*
+- feat(dashboard): cocher et replanifier une action depuis le tableau de bord — *Leonard Mangallon*
+- refactor(methode): « Mon Identité » ouvre le parcours, « Vision et objectifs » passe en étape 2 — *Leonard Mangallon*
+- fix(landing): un témoignage sans auteur ne tue plus l'éditeur — initiales null-safe, null retirés des items à l'écriture IA et au rendu (EOS-483) — *Leonard Mangallon*
+- fix(connaissance): rétablir le scroll de la base de connaissance (#305) — *Quentin H*
+- fix(connaissance): rétablir le scroll de la base de connaissance — *Quentin H*
+- fix(mobile): finalise le responsive client (nav sombre, dialogs, overflow, contrastes) (#304) — *Quentin H*
+- fix(mobile): finalise le responsive client (nav sombre, dialogs, overflow, contrastes) — *Quentin H*
+- fix(dashboard): carte coach sur une ligne — pastille près du nom, bouton à droite — *Leonard Mangallon*
+- fix(dashboard): le bouton de réservation partage la ligne du compteur de sessions — *Leonard Mangallon*
+- feat(dashboard): survol des autres objectifs, infobulles de ligne et survol adouci — *Leonard Mangallon*
+- feat(dashboard): réserver une session avec son coach depuis le tableau de bord — *Leonard Mangallon*
+### 2026-09-03
+- feat(onboarding): mail de bienvenue — inscription en 1 clic au Live Onboarding via n8n (#303) — *Quentin H*
+- feat(onboarding): mail de bienvenue — inscription en 1 clic au Live Onboarding via n8n — *Quentin H*
+- feat(dashboard): rétro du soir accessible depuis le dashboard sur mobile — *Leonard Mangallon*
+- refactor(mon-espace): la complétion du profil adopte le filet de la carte Méthode — *Leonard Mangallon*
+- feat(notifications): un centre de notifications, dans Mon espace comme dans Mon compte — *Leonard Mangallon*
+- refactor(methode): l'étape ouvre sa page « Découvrir » au clic, plus de sous-étape à part — *Leonard Mangallon*
+- feat: seed 4 pre-coaching welcome actions for a client leaving onboarding — *Leonard Mangallon*
+- fix(académie): panneaux du module en verre translucide + note glass dans CLAUDE.md — *Leonard Mangallon*
+- feat(académie): « Se former » ouvre le module sur sa propre page — *Leonard Mangallon*
+- fix(social,finance): bandeaux de pilier en verre — plus de dalle noire sur le fond rouge — *Leonard Mangallon*
+- fix(applications): un outil verrouillé ouvre la landing de son pilier, Veille et Bibliothèque passent en « Bientôt » — *Leonard Mangallon*
+- feat(notifications): un centre de notifications, dans Mon espace comme dans Mon compte — *Leonard Mangallon*
+- feat(founder-letter): la carte épinglée passe en sourdine une fois la lettre lue — *Leonard Mangallon*
+- feat(dashboard): « Revoir la visite », en légende du hero — *Leonard Mangallon*
+- feat(dashboard): une visite guidée du tableau de bord et de la sidebar — *Leonard Mangallon*
+- fix(rh): les bandeaux RH passent au verre — plus de dalle noire sur le fond rouge — *Leonard Mangallon*
+- feat(onboarding): CTA de téléchargement de l'app iOS dans les emails de bienvenue — *Leonard Mangallon*
+- feat(leanpay): outil de comparaison ancien↔nouveau compte + digest DAF — *Quentin H*
+- refactor(nav): le rail admin reprend l'IA de main — mêmes groupes, même ordre, mêmes entrées — *Leonard Mangallon*
+- fix(sidebar): la pastille de gel passe de ❄️ à 🧊, pour casser la file de ronds — *Leonard Mangallon*
+- docs(methode): l'encart dit comment juger « Se former » en se connectant en tant qu'un client — *Leonard Mangallon*
+- chore: merge main into staging — *Leonard Mangallon*
+- refactor(sidebar): compteurs en guise d'icônes, libellés sans possessifs, ressources dans le menu utilisateur — *Leonard Mangallon*
+- feat(methode): l'écran « Se former » se lit d'un coup d'œil et ne perd plus un réglage — *Leonard Mangallon*
+- feat(chat): lineup d'experts dans l'accueil du chat, changement d'agent en place + liens accentués corrigés — *Leonard Mangallon*
+- feat(communaute/liens): infobulles explicatives + le module parent des leçons — *Leonard Mangallon*
+- feat(communaute): revue des liens sortants — /admin/communaute/liens — *Leonard Mangallon*
+- fix(methode): nommer QUEL Codex, sur les lignes qui affirment une destination — *Leonard Mangallon*
+- fix(methode): une formation staff n'est plus une destination, et « Aucun module » ne grise plus sur un doute — *Leonard Mangallon*
+- feat(methode): la destination de « Se former » se règle par programme dans l'admin — *Leonard Mangallon*
+- feat(chat): joindre une action ou un objectif à Alfred et Ariane, comme dans /messages — *Leonard Mangallon*
+### 2026-09-02
+- fix(palette): ⌘K écrit à UNE personne, pas au groupe de la fiche — et l'action passe en icône de ligne — *Leonard Mangallon*
+- fix(ariane): la salutation à deux jetons ne soude plus le prénom du client au nom du coach — *Leonard Mangallon*
+- fix(ariane): le brouillon au client est signé du vrai nom du coach, sans Markdown ni liste recopiée — *Leonard Mangallon*
+- feat(email): le staging délivre aussi aux adresses @entrepreneurs.com — *Leonard Mangallon*
+- feat(seed): Arthur Dent en début ou milieu de Scaling, coaché par Douglas Adams — *Leonard Mangallon*
+- feat(palette): action « Envoyer un message » sur chaque personne de ⌘K — *Leonard Mangallon*
+- feat(ariane): la FAQ dans le chat — recherche scopée, canal des coachs, et surfaces alignées sur /messages — *Leonard Mangallon*
+- chore: merge origin/main into staging (EOS-477 + onboarding:resend) — *Leonard Mangallon*
+- feat(seed): Arthur Dent en début ou milieu de Scaling, coaché par Douglas Adams — *Leonard Mangallon*
+- chore: merge origin/main into staging (résout 11 conflits post-retrait Circle) — *Leonard Mangallon*
+- feat(onboarding): pnpm onboarding:resend — renvoyer le mail de bienvenue à un client sans rien réécrire — *Leonard Mangallon*
+- fix(associes): emails et parcours atteignent chaque membre d'une fiche partagée (EOS-477) — *Leonard Mangallon*
+- Remplacement complet de Circle.so (Académie, Communauté, Événements) (#261) — *Quentin H*
+- fix(breadcrumb): ids string post-Circle (drop Number()) — *Quentin H*
+- feat(focus): série Full Focus sur l'entrée « Mon Focus », état gelé et repères au survol — *Leonard Mangallon*
+- feat(notifications): préférences de notifications par catégorie + divers — *Quentin H*
+- feat(académie): sous-modules repliables sur la page cours — *Quentin H*
+- fix(communauté): gate de visibilité sur les réactions post/commentaire — *Quentin H*
+- fix(communauté/académie): 5 corrélations Drizzle auto-bindées + rollback réaction robuste — *Quentin H*
+- fix(communauté): réactions/réponses/likes de commentaire toujours à 0 (corrélation Drizzle) — *Quentin H*
+- feat(admin-push): historique des push envoyés + vue destinataires « à qui » (#300) — *Quentin H*
+- fix(chat): file d'attente d'envoi + tour interruptible, fini les flux concurrents (EOS-467, EOS-468) — *Leonard Mangallon*
+- feat(admin-push): historique des push envoyés + vue destinataires « à qui » — *Quentin H*
+- feat(notifications): confiner les push système à 08h-21h, différées hors fenêtre — *Leonard Mangallon*
+- feat(communauté): réponses optimistes + préchargement des réponses — *Quentin H*
+- fix(communauté): identité optimiste correcte AUSSI hors page détail (feed, cartes) — *Quentin H*
+- perf(communauté): commentaire optimiste sans « flip » — *Quentin H*
+- feat(sidebar): badge d'environnement « Staging » / « Local » dans l'en-tête — *Leonard Mangallon*
+- feat(communauté): interactions optimistes façon Instagram (réactions, likes, commentaires, épingle) — *Quentin H*
+- chore(academie): script réutilisable de réorg Codex en niveaux Déb/Interm/Expert — *Quentin H*
+- feat(seances): une carte dediee pour une seance citee, et le sens coach -> client — *Leonard Mangallon*
+- feat(ariane): elle ne demande plus quelle fiche quand il n'y en a qu'une — *Leonard Mangallon*
+- feat(ariane): les actions et objectifs qu'elle cite s'affichent en cartes, comme dans /messages — *Leonard Mangallon*
+- feat(seances): une carte dediee pour une seance citee, et le sens coach -> client — *Leonard Mangallon*
+- test(avatar): verrouiller l'arbitrage de l'avatarId et l'échec bruyant sur 0 ligne (EOS-478) — *Leonard Mangallon*
+- feat(académie): sous-modules optionnels (Module → Sous-module → Leçon) + grille /academie — *Quentin H*
+- docs(focus): passage en prod — focus_onboarding est la seule table manquante du pilier — *Leonard Mangallon*
+- feat(focus): aperçu au survol des horizons, navigation par semaine et calendrier qui montre enfin son contenu — *Leonard Mangallon*
+- feat(ariane): elle ne demande plus quelle fiche quand il n'y en a qu'une — *Leonard Mangallon*
+- feat(ariane): les actions et objectifs qu'elle cite s'affichent en cartes, comme dans /messages — *Leonard Mangallon*
+- fix(avatar): parcours mort en phase 0 quand le modèle recopie mal l'UUID (EOS-478) — *Leonard Mangallon*
+### 2026-09-01
+- fix(ariane): « Changer » ouvre le sélecteur de fiche au lieu de la retirer sans retour — *Leonard Mangallon*
+- feat(focus): porte d'engagement, visite guidée du cockpit et clôture du jour précédent — *Leonard Mangallon*
+- fix(onboarding): mail d'onboarding jamais envoyé quand la fiche est déjà liée à un user — *Leonard Mangallon*
+- Micro-todos UI : dashboard, sidebar, bulle Alfred & outils agents (#297) — *Quentin H*
+- feat(sidebar): carte « Applications » sans texte au repos — *Quentin H*
+- feat(agents): retire la section Roadmap 90 jours des prompts Alfred & Victor — *Quentin H*
+- refactor(agents): commente les outils Roadmap 90 jours au lieu de les supprimer — *Quentin H*
+- fix(sidebar): agrandit un peu la pastille « Mes tâches » — *Quentin H*
+- fix(circle-migration): corrige 6 résidus vérifiés (adversarial) après retrait Circle vague 2 — *Quentin H*
+- feat(sidebar): renomme « Mes outils » en « Applications » — *Quentin H*
+- feat(agents): retire les outils Roadmap 90 jours de la surface des agents — *Quentin H*
+- fix(sidebar): corrige la pastille de compteur « Mes tâches » — *Quentin H*
+- feat(sidebar): rend le rail moins translucide en mode clair — *Quentin H*
+- feat(agents): élargit la bulle du mot du jour d'Alfred — *Quentin H*
+- feat(dashboard): retire le bouton flottant « Découvrir La Plateforme » — *Quentin H*
+- feat(circle-vague2): retrait complet de Circle du runtime — 0 appel API Circle. Cloche + page notifs platform-only (onglet Communauté = mentions locales), sections profil membre → server actions locales, profile-setup/logout dé-Circle-isés, suppression de 32 fichiers Circle morts (server actions, cron, live-events, 16 scripts). lib/circle client + scripts/circle-migration GARDÉS (sync final au cutover) — *Quentin H*
+- feat(ambassadeurs): commission 5 % du montant total + accès client sidebar (#295) — *Quentin H*
+- feat(focus): historique jour/semaine, calendrier & rétro + refonte nav cliente (#296) — *Quentin H*
+- fix(circle-migration): sweep progression traite 401 comme 'non-inscrit par cours' (skip) + fail-soft sur statut inattendu — a permis l'import propre de 5109 complétions (288 membres, 0 orphelin) — *Quentin H*
+- feat(focus): historique jour/semaine, calendrier & rétro + refonte nav cliente — *Quentin H*
+- chore: merge origin/staging into quentinhgt/replace-circle-plan (résout 12 conflits: flip garde le shim/retrait Circle, bell+page V2 conservées, getAcademieCourses reconstruit en local pour le dashboard V2) — *Quentin H*
+- fix(claap): importer le coaching sans replay quand Claap ne fournit pas de vidéo — *Leonard Mangallon*
+- fix(chat): corriger la dictée vocale qui dupliquait le texte sur Android — *Leonard Mangallon*
+### 2026-08-31
+- fix(admin): ne plus proposer l'impersonation des comptes admin/sales et remonter l'erreur au lieu d'un 403 muet — *Leonard Mangallon*
+- feat(ambassadeurs): commission 5 % du montant total + accès client sidebar — *Quentin H*
+- feat(ariane): sélecteur de fiche avec avatar, outil Académie, et un refus de documents qui ne se fait plus passer pour un problème de droits — *Leonard Mangallon*
+- feat(ariane): une échappatoire dans le menu du lanceur — « Autre demande… » — *Leonard Mangallon*
+- feat(ariane): les outils qui manquaient à l'assistante des coachs — *Leonard Mangallon*
+- feat(agents): new coach agent prompt — *Leonard Mangallon*
+- feat(admin/push): annoncer l'app live sur l'App Store dans le centre de push (#294) — *Quentin H*
+- feat(admin/push): annoncer l'app live sur l'App Store dans le centre de push — *Quentin H*
+- fix(bi/okrs): les parts « avec » et « sans » OKR se calculent sur le périmètre OKR, pas sur le total clients — *Leonard Mangallon*
+### 2026-08-29
+- fix(apple-review): masquer le diagnostic NPS et épurer la page /demo pour les comptes de review Apple (#293) — *Quentin H*
+- fix(demo): retirer « Créer un compte » et « Mot de passe oublié » sur /demo — *Quentin H*
+- fix(nps): ne pas afficher le diagnostic NPS aux comptes de review Apple — *Quentin H*
+### 2026-08-28
+- fix(immersions/admin): rendre la liste et la page de détail responsive (#292) — *Quentin H*
+- fix(immersions/admin): rendre la liste et la page de détail responsive — *Claude*
+- feat(coach): chaque coach règle sa voix, et l'IA l'applique quand elle rédige à sa place — *Leonard Mangallon*
+- fix(legal): consolider les pages légales sous Entrepreneurs Horizon Management Consultancies L.L.C (#291) — *Quentin H*
+- fix(legal): consolider les pages légales sous Entrepreneurs Horizon Management Consultancies L.L.C — *Quentin H*
+- fix(chat): une sauvegarde interrompue murait la conversation — les appels d'outil sans résultat ne sont plus rejoués au modèle — *Leonard Mangallon*
+- fix(avatar): le client voyait le JSON brut de sa fiche recopié dans le chat — *Leonard Mangallon*
+- fix(offre): les marqueurs de debug s'affichaient en clair chez le client (EOS-463) — *Leonard Mangallon*
+- fix(offre): le module Offre se taisait aussi — même repli manuel que le chat (EOS-463) — *Leonard Mangallon*
+- fix(chat): l'IA se taisait sans erreur — repli manuel quand Gemini renvoie un 200 OK vide (EOS-458, EOS-463) — *Leonard Mangallon*
+### 2026-08-27
+- feat(app-store): préparer la soumission iOS (conformité App Review Guidelines) (#290) — *Quentin H*
+- feat(app-store): préparer la soumission iOS (conformité App Review Guidelines) — *Quentin H*
+- docs(context): cartographier le codebase et publier l'état réel de la chaîne build/test — *Quentin H*
+- fix(methode): ne plus promettre ce qui n'existe pas — « Se former » sans module grisé, étapes 8-10 verrouillées — *Leonard Mangallon*
+- feat(support): dire quand on décroche — horaires 9h-17h lun-ven et pastille ouvert/fermé partout où l'on invite à appeler — *Leonard Mangallon*
+- fix(support): la carte d'aide étirait la carte Account Manager — horaires à la place du sous-titre, plus une ligne de plus — *Leonard Mangallon*
+- feat(support): dire quand on décroche — horaires 9h-17h lun-ven et pastille ouvert/fermé partout où l'on invite à appeler — *Leonard Mangallon*
+- fix(email,proactivité): deux régressions propres au staging, nées du merge main→staging — *Leonard Mangallon*
+- fix(offre): la carte « valeur de substitution » restait un bloc opaque au-dessus de trois cartes en verre — *Leonard Mangallon*
+- feat(methode): « Se former » sur chaque étape, et les guides Ma vision et OKR & pilotage — *Leonard Mangallon*
+- refactor(immersions): la dateline du broadcast sans garde inutile (location/startDate sont notNull) — *Leonard Mangallon*
+- Merge branch 'main' into staging — *Leonard Mangallon*
+- fix(avatar): le rattrapage d'artefact manquant n'existait que sur /api/chat — *Leonard Mangallon*
+- feat(live-coaching): onglet « Objectifs » (OKR → KR → actions), chronomètre réel, contrôles morts réparés — *Leonard Mangallon*
+- fix(documents): un document modifié par l'IA restait invisible — toutes les surfaces lisaient la 1re version (EOS-454) — *Leonard Mangallon*
+- fix(chat): « je n'ai rien » ne déclenchait pas le rattrapage d'artefact manquant — *Leonard Mangallon*
+- fix(email): plus aucun magic link ne partait du staging — régime « internal » borné à @42lab.co — *Leonard Mangallon*
+- fix(chat): l'IA se taisait sans erreur — repli manuel quand Gemini renvoie un 200 OK vide — *Leonard Mangallon*
+- fix(avatar): un avatar entamé lisait « Construire » — « Reprendre l'avatar » + halo sur le CTA — *Leonard Mangallon*
+### 2026-08-26
+- feat(live-coaching): « aide-moi » répond une phrase ancrée sur le client de l'appel — *Leonard Mangallon*
+- revert(jalons): ne pas re-générer le diagnostic à M+6 — le pipeline écrase la baseline sans historique — *Leonard Mangallon*
+- feat(dossier): dire au coach d'où viennent ces infos, et de quand elles datent — *Leonard Mangallon*
+- fix(dossier): expliquer l'écran vide et ne plus cacher les jalons derrière le diagnostic — *Leonard Mangallon*
+- feat(jalons): réparer la boucle M3/M6/M9 — envoi à tous, lecture coach, alerte in-app — *Leonard Mangallon*
+- style(live-coaching): l'accent passe de l'orange au rouge de marque #EB2027 — *Leonard Mangallon*
+- fix(guide): le dock Alfred se hisse au-dessus du composeur de /messages au lieu de couvrir « Envoyer » — *Leonard Mangallon*
+- fix(académie): « Marquer terminée » écrivait sur le mauvais membre Circle — *Leonard Mangallon*
+- fix(email): seule la production envoie — garde-fou EMAIL_DELIVERY_ENABLED sur les deux appels Resend — *Leonard Mangallon*
+- fix(landing): le consentement ne masque plus le contenu — 16 pages publiées étaient vides — *Leonard Mangallon*
+- fix(circle): le 404 « membre introuvable » de l'auth par email n'est plus loggé en erreur — *Leonard Mangallon*
+### 2026-08-25
+- feat(coach-alfred): Alfred sait toujours s'il parle à un client ou à un coach, et sait demander de quelle fiche il s'agit — *Leonard Mangallon*
+- feat(landing): tracking GTM par compte, injecté sur toutes les pages publiées — *Leonard Mangallon*
+- feat(landing): opt-in cookie-consent banner gating A/B, analytics, embeds and tracking scripts — *Leonard Mangallon*
+- docs(finance): run final — 86/86 done, catégorisation à 98,5 %, et les trois faux positifs de sondes (EOS-411/EOS-406) — *Leonard Mangallon*
+- fix(finance): le deuxième mur de taille de step — load-uncategorized renvoyait aussi les lignes entières (EOS-411/EOS-352) — *Leonard Mangallon*
+- docs(finance): le lot qui reste en « categorizing » sans erreur, et où en est la preuve (EOS-411/EOS-352) — *Leonard Mangallon*
+- fix(finance): la catégorisation d'un gros lot mourait sur la taille d'un step Inngest (EOS-411/EOS-352) — *Leonard Mangallon*
+- fix(finance): lire le libellé qui court sur une troisième ligne (EOS-411/EOS-406) — *Leonard Mangallon*
+- docs(finance): retest live — crédit exact au centime, 84/86 relevés, résidu 544,21 € diagnostiqué (EOS-411/EOS-406) — *Leonard Mangallon*
+- docs(finance): l'hypothèse derrière la tête orpheline, mesurée, et sa recette de contrôle (EOS-411) — *Leonard Mangallon*
+- docs(finance): deux façons dont un retest live meurt sous vous, et le fil-piège qui les détecte (EOS-411) — *Leonard Mangallon*
+- docs(finance): la tokenisation de matches(), ses deux formes et ce qu'elle n'explique pas (EOS-411/EOS-406) — *Leonard Mangallon*
+- fix(finance): rapprocher la copie qui a collé un fragment ou ressoudé un mot coupé (EOS-411/EOS-406) — *Leonard Mangallon*
+- perf(notifications): la cloche sert un cache, précharge sa liste et n'en rend que 15 — *Quentin H*
+- refactor(actions): dialog resserré, rattachement en un choix et en deux clics — *Leonard Mangallon*
+- fix(immersions): le compte à rebours vise la vraie date de départ, dans le fuseau de l'immersion (EOS-441) — *Leonard Mangallon*
+- feat(landing): export HTML d'une page depuis ses paramètres — *Leonard Mangallon*
+- fix(actions): un OKR choisi sans Key Result ne détache plus et ne ment plus — *Leonard Mangallon*
+- feat(rgpd): script d'export des documents client depuis Vercel Blob — *Leonard Mangallon*
+### 2026-08-24
+- feat(recherche): impersonation d'un coach depuis ⌘K, actions sur les récents, historique cloisonné par compte — *Leonard Mangallon*
+- fix(actions): « Enregistrer » sauve le rattachement OKR au lieu de le jeter — *Leonard Mangallon*
+- feat(coach-messages): le chat coach rédige un brouillon relu, avec pièces jointes et actions/OKR proposés — *Leonard Mangallon*
+### 2026-08-21
+- docs(matching): passage de relais — etat, faits qui guident la suite, pistes ecartees — *Leonard Mangallon*
+- fix(matching): rendre la file lisible — dénominateurs, charge réelle, phrase réparée — *Leonard Mangallon*
+- fix(format): tel number — *Quentin H*
+### 2026-08-20
+- feat(facturation): table client_billing_comment — souveraineté des commentaires LeanPay (#287) — *Quentin H*
+- feat(facturation): synchro + lecture DB + CRUD des commentaires facturation — *Quentin H*
+- feat(immersions): libellé « Évènement » pour les SPECIAL + gestion journée unique (#288) — *Quentin H*
+- feat(immersions): libellé « Évènement » pour les SPECIAL + gestion journée unique — *Quentin H*
+- feat(facturation): table client_billing_comment pour souveraineté des commentaires LeanPay — *Quentin H*
+- fix(circle): resynchroniser le membre quand l'email client change, l'API ne sait pas le renommer — *Leonard Mangallon*
+- fix(landing): le popover Publier cachait les domaines déjà utilisés et « Détacher et réessayer » supprimait le domaine sans confirmation — *Leonard Mangallon*
+- Add SQL extraction for closing transcripts of top clients — *Claude*
+### 2026-08-19
+- fix(newsletter): la rédaction du corps échouait après chaque appel au modèle, et le tableau ne distinguait pas un numéro rédigé d'un vide — *Leonard Mangallon*
+- feat(coach-messages): porte de relecture coach avant envoi au client, dans la conversation — *Leonard Mangallon*
+- feat(coaching): un appel Meet du coach atterrit sur la fiche client, rattaché à sa réservation — *Leonard Mangallon*
+- feat(admin): afficher les coachs complets dans la file, avec un filtre — *Leonard Mangallon*
+- feat(matching): un coach complet n'est plus invisible, il est affiche complet — *Leonard Mangallon*
+- fix(support): l'agent inventait les actions déjà testées et l'identité dans les tickets Zendesk (EOS-431) — *Leonard Mangallon*
+- fix(newsletter): la génération de plan dépassait le plafond de 120s et échouait sans message (EOS-431) — *Leonard Mangallon*
+- fix(finance): ne plus annoncer un échec d'analyse quand le lot avance (EOS-411) — *Leonard Mangallon*
+- fix(finance): élaguer aussi le jumeau imprimé sous une seule date (EOS-411/EOS-406) — *Leonard Mangallon*
+- docs(finance): crédit exact, débit résiduel 1 176,13 € entièrement expliqué (EOS-411/EOS-406) — *Leonard Mangallon*
+- fix(finance): élaguer le jumeau dont la copie a perdu la référence bancaire (EOS-411/EOS-406) — *Leonard Mangallon*
+- docs(finance): la piste garde-de-date est morte, contrôle négatif à l'appui (EOS-411) — *Leonard Mangallon*
+- docs(finance): cause racine du résidu de Benjamin CHATEAU (EOS-411/EOS-406) — *Leonard Mangallon*
+- fix(finance): supprimer les prélèvements SEPA recomptés en recette (EOS-411/EOS-406) — *Leonard Mangallon*
+- fix(finance): lire la colonne MONTANT signée des relevés BPCE 2023+ (EOS-411) — *Leonard Mangallon*
+- fix(immersions): chacun saisissait ses dates d'hôtel, l'équipe corrigeait 42 fiches à la main (EOS-438) — *Leonard Mangallon*
+- fix(debug-chat): les rejets d'outils (output-error) étaient invisibles dans pnpm debug:chat — *Leonard Mangallon*
+- fix(social): Noah perdait ses outils hors du Guide ; la carte de variantes affiche un aperçu LinkedIn — *Leonard Mangallon*
+### 2026-08-18
+- fix(matching): le palier « secteur » degradait le classement, il ne score plus — *Leonard Mangallon*
+- docs(matching): §14 — la piste bio par jugement LLM, et pourquoi le §13 ne la ferme pas — *Leonard Mangallon*
+- fix(social): les Réglages promettaient un email du lundi qui n'a jamais été envoyé (EOS-432) — *Leonard Mangallon*
+- fix(ui): retirer la classe container morte et rendre a /login le fond de l'app — *Leonard Mangallon*
+- fix(matching): le juge de parcours changeait d'avis tout seul — *Leonard Mangallon*
+- feat(social): clarifier la carte de publication (éditeur, heure d'envoi) et publier maintenant depuis la liste — *Leonard Mangallon*
+- fix(matching): compter reellement la sante du critere parcours — *Leonard Mangallon*
+- fix(social): réparer la publication LinkedIn morte depuis le 15/07 et sécuriser l'arriéré (EOS-432) — *Leonard Mangallon*
+- feat(matching): le parcours du coach entre dans la decision, juge par un LLM — *Leonard Mangallon*
+- fix(chat): rattraper les livrables annoncés mais jamais produits par le modèle (EOS-437) — *Leonard Mangallon*
+- feat(matching): donner enfin le parcours du coach a l'explication IA — *Leonard Mangallon*
+- fix(branding): l'onglet Stratégie annonçait « sauvegardé » sans rien enregistrer — *Leonard Mangallon*
+- chore(db): adopter les tables academy_* et préparer le passage en production — *Leonard Mangallon*
+- docs(matching): corriger trois affirmations du §12, relevees en verification — *Leonard Mangallon*
+- fix(matching): trois defauts de l'instrument, dont un qui flattait mon resultat — *Leonard Mangallon*
+- fix(matching): le gate ignorait une degradation du quantile — *Leonard Mangallon*
+- docs(matching): §12 et §13 — le plancher de bruit, et la fin de la piste bio — *Leonard Mangallon*
+- fix(admin): reexporter coach_assignment_history, absente du barrel du schema — *Leonard Mangallon*
+- docs(live-coaching): §14 — les dettes du §13 refermées, et la dérive de schéma chiffrée — *Leonard Mangallon*
+- chore(db): mesurer la dérive de schéma, rattraper staging, et documenter la baseline — *Leonard Mangallon*
+- feat(matching): departager les ex aequo par la charge, pas par l'identifiant — *Leonard Mangallon*
+- feat(matching): arreter de jeter la resolution du score a la derniere ligne — *Leonard Mangallon*
+- fix(live-coaching): préférences par coach, décisions de l'Après persistées, et fin du drapeau ?lc=1 — *Leonard Mangallon*
+- mesure(matching): test apparie, pour rendre l'instrument capable de trancher — *Leonard Mangallon*
+- fix(offre): la coercition des modules ne doit pas supprimer valueAnchor (EOS-424/EOS-427) — *Leonard Mangallon*
+- fix(offre): les modules écrits par Oxana n'étaient pas enregistrés faute de schéma exposé au modèle (EOS-424) — *Leonard Mangallon*
+- fix(admin): normaliser les dates du tooltip de statut pour tous les navigateurs (EOS-436) — *Leonard Mangallon*
+- fix(admin): afficher le vrai statut d'acces des clients dans /admin/users (EOS-436) — *Leonard Mangallon*
+- fix(roadmap): publier le document 90 jours dans Mes Documents et la conversation (EOS-434) — *Leonard Mangallon*
+- fix(offer): empecher qu'un module JSONB malforme rende l'offre illisible (EOS-433) — *Leonard Mangallon*
+### 2026-08-17
+- feat(bi): export clients par secteur d'activité et données onboarding V2 — *Claude*
+- perf(avis-clients): paginer les avis et calculer les agrégats en SQL (#284) — *Quentin H*
+- perf(avis-clients): paginer les avis et calculer les agrégats en SQL — *Claude*
+- feat(offer): ancrer le pricing sur la valeur de substitution quand l'offre ne génère pas de revenu (EOS-427) — *Leonard Mangallon*
+- fix(immersions): icone plus lisible pour le segment sans nuitee du broadcast — *Leonard Mangallon*
+- feat(immersions): cibler un broadcast sur les clients avec ou sans nuitée (EOS-426) — *Leonard Mangallon*
+- feat(immersions): lister tous les associés d'une fiche et refondre l'export CSV — *Leonard Mangallon*
+- fix(immersions): le badge « Mis en avant » se superposait aux badges statut et type — *Leonard Mangallon*
+### 2026-08-14
+- docs(matching): corriger deux affirmations sur la qualite du scoring — *Leonard Mangallon*
+- docs(matching): consigner le resultat negatif sur la lecture des bios — *Leonard Mangallon*
+- fix(immersions): cibler la séquence email sur les programmes en cours, plus sur current_program — *Leonard Mangallon*
+- feat(recherche): recherche clients/coachs/comptes dans la palette ⌘K — *Leonard Mangallon*
+- fix(coachs): un lien LinkedIn sans https bloquait toute modification de la fiche coach — *Leonard Mangallon*
+- docs: pièges non évidents du merge staging → main — *Leonard Mangallon*
+- feat(dashboard): un seul tableau de bord pour tous les clients + mapping Méthode → Académie — *Leonard Mangallon*
+- docs(live-coaching): §13 — les quatre quick wins, et les deux pièges qui les précèdent — *Leonard Mangallon*
+- feat(live-coaching): le panneau écrit enfin — étape et taps persistés par (séance, coach) — *Leonard Mangallon*
+- feat(live-coaching): le déroulé suit enfin le vrai programme et le vrai numéro de séance — *Leonard Mangallon*
+- feat(live-coaching): carte « En direct » sur la fiche client et les listes de coachings — *Leonard Mangallon*
+- feat(live-coaching): rattacher la séance importée à son bot Recall, et horodater le direct au vrai chunk — *Leonard Mangallon*
+- docs(live-coaching): Ably chiffré puis rejugé — *Leonard Mangallon*
+- fix(landing): un-break a landing page whose diagnostic block holds a free-form quiz (EOS-421) — *Leonard Mangallon*
+- feat(immersions): logistique éditable par l'admin après inscription (chambre, dates, régime, navette) — *Leonard Mangallon*
+- docs: notes internes sur le partage de fiche client — *Leonard Mangallon*
+### 2026-08-13
+- docs(matching): note de decision taxonomie + etat d'avancement — *Leonard Mangallon*
+- feat(admin): editeur du profil pilotage coach + signalement des profils incomplets — *Leonard Mangallon*
+- feat(matching): ne plus confondre « aucune donnee » et « mauvais fit » — *Leonard Mangallon*
+- feat(matching): rendre la mise en avant capable d'injecter un coach — *Leonard Mangallon*
+- fix(matching): corriger 9 defauts releves par la verification adversariale — *Leonard Mangallon*
+- Merge branch 'main' into staging — *Leonard Mangallon*
+- feat(matching): rendre lisible d'ou vient une proposition — *Leonard Mangallon*
+- feat(focus): barre d'horizons — Programme › Cycle › Semaine › Jour — *Leonard Mangallon*
+- feat(matching): exclure un coach du pool sans le faire disparaitre des ecrans — *Leonard Mangallon*
+- mesure(matching): tableau de bord read-only + chemin de scoring pur — *Leonard Mangallon*
+- feat(finance): vue d'ensemble multi-comptes et comptes bancaires éditables depuis Réglages — *Leonard Mangallon*
+- docs: update of testing process — *Leonard Mangallon*
+- docs(live-coaching): le simulateur ne prétend plus offrir un --bind qu'il n'a pas — *Leonard Mangallon*
+- feat(live-coaching): rejouer un vrai coaching comme s'il se déroulait maintenant — *Leonard Mangallon*
+- feat(finance): script de remédiation — snapshot + reset SQL sans toucher au Blob — *Leonard Mangallon*
+- fix(finance): router les relevés par IBAN hors onboarding + noms de comptes corrects (EOS-411) — *Leonard Mangallon*
+- feat(live-coaching): panneau Meet à la marque, et mesure du délai parole → écran — *Leonard Mangallon*
+- fix(meet-addon): laisser le cookie de session traverser l'iframe Meet sur staging (SameSite=None), jamais en prod — *Leonard Mangallon*
+- feat(live-coaching): le panneau Meet s'identifie par le code de réunion, et le coach peut rattacher l'appel — *Leonard Mangallon*
+- fix(build): auto-héberger Playfair Display — le build dépendait de Google Fonts — *Leonard Mangallon*
+- fix(meet-addon): charger le SDK Meet — sans lui le panneau ne démarre jamais — *Leonard Mangallon*
+- fix(finance): la réparation de rappel ne supprime plus une ligne sur simple absence de verbe français (EOS-411) — *Leonard Mangallon*
+- fix(finance): n'imposer le compte des lignes imprimées qu'aux relevés qui l'ont prouvé (EOS-411) — *Leonard Mangallon*
+- fix(live-coaching): dire au coach non rattaché que le direct ne lui sera pas transmis — *Leonard Mangallon*
+### 2026-08-12
+- fix(finance): le compte des lignes imprimées fait autorité sur le rappel du modèle (EOS-411) — *Leonard Mangallon*
+- fix(clients): résolution déterministe quand plusieurs invités sont clients — *Leonard Mangallon*
+- fix(live-coaching): la liaison live ne renvoie plus 500, et dit sur quelle base elle a échoué — *Leonard Mangallon*
+- fix(finance): import par lot fiable — annulation, comptes dupliqués, doublons de fenêtre (EOS-411) — *Leonard Mangallon*
+- feat(landing): pilot A/B tests from the Landing Pages MCP — *Leonard Mangallon*
+- feat(landing): A/B/n traffic-split testing for pages and funnels — *Leonard Mangallon*
+- feat(nps): ajoute la colonne Email à l'export CSV admin (#283) — *Quentin H*
+- fix(live-coaching): lier le bot au client via l'annonce d'engram, pas via le flux — *Leonard Mangallon*
+- chore: re-trigger CI (transient Google Fonts fetch failure) — *Claude*
+- feat(nps): ajoute la colonne Email à l'export CSV admin — *Claude*
+- feat(live-coaching): consommer le flux du bot d'engram au lieu d'en envoyer un second — *Leonard Mangallon*
+- docs(live-coaching): arbitrage du bot unique, et correction de sa clé de jointure — *Leonard Mangallon*
+- fix(offre): Oxana n'annonce plus un enregistrement qui n'a pas eu lieu (EOS-414) — *Leonard Mangallon*
+- fix(finance): sens des opérations lu dans les colonnes/signe du relevé au lieu d'être déduit (EOS-411) — *Leonard Mangallon*
+- revert(live-coaching): retire la transcription en direct de main — *Leonard Mangallon*
+- feat(coachs): export markdown des profils, onglet personnalité et filtres pilotables (EOS-416) — *Leonard Mangallon*
+- fix(finance): sens des opérations lu dans les colonnes/signe du relevé au lieu d'être déduit (EOS-411) — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into staging-sync2 — *Leonard Mangallon*
+- style(live-coaching): aligne le panneau sur le verre dépoli de l'app — *Leonard Mangallon*
+- refactor(live-coaching): RECALL_WEBHOOK_BASE_URL devient optionnel — *Leonard Mangallon*
+- fix(live-coaching): le panneau s'adapte au panneau latéral de Meet — *Leonard Mangallon*
+- docs(live-coaching): mode d'emploi à jour (bouton, port 3001, deux bots) — *Leonard Mangallon*
+- docs(live-coaching): inventaire complet, état et suite — *Leonard Mangallon*
+- docs(live-transcription): Media API inapplicable, distribution privée confirmée — *Leonard Mangallon*
+- feat(live-coaching): add-on Google Meet + fin de l'hypothèse vidéo intégrée — *Leonard Mangallon*
+- fix(live-coaching): lien bot en base, rattrapage du transcript, vue complète — *Leonard Mangallon*
+- feat(engram): épingle l'organisation émettrice du webhook — *Leonard Mangallon*
+- feat(engram): récepteur du webhook post-call → client_coaching — *Leonard Mangallon*
+- docs(live-transcription): corrige l'état d'Engram (export post-call construit) — *Leonard Mangallon*
+- feat(live-coaching): transcription en direct pilotée depuis le panneau Pendant — *Leonard Mangallon*
+- feat(live-coaching): v1 companion panel behind ?lc=1 (before/during/after + scenarios) — *Leonard Mangallon*
+- spike(live-transcription): transcript Recall.ai en temps réel via webhook + Ably — *Leonard Mangallon*
+- Merge branch 'claude/live-transcription-spike-b9c4f7' into staging-merge2 — *Leonard Mangallon*
+- refactor(live-coaching): RECALL_WEBHOOK_BASE_URL devient optionnel — *Leonard Mangallon*
+- Merge branch 'claude/live-transcription-spike-b9c4f7' into staging-merge — *Leonard Mangallon*
+- fix(live-coaching): le panneau s'adapte au panneau latéral de Meet — *Leonard Mangallon*
+- docs(live-coaching): mode d'emploi à jour (bouton, port 3001, deux bots) — *Leonard Mangallon*
+- docs(live-coaching): inventaire complet, état et suite — *Leonard Mangallon*
+### 2026-08-11
+- docs(live-transcription): Media API inapplicable, distribution privée confirmée — *Leonard Mangallon*
+- feat(live-coaching): add-on Google Meet + fin de l'hypothèse vidéo intégrée — *Leonard Mangallon*
+- fix(matching): la capacité coach est lue en direct, plus via un compteur figé (EOS-412) — *Leonard Mangallon*
+- fix(live-coaching): lien bot en base, rattrapage du transcript, vue complète — *Leonard Mangallon*
+- fix(avatar): message clair au lieu de l'erreur Server Components sur « Finaliser l'avatar » (EOS-410) — *Leonard Mangallon*
+- feat(engram): épingle l'organisation émettrice du webhook — *Leonard Mangallon*
+- feat(engram): récepteur du webhook post-call → client_coaching — *Leonard Mangallon*
+- feat(admin): colonne Rattachement lisible sur /users (pills cliquables, co-titulaires, libellé Admin) — *Leonard Mangallon*
+- docs(live-transcription): corrige l'état d'Engram (export post-call construit) — *Leonard Mangallon*
+- feat(live-coaching): transcription en direct pilotée depuis le panneau Pendant — *Leonard Mangallon*
+- feat(live-coaching): v1 companion panel behind ?lc=1 (before/during/after + scenarios) — *Leonard Mangallon*
+- spike(live-transcription): transcript Recall.ai en temps réel via webhook + Ably — *Leonard Mangallon*
+### 2026-08-10
+- fix(ia): données inventées dans les tableurs, PDF tronqués en silence, avatars bloqués (EOS-410) — *Leonard Mangallon*
+- fix(guide): survoler le mot du jour n'ouvre plus le sélecteur d'experts — *Leonard Mangallon*
+- Merge origin/staging into fix/admin-sidebar-parity — *Leonard Mangallon*
+- fix(ui): le verre s'applique enfin aux <Card> (il perdait contre bg-card) — *Leonard Mangallon*
+- fix(ui): rendre son bleu au rail en mode clair — *Leonard Mangallon*
+- feat(dashboard): le mot du jour d'Alfred passe dans la bulle du guide — *Leonard Mangallon*
+- style(ui): verre plus transparent et plus dépoli — *Leonard Mangallon*
+- fix(ui): sortir le bleu ardoise de la palette sombre — *Leonard Mangallon*
+- fix(dashboard): le mot du jour d'Alfred devient répondable — *Leonard Mangallon*
+- feat(ui): fiche client + palette ⌘K passent au verre dépoli — *Leonard Mangallon*
+- feat(agents): reprendre le dernier expert utilisé (fenêtre 2 h) — *Leonard Mangallon*
+- fix(nav): parité d'accès avec la prod + rail allégé (sidebar admin) — *Leonard Mangallon*
+- fix(landing): un bloc au contenu vide ne fait plus planter la page publique — *Leonard Mangallon*
+- chore: merge origin/main into staging — *Leonard Mangallon*
+### 2026-08-07
+- fix(nav): « Mes outils » ouvre son menu au lieu de naviguer vers / — menus glass ouvrables au clic/tap — *Leonard Mangallon*
+- fix(finance): détecte la ligne d'en-tête sous le préambule des relevés (CSV + xlsx) — *Leonard Mangallon*
+- fix(finance): supprime les doublons d'extraction des relevés PDF (EOS-406) — *Leonard Mangallon*
+- feat(bi/adoption): timeline 1er coaching + comparaison par programme (Délai de démarrage) (#282) — *Quentin H*
+- fix(landing): restaurer le flou du navbar sticky des landing pages — *Leonard Mangallon*
+- refactor(ui): centraliser la recette du verre + tokeniser les rouges du masthead — *Leonard Mangallon*
+- fix(admin): réparer la page HubSpot Webhooks (div non fermée) — *Leonard Mangallon*
+- feat(ui): frosted glass on content-card <Card> slabs app-wide (~547 cards, className override of base bg-card) — *Leonard Mangallon*
+- feat(bi/adoption): comparaison par programme du délai de démarrage — *Quentin H*
+- feat(bi/adoption): ajoute le 1er coaching à la timeline « Délai de démarrage » — *Quentin H*
+- feat(bi/adoption): ajoute le 1er coaching à la timeline « Délai de démarrage » — *Quentin H*
+- fix(ui): frosted glass on knowledge folder cards + dashboard list cards (Card slabs) — *Leonard Mangallon*
+- feat(ui): roll PageMasthead out to admin + finance/veille + dashboards/rh/saas headers + compact variant — *Leonard Mangallon*
+- Merge pull request #281 from 42Lab-co/quentinhgt/admin-onboarding-dates — *Quentin H*
+- feat(admin/client): jalons de démarrage (ouverture accès + onboarding finalisé) — *Quentin H*
+- Merge pull request #280 from 42Lab-co/quentinhgt/onboarding-v2-delai-acces — *Quentin H*
+- feat(bi/adoption): onglet « Délai de démarrage » (accès → onboarding V2 + coach) — *Quentin H*
+### 2026-08-06
+- Merge pull request #279 from 42Lab-co/quentinhgt/whop-temp-unblock — *Quentin H*
+- feat(whop): déblocage temporaire d'accès pour les clients bloqués via Whop — *Quentin H*
+- feat(ui): reusable PageMasthead editorial header (shared PageHeader adopts it) + app-wide pretty scrollbars — *Leonard Mangallon*
+- feat(ui): app-wide frosted-glass sweep — replace opaque bg-card panel slabs with .app-panel-glass (260 surfaces) — *Leonard Mangallon*
+- Merge pull request #278 from 42Lab-co/quentinhgt/ambassadeur-program — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into quentinhgt/ambassadeur-program — *Quentin H*
+- fix(ambassadeurs): désactive l'unfurl des liens sur les notifs Slack — *Quentin H*
+- feat(ambassadeurs): espace client + console admin CRM (remplacement Yuccan) — *Quentin H*
+- merge: rituels cockpit improvements (rituels, hiérarchie semaine/Big3, rétro hebdo, fix streak) — *Quentin H*
+- feat(focus): rituels sans toggle + catégories claires, hiérarchie semaine/Big3, rétro hebdo accessible & incrémentale, fix streak (décroissance + jokers) + popover pédagogique — *Quentin H*
+- fix(email): ne jamais envoyer d'email réel hors production (log [EMAIL] uniquement) — *Quentin H*
+- feat(ui): frosted-glass on admin renewals + founder-letter responses + finance KPI table panels (drop opaque bg-card slabs) — *Leonard Mangallon*
+- feat: Daily Accountability Agent + cadence Full Focus (sur staging) (#277) — *Quentin H*
+- feat(actions): repères visuels de drop cross-colonne + drag overlay portalisé sur le kanban — *Quentin H*
+- feat(ui): frosted-glass surface on the Lettre du Fondateur admin table (drop opaque bg-card slab) — *Leonard Mangallon*
+- perf(focus): ouverture instantanée de la rétro du soir (store client, plus de round-trip URL ni spinner) — *Quentin H*
+### 2026-08-05
+- feat(ui): frosted-glass surfaces + dark-mode fixes — messages thread glass + header gradient, admin users cards/table on .app-panel-glass — *Leonard Mangallon*
+- feat(focus): série 🔥 + rétro du soir dans l'en-tête global (client), dashboard épuré au mot du coach — *Quentin H*
+- fix(veille): auto-resolve competitor domain + truthful benchmark error (EOS-405) — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/staging' into quentinhgt/daily-accountability-agent — *Quentin H*
+- fix(sales-calls): migrate SuperSales.dev integration to Vondo.io (#276) — *Quentin H*
+- fix(sales-calls): migrate SuperSales.dev integration to Vondo.io — *Quentin H*
+- feat(full-focus): cadence Full Focus — Daily/Weekly Big 3, rituels, objectifs du trimestre, cockpit /focus, tâches — *Quentin H*
+- docs(claude): add Context section (product, roles, programs) — *Leonard Mangallon*
+- feat(sidebar): unify header/rail hover menus on the glass standard + mode-clair polish — *Leonard Mangallon*
+- docs: trim CLAUDE.md to essentials — *Leonard Mangallon*
+### 2026-08-04
+- fix(landing): sandbox page-preview thumbnails so injected video/VSL players can't run — *Leonard Mangallon*
+- fix(landing): correct breadcrumb labels and funnel-aware editor back/exit — *Leonard Mangallon*
+- fix(landing): block media autoplay in live page-preview iframes across the pillar — *Leonard Mangallon*
+- fix(admin): shared DebouncedSearchInput — live search without Enter on capacity, coaches, expertise, partners — *Leonard Mangallon*
+### 2026-08-03
+- feat(bi): live product adoption & usage dashboard (/bi/adoption) (#273) — *Quentin H*
+- fix(bi): agent breakdown = calendar lookback (last N days) with date range, not tenure — *Quentin H*
+- feat(bi): NPS space = declared vs real-usage gap (platform-only); drop finance card — *Quentin H*
+- fix(finance): detect American MM/DD CSV dates so a July statement stops scattering into 2027/2028 (#274) — *Quentin H*
+- fix(finance): detect American MM/DD CSV dates so a July statement stops scattering into 2027/2028 — *Quentin H*
+- fix(finance): detect American MM/DD CSV dates so a July statement stops scattering into 2027/2028 — *Quentin H*
+- feat(bi): coach breakdown, chat depth, support & per-feature J+7/J+30 retention — *Quentin H*
+- feat(bi): add live product adoption & usage dashboard at /bi/adoption — *Quentin H*
+- fix(finance): snap hallucinated PDF transaction years to statement anchor (#272) — *Quentin H*
+- fix(finance): snap hallucinated PDF transaction years to statement anchor — *Quentin H*
+- feat(zendesk): median first reply time by window & team (#271) — *Quentin H*
+- feat(zendesk): median first reply time by window & team — *Quentin H*
+- feat(partenaires): retirer le bouton « Échanger avec l'équipe » (#270) — *Quentin H*
+- feat(partenaires): retirer le bouton « Échanger avec l'équipe » — *Quentin H*
+- feat(expert-mission): dupliquer une fiche de mission pour relancer une session (#269) — *Quentin H*
+- feat(expert-mission): dupliquer une fiche de mission pour relancer une session — *Quentin H*
+### 2026-07-31
+- fix(hubspot): prevent duplicate owner account on deal-sync + client merge (#267) — *Quentin H*
+- fix(founder-letter): render YouTube links as plain links instead of iframes (#268) — *Quentin H*
+- fix(founder-letter): render YouTube links as plain links instead of iframes — *Quentin H*
+- fix(hubspot): prevent duplicate owner account on deal-sync + client merge — *Quentin H*
+- feat(admin): attach optional supporting documents to a downsell (#265) — *Quentin H*
+- feat(renewals): show all AI renewal signals with server-side pagination (#266) — *Quentin H*
+- feat(admin): attach optional supporting documents to a downsell — *Quentin H*
+- feat(renewals): show all AI renewal signals with server-side pagination — *Quentin H*
+- feat(coachings): filtre par programme avec répartition des sessions (#263) — *Quentin H*
+- feat(nps): export complet des réponses NPS en CSV depuis /admin/nps (#264) — *Quentin H*
+- feat(nps): export complet des réponses NPS en CSV depuis /admin/nps — *Quentin H*
+- feat(coachings): filtre par programme avec répartition des sessions — *Quentin H*
+- fix(clients): backfill missing contract end dates from cohort durations (EOS-402) (#262) — *Quentin H*
+- fix(clients): backfill missing contract end dates from cohort durations (EOS-402) — *Quentin H*
+### 2026-07-30
+- chore: merge origin/main into quentinhgt/replace-circle-plan (résout conflits db/schema.ts + globals.css, restaure export coach-assignment-history) — *Quentin H*
+- feat(proactivite): moteur proactif + conciergerie/support client + board kanban DnD + admin proactivité — *Quentin H*
+- feat(scripts): claap usage-by-user cross-references roster to flag unused paid licenses (#260) — *Quentin H*
+- feat(scripts): claap usage-by-user cross-references roster to flag unused paid licenses — *Quentin H*
+- fix(messaging): disambiguate homonym members in coach search (email + program + coach) (#259) — *Quentin H*
+- fix(messaging): disambiguate homonym members in coach search (email + program + coach) — *Quentin H*
+### 2026-07-29
+- fix(sidebar): light text on dark rail in light mode (nav rows inherited a dark computed color) — *Leonard Mangallon*
+- style(sidebar): dark rail in light mode (admin + client) — *Leonard Mangallon*
+- feat(coach): floating Alfred guide (Studio IA), glass user-menu hover, ⌘K header trigger — *Leonard Mangallon*
+- fix(ai-tools): relax strict tool-input schemas that hard-rejected agent saves/choices (EOS-397) — *Leonard Mangallon*
+- feat(landing): migration tool for legacy diagnostic blocks → contact form (#258) — *Quentin H*
+- feat(landing): --include-scored opt-in to convert scored legacy diagnostics + button.text fallback — *Quentin H*
+- fix(landing): allow user-activated top navigation in interactive HTML blocks so CTA links work — *Leonard Mangallon*
+- feat(landing): migration script for legacy diagnostic blocks → contact form — *Quentin H*
+- fix(landing-preview): stop 500s on non-uuid ids + partial diagnostic content (#257) — *Quentin H*
+- fix(landing-preview): stop 500s on non-uuid ids + partial diagnostic content — *Quentin H*
+### 2026-07-28
+- feat(admin): registry-driven sidebar (domains, collapsible groups, count badges, ⌘K palette, favorites, welcome) + glass UI — *Leonard Mangallon*
+- feat(community): réactions emoji (posts+commentaires) + @mention/notify dans les posts + épinglage de commentaire + rich text léger + barre de formatage (au-delà de Circle) — *Quentin H*
+- chore: merge origin/main into staging — *Leonard Mangallon*
+- fix(build): disable webpack persistent cache in prod to fix Vercel build OOM — *Leonard Mangallon*
+- feat(community): @mention en commentaire → notification in-app + push (au-delà de Circle) — autocomplete scopé audience, validation visibilité serveur, surlignage @Nom — *Quentin H*
+- fix(communaute-admin): durcissement audit (9 findings) — expansion variantes programmes (expand/collapse), suppr. leçon, events annulés + republier, dates heure de Paris, email d'annulation, publier la série, toggle isActive espace, moveSpace tie-break, modération période + suppression cascade + minors — *Quentin H*
+- fix(build): enable webpackMemoryOptimizations to prevent Vercel build OOM — *Leonard Mangallon*
+- feat(founder-letter): embed YouTube in reader + fix admin editor typography (#256) — *Quentin H*
+- feat(founder-letter): embed YouTube in reader + fix admin editor typography — *Quentin H*
+- fix(build): enable webpackMemoryOptimizations to prevent Vercel build OOM — *Leonard Mangallon*
+- feat(rh): copier/exporter la fiche, l'éditer depuis l'UI, CTA Héloïse, onglet Description par défaut (EOS-395) — *Leonard Mangallon*
+- polish(rh): masquer le titre H1 redondant de la fiche à l'affichage (EOS-395) — *Leonard Mangallon*
+- feat(rh): onglets visibles Pipeline/Description/Paramètres sur la fiche poste (EOS-395) — *Leonard Mangallon*
+- feat(rh): outil updateJobDescription pour éditer une fiche de poste existante (EOS-395) — *Leonard Mangallon*
+- fix(rh): afficher la fiche de poste générée dans RH › Jobs (EOS-395) — *Leonard Mangallon*
+- fix(circle-migration): matcher les auteurs aussi via client.email→user_id (double email login≠fiche) — récupère les auteurs orphelins type Charlotte Millour — *Quentin H*
+- feat(guide): persist agent panel across pages + in-chat hand-off; dashboard/glass polish — *Leonard Mangallon*
+- fix(chat): thread clientId/visibility through the registry-agent tools and derive extractable types from the shared attachment list (review follow-ups) — *Leonard Mangallon*
+- fix(security): resolve the enriched session inside canUserAccessClientTag (raw session denied every coach + stripped owner context) — *Leonard Mangallon*
+- fix(security): access-control the chat taggedClientId (IDOR), chat re-tag and message vote (G) — *Leonard Mangallon*
+- fix(chat): coach-session frictions — persist tagged client on switch, resolve Zendesk programme from the client, correct model comment (F) — *Leonard Mangallon*
+- fix(chat): coach-authored documents save to the tagged client's Mes Documents (shared) and are listable (E) — *Leonard Mangallon*
+- fix(chat): name the client's real program (no hardcoded "Board") and lift OKR/roadmap access to all programs (D1) — *Leonard Mangallon*
+- fix(chat): give Alfred a coach persona so it addresses the coach about the client (3rd person), not the client — *Leonard Mangallon*
+- fix(chat): accept markdown (.md) uploads and reliably extract text/plain + markdown content — *Leonard Mangallon*
+- fix(veille): addCompetitor writes to the tagged client's Brain, not the coach's first-assigned client — *Leonard Mangallon*
+- feat(events): live top bar when a masterclass/event is ongoing — *Leonard Mangallon*
 ### 2026-07-27
+- feat(users): action « accès sur pause » / réactiver dans le menu admin (EOS-390) — *Leonard Mangallon*
+- fix(founder-letter): restore broken typography, scoped to the letter body (#255) — *Quentin H*
+- feat(lifecycle): statut « accès sur pause » réversible (EOS-390) — *Leonard Mangallon*
+- fix(deps): declare @tiptap/core as a direct dependency (resolves 500 on Tiptap render) — *Quentin H*
+- fix(founder-letter): scope prose typography to the letter body (.lettre-prose) — *Quentin H*
+- feat(landing): support extra & custom fields on the email-gated download block — *Leonard Mangallon*
+- fix(landing): add modifyBlockList so AI list-entry edits don't clobber manual edits — *Leonard Mangallon*
+- fix(circle-migration): garde --db-host tolérante (forme courte/pooler via endpoint id) + validée au début du sync (fail-fast avant l'export) — *Quentin H*
+- feat(scripts): audit Claap usage par utilisateur (recorder) et mois (#254) — *Quentin H*
+- feat(scripts): audit Claap usage par utilisateur (recorder) et mois — *Quentin H*
+- feat(connaissance): allow-list gate + internal search endpoint for the prospect MCP (#253) — *lmangall-42lab*
+- fix(social): manual edit + persisted AI rewrite of LinkedIn variants so the corrected post is schedulable (EOS-388) — *Leonard Mangallon*
 - feat(offre): export PDF dossier complet côté coach (#252) — *Quentin H*
 - feat(offre): export PDF dossier complet côté coach — *Quentin H*
 ### 2026-06-15
