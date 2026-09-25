@@ -1,5 +1,111 @@
 ## Commit Log
+### 2026-09-25
+- fix(ariane): un objectif cité porte ses résultats clés — plus de liste recopiée sous la carte — *Leonard Mangallon*
+- Merge pull request #371 from 42Lab-co/codex/modifier-lexpditeur-du-mail — *Quentin H*
+- Rediriger les alertes de demandes de service vers Fabrice — *Quentin H*
+- fix(ariane): une carte citée ne se double plus d'un texte qui la recopie — *Leonard Mangallon*
+- feat(engram): release coach navigation and explain notetaker (#370) — *Quentin H*
+- feat(engram): release coach navigation and explain notetaker — *Quentin H*
+- Merge pull request #369 from 42Lab-co/codex/exempter-les-impays-sous-100 — *Quentin H*
+- Allow access for overdue balances below €100 — *Quentin H*
+- fix(capacity): les clients bloqués (paiement) restent listés sous leur coach, hors charge — *Leonard Mangallon*
+- feat(fiche-coach): ville cliquable vers Google Maps, suivie de son numéro de département — *Leonard Mangallon*
+- copy(le-club): « Anniversaire » — mention de visibilité raccourcie — *Leonard Mangallon*
+- fix(fiche-coach): la date de naissance seule dans l'en-tête, sans l'âge — *Leonard Mangallon*
+- feat(le-club): « Anniversaire » (jour + mois) demandé dans le profil Le Club, lu en tête de fiche coach — *Leonard Mangallon*
+- feat(fiche-coach): date de naissance et ville d'habitation des clients, éditables en tête de fiche — *Leonard Mangallon*
+- feat(fiche-coach): ville cliquable vers Google Maps, suivie de son numéro de département — *Leonard Mangallon*
+- fix(email): les mails aux adresses @entrepreneurs.com partent de plateforme@, plus de quentin@42lab.co — *Leonard Mangallon*
+- copy(le-club): « Anniversaire » — mention de visibilité raccourcie — *Leonard Mangallon*
+- fix(fiche-coach): la date de naissance seule dans l'en-tête, sans l'âge — *Leonard Mangallon*
+- feat(pause): bloquer les futures pauses depuis la console cycle de vie, avec journal audit_log de qui bloque — *Leonard Mangallon*
+- feat(le-club): « Anniversaire » (jour + mois) demandé dans le profil Le Club, lu en tête de fiche coach — *Leonard Mangallon*
+- feat(fiche-coach): date de naissance et ville d'habitation des clients, éditables en tête de fiche — *Leonard Mangallon*
+- feat(programmes): la fin recule du retard de la 1re séance (démarrage tardif) — *Leonard Mangallon*
+- fix(pause): fiche coach, la pause en cours n'est dite qu'une fois (badge réduit au statut, historique sans la pause en cours) — *Leonard Mangallon*
+- feat(pause): mise en pause permise en impersonation, modale précisant durée fixe d'un mois, associés et coach à prévenir — *Leonard Mangallon*
 ### 2026-09-24
+- fix(pause): ⌘K et le registre de navigation ne proposent plus « Mettre un accès en pause » — *Leonard Mangallon*
+- fix(pause): la vue d'ensemble du cycle de vie n'explique plus l'« Accès sur pause » retiré — *Leonard Mangallon*
+- docs(pause): plus de pointeur vers `lib/access-pause.ts`, supprimé par cette dépose — *Leonard Mangallon*
+- chore(pause): dépose d'EOS-390 « Accès sur pause » (étape 12) — *Leonard Mangallon*
+- feat(social): publier son propre texte, et une autre variante comme post à part (EOS-574) — *Leonard Mangallon*
+- feat(social): calendrier des publications lisible par critères — pilier, funnel, framework (EOS-580) — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/565-incorrect-account-overview-55c278 — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/565-incorrect-account-overview-55c278 — *Leonard Mangallon*
+- Merge origin/main into claude/pause-accompagnement-impl (séance « 1-1 Direction ») — *Leonard Mangallon*
+- feat(coachings): type de séance « 1-1 Direction » (1-1 d'Alec avec les clients Board) — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/565-incorrect-account-overview-55c278 — *Leonard Mangallon*
+- Merge origin/main into claude/pause-accompagnement-impl (finances : lecture seule, contreparties) — *Leonard Mangallon*
+- fix(pause): E.lan / E.volution — les cycles mensuels reculent avec la pause — *Leonard Mangallon*
+- docs(pause): §11 — arbitrages du 24/09 (HubSpot, Success Score, E.lan/E.volution, programme courant seul) — *Leonard Mangallon*
+- fix(pause): la pause ne recule que le programme COURANT — *Leonard Mangallon*
+- docs(finances): consigner la revue prod de la clé de rapprochement des contreparties — *Leonard Mangallon*
+- fix(pause): ⌘K et le registre de navigation ne proposent plus « Mettre un accès en pause » — *Leonard Mangallon*
+- fix(pause): la vue d'ensemble du cycle de vie n'explique plus l'« Accès sur pause » retiré — *Leonard Mangallon*
+- docs(pause): plus de pointeur vers `lib/access-pause.ts`, supprimé par cette dépose — *Leonard Mangallon*
+- chore(pause): dépose d'EOS-390 « Accès sur pause » (étape 12) — *Leonard Mangallon*
+- docs(pause): §11 — revue du 24/09/2026 (fusion de main, écarts, corrections, checklist) — *Leonard Mangallon*
+- fix(finances/import): harmoniser les contreparties de tout le dossier à chaque import, sur tous les chemins — *Leonard Mangallon*
+- fix(pause): la reprise anticipée ne promet « tout modifier » que si l'accès revient vraiment — *Leonard Mangallon*
+- fix(pause): le mail « reprendre plus tôt » du tableau de bord et de /reserver dit aussi qui écrit — *Leonard Mangallon*
+- fix(pause): un rechargement raté de « Mon accompagnement » ne masque plus la page — *Leonard Mangallon*
+- fix(pause): « rien n'est repoussé » seulement si AUCUN programme de la fiche ne recule — *Leonard Mangallon*
+- fix(pause): « Reprise le 23 octobre · reprise demain » ne répète plus le verbe — *Leonard Mangallon*
+- fix(pause): l'email du coach ne dit plus que Calendly est invisible — *Leonard Mangallon*
+- fix(pause): import_image et create_upload_link renvoient le code de refus, pas INTERNAL — *Leonard Mangallon*
+- fix(pause): l'email de phase T1 et le replay de 17 h 30 épargnent une fiche passée en pause — *Leonard Mangallon*
+- fix(pause): le repli du démarrage différé ne ramène plus sur une fiche terminée — *Leonard Mangallon*
+- fix(pause): le badge de la fiche suit « Terminer la pause » — *Leonard Mangallon*
+- fix(pause): /mes-coachings n'ordonne plus de réserver pendant une pause — *Leonard Mangallon*
+- fix(pause): le mail de reprise anticipée dit qui écrit (nom et compte) — *Leonard Mangallon*
+- fix(pause): la carte programme relit sa date de fin après une mise en pause — *Leonard Mangallon*
+- fix(pause): la modale ne présente plus comme certain ce que la plateforme ignore — *Leonard Mangallon*
+- fix(pause): ne plus annoncer « fin de programme repoussée » quand rien n'est décalé — *Leonard Mangallon*
+- fix(pause): la relance « un message t'attend » atteint aussi un client en pause — *Leonard Mangallon*
+- fix(pause): pnpm dry:pause-reminders lit .env.local et simule vraiment 9 h Paris — *Leonard Mangallon*
+- fix(pause): l'email du coach ne laisse plus croire qu'aucune séance n'est prévue — *Leonard Mangallon*
+- fix(pause): l'email du demandeur ne dit « Votre coach est prévenu » que si c'est vrai — *Leonard Mangallon*
+- fix(pause): une relance J-7/J-0 n'est plus perdue sur une erreur transitoire — *Leonard Mangallon*
+- fix(pause): les relances J-7/J-0 ne promettent la reprise que si l'accès revient — *Leonard Mangallon*
+- fix(pause): les relances J-7/J-0 du coach nomment la fiche en entier — *Leonard Mangallon*
+- fix(pause): J-7 et « jours restants » comptés en jours calendaires Paris — *Leonard Mangallon*
+- fix(pause): pas d'annonce de reprise J-0 pour une pause suivie d'une autre — *Leonard Mangallon*
+- fix(pause): un associé actif n'est plus enfermé par sa propre fiche à venir — *Leonard Mangallon*
+- fix(pause): l'écran d'activation ne promet plus un espace ouvert au démarrage différé — *Leonard Mangallon*
+- fix(pause): bandeau d'impersonation sur l'écran d'attente du démarrage différé — *Leonard Mangallon*
+- fix(pause): l'écran d'attente mène à l'onboarding tant qu'il n'est pas fini — *Leonard Mangallon*
+- fix(pause): l'upload vocal de l'onboarding passe au démarrage différé — *Leonard Mangallon*
+- fix(pause): les refus d'écriture Landing donnent le vrai motif (pause, pas « terminé »), sur le web et le MCP — *Leonard Mangallon*
+- fix(pause): les scans proactifs compilent sans erreur TS2352 — *Leonard Mangallon*
+- fix(pause): le silence ne compte plus les jours de pause d'accompagnement — *Leonard Mangallon*
+- fix(pause): les relances proactives n'atteignent plus un client en pause — *Leonard Mangallon*
+- fix(finances): lecture seule, journal d'annulation fiable, « Est-ce vous ? » réversible, pièges en un clic — *Leonard Mangallon*
+- fix(pause): les séances Calendly de la fenêtre sont listées au coach et au client — *Leonard Mangallon*
+- fix(pause): rang et cumul de la console calculés sur tout l'historique de la fiche — *Leonard Mangallon*
+- fix(pause): les crédits immersion suivent la fin de programme repoussée — *Leonard Mangallon*
+- fix(pause): la pause repousse la fin de TOUS les programmes en cours de la fiche — *Leonard Mangallon*
+- fix(pause): pas de pause sur les programmes à cycles mensuels (E.lan, E.volution) — *Leonard Mangallon*
+- fix(pause): /mon-espace n'envoie plus la fiche client entière au navigateur — *Leonard Mangallon*
+- fix(pause): le motif de blocage des pauses quitte la fiche `client` — *Leonard Mangallon*
+- feat(finances): édition en lot, Référentiel et canonisation des contreparties (travail existant) — *Leonard Mangallon*
+- Merge origin/main dans la pause d'accompagnement (résolution des 3 conflits) — *Leonard Mangallon*
+- feat(seed): coach fictif Douglas Adams seul, inactif, sur 42lab@entrepreneurs.com — *Leonard Mangallon*
+- fix(finance): cartes Visa et folio Desjardins importés au bon compte, dans le bon sens (EOS-565) — *Leonard Mangallon*
+- fix(ariane): toujours le chemin registre (outils coach absents en prod) + limit borné au lieu d'être rejeté — *Leonard Mangallon*
+- Merge branch 'claude/ariane-expert-briefs-3c2557' — Ariane prépare les briefs experts — *Leonard Mangallon*
+- fix(coaching): la validation retrouve les associés DUO/TRIO/QUATUOR — *Leonard Mangallon*
+- chore(saship): resynchroniser l'instantané de la roadmap (LMS et soirée Paris livrés) — *Leonard Mangallon*
+- feat(saship): rallumer le digest quotidien — libellés sur plusieurs jours, réponse IA plus longue — *Leonard Mangallon*
+- fix(landing): Noah n'invente rien quand l'Avatar ou l'Offre manquent (EOS-578) — *Leonard Mangallon*
+- feat(landing): Board et Scaling débloqués sans Avatar ni Offre (EOS-578) — *Leonard Mangallon*
+- chore(coachings): dry-run de l'attribution automatique des actions (lecture seule) — *Leonard Mangallon*
+- feat(coach-messages): l'associé proposé apparaît dans le brouillon relu, le coach le corrige avant l'envoi — *Leonard Mangallon*
+- feat(coachings): attribuer automatiquement les actions d'une séance au membre de la fiche qui s'y est engagé — *Leonard Mangallon*
+- refactor(coachings): sortir les prompts d'extraction d'actions des deux chemins vivants — *Leonard Mangallon*
+- chore(coachings): dry-run de l'attribution automatique des actions (lecture seule) — *Leonard Mangallon*
+- feat(coach-messages): l'associé proposé apparaît dans le brouillon relu, le coach le corrige avant l'envoi — *Leonard Mangallon*
+- feat(coachings): attribuer automatiquement les actions d'une séance au membre de la fiche qui s'y est engagé — *Leonard Mangallon*
 - feat(attribution-email): entrée « Mail de bienvenue » sur /capacity — *Leonard Mangallon*
 - feat(attribution-email): programmes détectés, correctifs de revue, opt-out retiré — *Leonard Mangallon*
 - feat(attribution-email): écran /admin/emails-attribution, seed et doc — *Leonard Mangallon*
