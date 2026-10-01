@@ -1,5 +1,79 @@
 ## Commit Log
+### 2026-10-01
+- fix(renewal): use iClosed booking link (#385) — *Quentin H*
+- fix(renewal): use iClosed booking link — *Quentin H*
+- style(bi): glass panels on /bi/adoption cards and the 404 page — *Leonard Mangallon*
+### 2026-09-30
+- feat(methode): le titre d'étape mène à l'espace de travail une fois « Exécuter » fait — *Leonard Mangallon*
+- perf(landing): server-render public pages and drop the editor from their bundle — *Leonard Mangallon*
+- feat(actions): one task board for client and coach — shared edit modal, category tags, grouped views, no +7 — *Leonard Mangallon*
+- feat(landing): coaches see the client's landing pages (drafts included) on the client file, and Ariane can list them — *Leonard Mangallon*
+- feat(observabilité): capturer la vraie erreur serveur derrière « An error occurred in the Server Components render » (EOS-509) — *Leonard Mangallon*
+- fix(coach): onboarding % on the client fiche uses real business completion, with per-module tooltip — *Leonard Mangallon*
+- feat(client): open affiliate tools catalog (#384) — *Quentin H*
+- feat(client): open affiliate tools catalog — *Quentin H*
+- fix(engram): keep upcoming event per coach (#383) — *Quentin H*
+- fix(engram): keep upcoming event per coach — *Quentin H*
+- feat(rag): script liant les vidéos L'Accélérateur de la base à leurs leçons Académie (vimeoId) — *Leonard Mangallon*
+- Use Engram calendar invitation as fallback for client attribution (#382) — *Quentin H*
+- test(engram): keep invitation evidence separate from participant proof — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/engram-calendar-invitation-fallback — *Quentin H*
+- feat(engram): use calendar invitation to resolve unmatched clients — *Quentin H*
+- feat(client): prepare affiliate tools catalog and restore resource links (#381) — *Quentin H*
+- feat(client): prepare affiliate tools catalog and restore resource links — *Quentin H*
+- feat(chat): a knowledge-base source the client can't open shows a lock + why — *Leonard Mangallon*
+- style(ui): retire les dalles opaques restantes sous la coque en verre — *Leonard Mangallon*
+- style(offer): espace de travail transparent — plus de dalle bg-background — *Leonard Mangallon*
+- Merge main into staging — *Leonard Mangallon*
+- feat(ariane): « call de vente » / « appel de closing » force getSalesCalls (et le sélecteur de fiche sans fiche) — *Leonard Mangallon*
+### 2026-09-29
+- Merge main into staging — *Leonard Mangallon*
+- feat(ariane): accès aux calls de vente du client — outils + cartes cliquables — *Leonard Mangallon*
+- feat(landing): inscriptions non terminées regroupées par page — *Leonard Mangallon*
+- feat(landing): réponses visibles au survol dans « Inscriptions non terminées » — *Leonard Mangallon*
+- feat(landing): parcours de chaque inscription non terminée, étape par étape — *Leonard Mangallon*
+- feat(okrs): échéance modifiable en place sur le détail + actions dans un menu ⋯ — *Leonard Mangallon*
+- fix(okrs): un objectif « Réalisé » reste ouvrable, éditable et réversible ; échéance modifiable — *Leonard Mangallon*
+- feat(landing): sélecteur de page dans Analytics, entonnoir du formulaire dans la carte de la page — *Leonard Mangallon*
+- feat(landing): entonnoir visuel des étapes de formulaire (page, funnel, global) — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/lesysteme4-form-analytics-f9f0e0 — *Leonard Mangallon*
+- feat(landing): note « Info » propriétaire sur landing ou funnel, lisible et modifiable via le MCP — *Leonard Mangallon*
+- feat(landing): onglet Leads repensé + bascule d'affichage commune (Funnels, Analytics) — *Leonard Mangallon*
+- docs(mcp-landing): documenter lpSubmitOptin et le formulaire multi-étapes dans add_block — *Leonard Mangallon*
+- style(landing): maquette de vignette épurée — sans icône ni titre — *Leonard Mangallon*
+- perf(landing): vignettes de carte en maquette vectorielle, plus d'iframe — *Leonard Mangallon*
+- fix(landing): vignettes — révéler les animations d'entrée, ignorer le texte invisible — *Leonard Mangallon*
+- feat(landing): vignette de carte — maquette quand l'aperçu ne peut pas s'afficher — *Leonard Mangallon*
+- fix(landing): tableaux Leads et Analytics débordaient de 4px de la carte — *Leonard Mangallon*
+- style(landing): cartes de page en verre dépoli (MagicCard glass) — *Leonard Mangallon*
+- chore(landing): migration landing_funnel.info renumérotée 0133 (après main) — *Leonard Mangallon*
+- style(landing): tableau des funnels — plus de place au nom, colonne Info resserrée — *Leonard Mangallon*
+- style(landing): tableau des funnels aux couleurs de l'app — *Leonard Mangallon*
+- fix(landing): tableau des funnels lisible en thème sombre — *Leonard Mangallon*
+- feat(landing): vue Tableau des funnels + colonne « Info » éditable — *Leonard Mangallon*
+- Guard Engram attribution and render speaker turns (#380) — *Quentin H*
+- feat(landing): enregistrer chaque étape des formulaires HTML multi-étapes — *Leonard Mangallon*
+- fix(claap): dire au coach ce qu'attend un import en cours, et jusqu'à quand — *Leonard Mangallon*
+- docs(coaching): corriger l'origine des dates à minuit Paris (EOS-582) — *Leonard Mangallon*
+- feat(coaching): sessions Board illimitées dès le 01/10/2026 (EOS-582) — *Leonard Mangallon*
+- feat(pause): terminer une pause d'accompagnement depuis la console cycle de vie — *Leonard Mangallon*
+- fix(landing): scope /landing-preview/[id] session access to the caller's client — *Leonard Mangallon*
+- fix(attribution-email): page /admin/emails-attribution en pleine largeur — *Leonard Mangallon*
+- feat(chat): link the knowledge-base sources an agent names, at render time — *Leonard Mangallon*
+- feat(rag): agents say which module/video an excerpt comes from — *Leonard Mangallon*
+- feat(landing): simplifier l’installation du MCP par assistant IA (#379) — *Quentin H*
+- feat(landing): guide MCP par assistant IA — *Quentin H*
+- feat(landing): frosted glass surfaces and sticky frosted table headers — *Leonard Mangallon*
+- Merge main into staging — *Leonard Mangallon*
+- fix(mcp-landing): reset_analytics était inappelable — schéma publié sans propriétés — *Leonard Mangallon*
+- feat(ariane): « De qui parles-tu ? » — désigner la ou les personnes d'une fiche DUO/TRIO, en première étape — *Leonard Mangallon*
 ### 2026-09-28
+- fix(mon-espace): dire qu'un questionnaire business fini n'a rien à valider (EOS-591) — *Leonard Mangallon*
+- feat(photo): portrait de Mon espace cliquable, photos compte et Communauté séparées — *Leonard Mangallon*
+- feat(chat): link the knowledge-base sources an agent names, at render time — *Leonard Mangallon*
+- fix(avatar): montrer ses avatars au client au lieu de la page de présentation (EOS-584) — *Leonard Mangallon*
+- fix(claap): importer la séance muette que Claap ne transcrira jamais — *Leonard Mangallon*
+- fix(coachings): « Type de session » — le bouton Enregistrer redevient accessible — *Leonard Mangallon*
 - fix(avatar): montrer ses avatars au client au lieu de la page de présentation (EOS-584) — *Leonard Mangallon*
 - Merge pull request #378 from 42Lab-co/codex/hourly-adoption-20260928 — *Quentin H*
 - feat(bi): show hourly adoption by program and module — *Quentin H*
