@@ -1,5 +1,195 @@
 ## Commit Log
+### 2026-11-02
+- fix(community): preserve Builder academy and space targeting (EOS-702) (#547) — *Quentin H*
+- fix(community): preserve Builder academy and space targeting (EOS-702) — *Quentin H*
+- fix(coaching): prevent legacy restore after failed R2 CLI retry [skip actions] — *Quentin H*
+- fix(coaching): keep failed R2 CLI retries from restoring legacy rows [skip actions] — *Quentin H*
+- fix(coaching): private R2 playback and safe reprocessing [skip actions] — *Quentin H*
+- fix(finance): decode legacy bank CSV exports without corrupting accents (#544) — *Quentin H*
+- fix(finance): decode legacy bank CSV exports without corrupting accents — *Quentin H*
+- fix(team): allow read-only consultation during impersonation (#542) — *Quentin H*
+- fix(proactivity): preserve worker capacity after per-client checkpointing (#543) — *Quentin H*
+- fix(proactivity): preserve worker capacity after per-client checkpointing — *Quentin H*
+- fix(team): allow read-only consultation during impersonation — *Quentin H*
+- fix(runtime): restore finance workers and bound production workflows (#541) — *Quentin H*
+- fix(runtime): preserve finance worker identity and bound production workflows — *Quentin H*
+- fix(ai-consumption): preserve confirmed evidence on late completion (#540) — *Quentin H*
+- fix(ai-consumption): preserve confirmed evidence on late completion — *Quentin H*
+- fix(ai-consumption): réparer l’historique et valoriser les appels directs (#539) — *Quentin H*
+- fix(ai-consumption): repair historical counters and price direct calls — *Quentin H*
+- feat(coachings): add monthly list and coach CSV export (#538) — *Quentin H*
+- feat(coachings): add monthly list and coach CSV export — *Quentin H*
+- fix(events): preserve Builder and Boss audience selections (#537) — *Quentin H*
+- fix(events): preserve Builder and Boss audience selections — *Quentin H*
+### 2026-10-30
+- fix(replays): preserve archive access and stability on R2 (#536) [skip actions] — *Quentin H*
+- fix(replays): preserve legacy archive access and stability on R2 — *Quentin H*
+- fix(ai): a declared maintenance or test traffic wins over a caller's product traffic — *Leonard Mangallon*
+- docs(social): write-up of the CMO onboarding schema caps and their repair — *Leonard Mangallon*
+- feat(social): audit and repair script for degraded CMO onboardings — *Leonard Mangallon*
+- fix(social): keep the strategist's pillars when a field exceeds a cap — *Leonard Mangallon*
+- feat(expert): le lien de réservation visible sur la mission, avec « Envoyer dans la messagerie » — *Leonard Mangallon*
+- fix(social): l'Audition n'attend plus une voix qui ne s'écrira jamais (EOS-698) — *Leonard Mangallon*
+- Merge pull request #535 from 42Lab-co/claude/expert-booking-reminders — *lmangall-42lab*
+- feat(expert): date de mise en service des relances — le stock attend une décision — *Leonard Mangallon*
+- fix(ai): ask Haiku 5.5 for adaptive thinking, not a budget; publication review reads the per-text problems — *Leonard Mangallon*
+- feat(social): strategy and voice refine chats on the CMO model, strategist on the main chat model — *Leonard Mangallon*
+- feat(social): draft checks, image prompt, seed extraction and classifier on the CMO model — *Leonard Mangallon*
+- feat(social): Noah skills on Claude Haiku 5.5, clean variants kept, one rewrite — *Leonard Mangallon*
+- chore(social): draft 10 days ahead, drop the dead apply-decision handler, fix model comments — *Leonard Mangallon*
+- fix(social): a failing client no longer stops the Monday run or the watchdog — *Leonard Mangallon*
+- feat(social): remember why a slot was rejected, and stop re-paying for it daily — *Leonard Mangallon*
+- fix(social): keep the slot's request and profile scopes inside Inngest steps — *Leonard Mangallon*
+- fix(expert): le bouton « Lien de réservation client » montre le lien si la copie est refusée — *Leonard Mangallon*
+- fix(expert): relances — carte sûre, textes au compte réel, séquence par (client, expert) — *Leonard Mangallon*
+- feat(demo-users): ready for an HR live — recipe, AI-read CVs, pipeline warnings, tested on staging — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/expert-booking-reminders — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/main' into claude/test-account-structure-6bc2ad — *Leonard Mangallon*
+- feat(skills): the demo-user skill starts from the team and the scene — *Leonard Mangallon*
+- feat(skills): « Skills IA », for Claude, ChatGPT or another assistant — *Leonard Mangallon*
+- feat(skills): « Ta fiche est finie ? » lives in the demo-user card — *Leonard Mangallon*
+- feat(skills): /admin/skills reads as a catalogue, the demo user as skill n°1 — *Leonard Mangallon*
+- feat(skills): a shorter /admin/skills, with the .works project and a Slack button — *Leonard Mangallon*
+- feat(skills): /admin/skills hosts the demo-user Claude skill, always the latest version — *Leonard Mangallon*
+- chore(community): drop em dashes from EOS-693 comments — *Leonard Mangallon*
+- feat(community): schedule posts and let admins delete posts from the feeds (EOS-693) — *Leonard Mangallon*
+- fix(immersions): aligne la colonne Actions des places — *Leonard Mangallon*
+- fix(social): chaque login d'une fiche DUO/TRIO connecte son propre LinkedIn (EOS-697) — *Leonard Mangallon*
+- fix(documents): les agents relisent les PDF de Mes Documents (EOS-696) — *Leonard Mangallon*
+- docs(skills): video-production, l'ordre commit puis pull puis push — *Leonard Mangallon*
+- docs(skills): video-production dit où elle est versionnée et comment publier une modification — *Leonard Mangallon*
+- chore(skills): versionne la skill video-production, la skill sfx et /enhance-tella — *Leonard Mangallon*
+- feat(aura): « À rappeler au client » sur la page Préparer la séance — *Leonard Mangallon*
+- fix(css): referme le @media SCALE perdu à la fusion — *Leonard Mangallon*
+- feat(rapports): prévenir le client depuis la page du rapport et cartes en verre — *Leonard Mangallon*
+- Merge remote-tracking branch 'origin/claude/arianne-aura-coach-notification-6caa0f' into claude/aura-client-reminder-6489a2 — *Leonard Mangallon*
+### 2026-10-29
+- fix(campaigns): use branded email template and preview (#534) — *Quentin H*
+- fix(campaigns): use branded email template and preview — *Quentin H*
+- refactor(social): integrate profile switcher into header (#533) — *Quentin H*
+- refactor(social): integrate profile switcher into header — *Quentin H*
+- fix(admin): await email campaign dispatch and report failures (#532) — *Quentin H*
+- fix(social): avoid nested audit transactions when saving onboarding goals (#531) — *Quentin H*
+- fix(admin): await email campaign dispatch and report failures — *Quentin H*
+- fix(social): avoid nested audit transactions when saving onboarding goals — *Quentin H*
+- fix(ai-consumption): préserver le raisonnement et fiabiliser la collecte (#530) — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/ai-consumption-reliability — *Quentin H*
+- fix(ai-consumption): preserve reasoning totals and improve confirmation throughput — *Quentin H*
+- fix(ai): filter incompatible reasoning before Anthropic replay (#529) — *Quentin H*
+- fix(ai): filter incompatible reasoning before Anthropic replay — *Quentin H*
+- fix(ai): accepter la précision Gateway et reprendre les refus qualité (#528) — *Quentin H*
+- fix(ai): preserve Gateway cost precision and durable rejection identity — *Quentin H*
+- fix(billing): accès direct aux factures de l’accompagnement (#527) — *Quentin H*
+- SCALE 2027 : accès public dédié après achat Whop (#523) — *Quentin H*
+- Merge main and preserve collaborator and SCALE public access gates — *Quentin H*
+- fix(billing): open accompaniment invoices directly — *Quentin H*
+- fix(sales): recover calls from verified CRM evidence (#524) — *Quentin H*
+- fix(scale): exclude public admission from shared delivery capacity scope — *Quentin H*
+- fix(scale): separate event access from accompaniment client base — *Quentin H*
+- feat(admin): add email campaigns and SCALE reservation audiences (#525) — *Quentin H*
+- fix(nav): licences collaborateurs sous Gestion Coachs (#526) — *Quentin H*
+- fix(nav): place collaborator licenses below coach management — *Quentin H*
+- fix(scale): darken shell top while keeping sticky header transparent — *Quentin H*
+- style(scale): use black header backing and softer glass opacity — *Quentin H*
+- fix(scale): remove redundant topbar ticket shortcut — *Quentin H*
+- fix(scale): clear navigation backdrop and lighten support card — *Quentin H*
+- docs(licenses): record production activation and verification — *Quentin H*
+- fix(scale): improve contrast and pin public navigation — *Quentin H*
+- feat(admin): add email campaigns and SCALE reservation audiences — *Quentin H*
+- fix(sales): recover calls from verified CRM evidence — *Quentin H*
+- fix(clients): clarifier les places SCALE pour les proches (#522) — *Quentin H*
+- feat(scale): varier les annonces proches avec les onze GIF validés — *Quentin H*
+- feat(scale): add public buyer access and Whop admissions — *Quentin H*
+- feat: licences collaborateurs et accès aux applications (#502) — *Quentin H*
+- Merge main and prepare collaborator licenses for production — *Quentin H*
+- fix(scale): simplifier l'annonce Slack des achats proches — *Quentin H*
+- fix(clients): afficher les places SCALE achetées pour les proches — *Quentin H*
+- fix(licenses): remove name carousel play and pause controls — *Quentin H*
+- refine(licenses): animate names and remove invited people immediately — *Quentin H*
+- docs(review): capture the final free-seat suggestion layout — *Quentin H*
+- feat(licenses): suggest validated team members from the organisation chart — *Quentin H*
+- Merge pull request #521 from 42Lab-co/codex/scale-checkout-attendance-scope — *Quentin H*
+- fix(scale): scope checkout attendance to managed seats — *Quentin H*
+### 2026-10-28
+- feat(scale): buy discounted tickets for relatives and assign them later (#520) — *Quentin H*
+- feat(scale): buy discounted tickets for relatives and assign them later — *Quentin H*
+- Merge pull request #519 from 42Lab-co/codex/ai-consumption-06-experiments — *Quentin H*
+- docs(ai): record production schema rollout and CMO compatibility checks — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/ai-consumption-06-experiments — *Quentin H*
+- Merge pull request #518 from 42Lab-co/codex/ai-consumption-05-dashboard — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/ai-consumption-05-dashboard — *Quentin H*
+- Merge pull request #515 from 42Lab-co/codex/ai-consumption-04-costs — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/ai-consumption-04-costs — *Quentin H*
+- Merge pull request #513 from 42Lab-co/codex/ai-consumption-03-instrumentation — *Quentin H*
+- Merge remote-tracking branch 'origin/main' into codex/ai-consumption-03-instrumentation — *Quentin H*
+- Merge pull request #510 from 42Lab-co/codex/ai-consumption-02-ledger — *Quentin H*
+- Merge pull request #509 from 42Lab-co/codex/ai-consumption-01-audit — *Quentin H*
+- Merge branch 'codex/ai-consumption-05-dashboard' into codex/ai-consumption-06-experiments — *Quentin H*
+- Merge branch 'codex/ai-consumption-04-costs' into codex/ai-consumption-05-dashboard — *Quentin H*
+- Merge branch 'codex/ai-consumption-03-instrumentation' into codex/ai-consumption-04-costs — *Quentin H*
+- Merge production updates and preserve legacy CMO step replays — *Quentin H*
+- feat(ai): prepare bounded optimization experiment protocols — *Quentin H*
+- feat(credits): expose AI spend and complete result cohorts — *Quentin H*
+- fix(sales): reconcile migrated archives by verified Claap recording identity (#517) — *Quentin H*
+- fix(sales): reconcile migrated archives by verified Claap recording identity — *Quentin H*
+- fix(sales): verify write targets and encode duplicate window dates in UTC (#516) — *Quentin H*
+- fix(sales): verify write targets and encode duplicate window dates in UTC — *Quentin H*
+- feat(ai): valoriser les appels et rapprocher Gateway (4/6) — *Quentin H*
+- fix(sales): hold timestamp-shifted cross-source duplicates for review (#514) — *Quentin H*
+- fix(sales): hold timestamp-shifted cross-source duplicates for review — *Quentin H*
+- feat(ai): instrumenter les appels et corréler les demandes (3/6) — *Quentin H*
+- feat(sales): retrieve and backfill Engram calls while preserving Claap (#512) — *Quentin H*
+- fix(scale): accumulate reviewed rights from distinct contracts (#511) — *Quentin H*
+- fix(scale): accumulate reviewed rights from distinct contracts — *Quentin H*
+- feat(sales): retrieve and backfill Engram calls while preserving Claap — *Quentin H*
+- feat(ai): ajouter le journal technique et fiabiliser les crédits (2/6) — *Quentin H*
+- fix(inngest): éviter les timeouts LeanPay et préserver les reprises du calendrier (#508) — *Quentin H*
+- docs(ai): cartographier les appels et écarts de consommation (1/6) — *Quentin H*
+- fix(leanpay): keep cancellable pacing browser-compatible — *Quentin H*
+- fix(inngest): preserve pending calendar step IDs across rollout — *Quentin H*
+- fix(leanpay): checkpoint tag batches beyond function duration — *Quentin H*
+- fix(ai): reprendre les générations longues sans sacrifier les contrôles qualité (#507) — *Quentin H*
+- fix(onboarding): sanitize restored diagnostic outputs before persistence — *Quentin H*
+- fix(ai): checkpoint long writing and quality review stages — *Quentin H*
+- feat(bi): show SCALE forecasts and declined contract seats (#506) — *Quentin H*
+- feat(bi): show SCALE forecasts and declined contract seats — *Quentin H*
+- feat(bi): clarify SCALE 2027 room filling and contract follow-ups (#505) — *Quentin H*
+- feat(bi): clarify SCALE 2027 room filling and contract follow-ups — *Quentin H*
 ### 2026-10-27
+- feat(expert): relances J+7/J+14/J+21 avec page publique de réservation, carte dans la messagerie — *Leonard Mangallon*
+- feat(aura): page « Préparer la séance » composée pour la page, plus le tiroir Meet — *Leonard Mangallon*
+- fix(aura): page « Préparer la séance » lisible — densité page, panneau en colonne principale — *Leonard Mangallon*
+- fix(review): point feedback links to the new Slack thread — *Quentin H*
+- feat(aura): page « Préparer la séance » — panneau pré-appel + Ariane dans le dock — *Leonard Mangallon*
+- feat(frameworks): la démo en vidéo (3 min, chapitres) en tête de « C'est quoi ? » — *Leonard Mangallon*
+- fix(expert): fenêtre d'accès expert à 14 jours, écran « accès terminé » au lieu du 404 sur la fiche — *Leonard Mangallon*
+- fix(ariane): retrouver une séance par sa date dans getMyCoachings — *Leonard Mangallon*
+- feat(coach): lien public et aperçu du calendrier sur le profil (#504) — *Quentin H*
+- fix(licenses): require cancellation feedback before confirming — *Quentin H*
+- feat(review): add clear validation actions and Slack report handoff — *Quentin H*
+- fix(scale): upgrade confirmed party with Whop ticket quantity (#503) — *Quentin H*
+- feat(coach): preview public booking calendar from profile — *Quentin H*
+- fix(scale): upgrade confirmed party with Whop ticket quantity — *Quentin H*
+- docs(release): record final review handoff and merged build verification — *Quentin H*
+- fix(frameworks): tolerate absent search params during type validation — *Quentin H*
+- Merge latest main and preserve retired integration endpoints — *Quentin H*
+- feat(review): add screenshot slider and clean client handoff folder — *Quentin H*
+- fix(runtime): retire legacy syncs and preserve numeric drafts (#501) — *Quentin H*
+- feat(aura): Ariane proposes session prep in her launcher bubble before coaching (beta coaches) — *Leonard Mangallon*
+- fix(focus): reuse sidebar identity for streak queries — *Quentin H*
+- fix(runtime): retire legacy syncs and preserve numeric drafts — *Quentin H*
+- Collect licence cancellation feedback and add SaaS admin reporting — *Quentin H*
+- update frameworks — *Leonard Mangallon*
+- fix(rapports): bouton « Générer un rapport » sur la page Rapports de la fiche coach (EOS-653) — *Leonard Mangallon*
+- Handle collaborator CMO access without a shared LinkedIn profile — *Quentin H*
+- Use the platform sidebar for broader collaborator access — *Quentin H*
+- Migrate collaborator licensing off retired Whop v2 contracts — *Quentin H*
+- Integrate latest Whop API fixes and record final release validation — *Quentin H*
+- Merge main and validate collaborator release without production changes — *Quentin H*
+- Merge pull request #500 from 42Lab-co/codex/whop-current-api-safe-sync — *Quentin H*
+- fix(whop): migrate current API and guard billing recovery — *Quentin H*
+- Preserve validated collaborator UI and release preparation before main integration — *Quentin H*
+- improvement to lead magnet for landing — *Leonard Mangallon*
 - Merge pull request #499 from 42Lab-co/quentin/eos-692-debloquer-place-scale-pour-le-ticket-15666 — *Quentin H*
 - fix(bi): reconcile restored SCALE confirmations and scope labels — *Quentin H*
 - Merge pull request #498 from 42Lab-co/quentin/eos-692-debloquer-place-scale-pour-le-ticket-15666 — *Quentin H*
